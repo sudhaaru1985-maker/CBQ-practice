@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVS Case-Based Questions – MBBS Practice</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0d2b45;--teal:#1a8a82;--gold:#c8922a;
+  --bg:#f6f5f0;--card:#fff;--border:#ddd9d0;
+  --text:#1a1a1e;--muted:#6b6b72;
+  --ok-bg:#edf7f0;--ok-bd:#6abf8a;--ok-tx:#1a4a28;
+  --part-bg:#fff8e8;--part-bd:#e0b84a;--part-tx:#5a3a00;
+  --no-bg:#fef0f0;--no-bd:#e0807a;--no-tx:#4a1010;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.7;min-height:100vh}
+
+/* header */
+.hdr{background:var(--navy);padding:2.2rem 2rem 1.8rem;position:relative;overflow:hidden}
+.hdr::before{content:'';position:absolute;right:-30px;top:-50px;width:180px;height:180px;border-radius:50%;border:32px solid rgba(200,146,42,.1)}
+.hdr::after{content:'';position:absolute;left:58%;bottom:-35px;width:130px;height:130px;border-radius:50%;border:26px solid rgba(26,138,130,.11)}
+.hdr-eye{font-size:.67rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:.45rem}
+.hdr h1{font-family:'Lora',serif;font-size:1.8rem;font-weight:600;color:#fff;line-height:1.2;margin-bottom:.4rem}
+.hdr p{font-size:.83rem;color:rgba(255,255,255,.5);max-width:480px}
+.hdr-tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:1rem}
+.hdr-tag{font-size:.66rem;font-weight:500;padding:.2rem .65rem;border-radius:99px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.13)}
+
+/* sticky nav */
+.snav{position:sticky;top:0;z-index:200;background:#fff;border-bottom:1px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none;padding:0 1.2rem}
+.snav::-webkit-scrollbar{display:none}
+.snav-btn{flex-shrink:0;padding:.65rem .95rem;font-size:.77rem;font-weight:600;font-family:'DM Sans',sans-serif;background:none;border:none;border-bottom:2.5px solid transparent;cursor:pointer;color:var(--muted);transition:color .15s,border-color .15s;white-space:nowrap}
+.snav-btn:hover{color:var(--navy)}
+.snav-btn.on{color:var(--navy);border-bottom-color:var(--gold)}
+
+/* body */
+.pg{max-width:800px;margin:0 auto;padding:2rem 1.5rem 5rem}
+
+/* case block */
+.cb{margin-bottom:4rem;scroll-margin-top:50px}
+.cb-hr{border:none;border-top:1px dashed var(--border);margin:0 0 3.5rem}
+
+/* case header */
+.ch{border-bottom:2px solid var(--navy);padding-bottom:.7rem;margin-bottom:1.2rem}
+.ch-eye{font-size:.67rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.2rem}
+.ch-title{font-family:'Lora',serif;font-size:1.35rem;font-weight:600;color:var(--navy)}
+.ch-dept{font-size:.75rem;color:var(--muted);margin-top:.18rem}
+
+/* vignette */
+.vig{background:#fff;border-left:4px solid var(--teal);border:1px solid var(--border);border-left-width:4px;border-left-color:var(--teal);border-radius:0 10px 10px 0;padding:1.05rem 1.25rem;margin-bottom:1.6rem}
+.vig-lbl{font-size:.64rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--teal);margin-bottom:.45rem}
+.vig p{font-size:.92rem;line-height:1.75}
+
+/* question card */
+.qc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.15rem 1.25rem;margin-bottom:.95rem;transition:border-color .2s}
+.qc:focus-within{border-color:var(--teal)}
+.qt{display:flex;gap:.7rem;align-items:flex-start;margin-bottom:.85rem}
+.qb{flex-shrink:0;min-width:28px;height:28px;border-radius:7px;background:var(--navy);color:#fff;font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 5px;font-family:'Lora',serif}
+.qtx{font-size:.93rem;line-height:1.6;padding-top:2px}
+.qhint{font-size:.77rem;color:var(--muted);margin-top:.22rem;font-style:italic}
+
+/* textarea */
+textarea.qa{width:100%;min-height:88px;padding:.65rem .85rem;font-size:.87rem;font-family:'DM Sans',sans-serif;border:1px solid var(--border);border-radius:8px;resize:vertical;background:#fafaf7;color:var(--text);line-height:1.6;transition:border-color .15s,background .15s}
+textarea.qa:focus{outline:none;border-color:var(--teal);background:#fff}
+textarea.qa:disabled{opacity:.6;cursor:not-allowed}
+textarea.qa::placeholder{color:#aaa}
+
+/* submit */
+.sbtn{margin-top:.55rem;padding:.4rem 1rem;font-size:.79rem;font-weight:600;font-family:'DM Sans',sans-serif;background:var(--navy);color:#fff;border:none;border-radius:7px;cursor:pointer;transition:background .15s}
+.sbtn:hover{background:#1a4a70}
+.sbtn:disabled{opacity:.4;cursor:not-allowed}
+
+/* feedback */
+.fb{display:none;margin-top:.85rem;border-radius:10px;padding:1rem 1.15rem;border:1px solid}
+.fb.show{display:block}
+.fb.ok{background:var(--ok-bg);border-color:var(--ok-bd)}
+.fb.part{background:var(--part-bg);border-color:var(--part-bd)}
+.fb.no{background:var(--no-bg);border-color:var(--no-bd)}
+.fb-lbl{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem}
+.fb.ok .fb-lbl{color:var(--teal)}
+.fb.part .fb-lbl{color:#8a6000}
+.fb.no .fb-lbl{color:#8a1520}
+.fb-sum{font-size:.89rem;font-weight:600;margin-bottom:.5rem}
+.fb.ok .fb-sum{color:var(--ok-tx)}
+.fb.part .fb-sum{color:var(--part-tx)}
+.fb.no .fb-sum{color:var(--no-tx)}
+.fb-exp{font-size:.85rem;line-height:1.65;color:var(--text)}
+.fb-exp ul{padding-left:1.1rem;margin-top:.4rem}
+.fb-exp li{margin-bottom:.3rem}
+.fb-exp li::marker{color:var(--teal)}
+.fb-exp strong{font-weight:600}
+.fb-enc{margin-top:.6rem;padding-top:.5rem;border-top:1px solid rgba(0,0,0,.07);font-size:.81rem;font-style:italic;color:var(--muted)}
+
+/* retry */
+.rbtn{margin-top:.5rem;padding:.33rem .82rem;font-size:.76rem;font-weight:600;font-family:'DM Sans',sans-serif;background:transparent;color:var(--navy);border:1px solid var(--navy);border-radius:6px;cursor:pointer;display:none;transition:background .15s,color .15s}
+.rbtn:hover{background:var(--navy);color:#fff}
+
+@media(max-width:580px){.hdr h1{font-size:1.4rem}.pg{padding:1.2rem 1rem 4rem}.qc{padding:1rem}}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-eye">MBBS Year 1 &amp; 2 · Practice Module</div>
+  <h1>Cardiovascular System<br>Case-Based Questions</h1>
+  <p>Write your answer, then click <strong style="color:#fff">Submit</strong> for instant feedback and a full explanation.</p>
+  <div class="hdr-tags">
+    <span class="hdr-tag">Anatomy</span><span class="hdr-tag">Physiology</span>
+    <span class="hdr-tag">Biochemistry</span><span class="hdr-tag">Pathology</span>
+    <span class="hdr-tag">Microbiology</span><span class="hdr-tag">Pharmacology</span>
+  </div>
+</header>
+
+<nav class="snav" id="snav"></nav>
+<div class="pg" id="pg"></div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   CASE DATA — each question has:
+     text, hint, keys (required keywords for "correct"),
+     partial (keywords for "partial"), explanation, encouragements
+══════════════════════════════════════════════════════════ */
+const CASES = [
+{
+  id:'htn', num:1, title:'Hypertension', depts:'Physiology · Pathology · Pharmacology',
+  vignette:'A 52-year-old male presents for a routine check-up. He has a sedentary lifestyle and consumes a high-salt diet. His blood pressure is 160/100 mmHg on repeated measurements. Renal function tests are normal.',
+  qs:[
+    {
+      id:'htn1', badge:'Q1',
+      text:'Explain the physiological mechanisms responsible for long-term regulation of blood pressure.',
+      hint:'Think: renal, hormonal, and nervous system mechanisms.',
+      keys:['renin','angiotensin','aldosterone','kidney','renal','sodium','volume'],
+      partial:['sympathetic','baroreceptor','heart','blood volume','natriuretic'],
+      explanation:`Long-term BP regulation involves several key mechanisms:<ul>
+        <li><strong>Renal fluid-volume control</strong> — the kidneys adjust Na⁺ and water excretion to maintain blood volume; this is the dominant long-term mechanism (pressure-natriuresis relationship).</li>
+        <li><strong>RAAS</strong> — renin → angiotensin I → angiotensin II → aldosterone → Na⁺ and water retention → ↑ blood volume → ↑ CO → ↑ BP.</li>
+        <li><strong>ADH (vasopressin)</strong> — promotes water reabsorption at collecting duct → ↑ blood volume.</li>
+        <li><strong>Atrial natriuretic peptide (ANP)</strong> — released when atria are stretched by ↑ volume → promotes Na⁺ excretion → lowers BP (counter-regulatory).</li>
+        <li><strong>Sympathetic nervous system</strong> — chronic activation → vasoconstriction (↑ TPR) and ↑ cardiac output.</li>
+      </ul>`,
+      enc_ok:'Excellent — you have a strong grasp of long-term BP regulation!',
+      enc_part:'Good effort! Make sure you include the RAAS and the renal pressure-natriuresis relationship in your answer.',
+      enc_no:'Don\'t worry — this is a complex topic. Focus on the RAAS and kidney\'s role in controlling blood volume as the key long-term mechanism.'
+    },
+    {
+      id:'htn2', badge:'Q2',
+      text:'Describe the role of baroreceptors in short-term regulation and why they reset in chronic hypertension.',
+      hint:'Where are they located? What happens when BP stays high for a long time?',
+      keys:['baroreceptor','carotid','aortic','reset','adapt','chronic','sympathetic'],
+      partial:['short-term','stretch','blood pressure','nerve','reflex'],
+      explanation:`<ul>
+        <li><strong>Location:</strong> Baroreceptors (mechanoreceptors) are found in the carotid sinus and aortic arch.</li>
+        <li><strong>Function:</strong> They detect arterial wall stretch. When BP rises acutely → ↑ baroreceptor firing → inhibit the sympathetic vasomotor centre → ↓ HR, ↓ stroke volume, vasodilation → BP falls back toward normal.</li>
+        <li><strong>Resetting in chronic hypertension:</strong> Sustained high pressure causes structural remodelling of vessel walls around baroreceptors → the receptors "adapt" to the higher pressure level → they stop perceiving elevated BP as abnormal → their corrective reflex is blunted or lost.</li>
+        <li>This means baroreceptors <em>maintain</em> whatever BP they are chronically exposed to — they cannot correct chronic hypertension on their own.</li>
+      </ul>`,
+      enc_ok:'Well done! You clearly understand the baroreceptor reflex and why it fails in sustained hypertension.',
+      enc_part:'Good start. Make sure you explain <em>why</em> baroreceptors reset — it\'s the structural adaptation to chronic stretch that matters.',
+      enc_no:'Key idea: baroreceptors normally correct acute BP changes, but in chronic hypertension the vessel wall around them remodels, so they reset to a higher set-point and stop correcting it.'
+    },
+    {
+      id:'htn3', badge:'Q3',
+      text:'List TWO causes of secondary hypertension.',
+      hint:'Secondary hypertension has an identifiable underlying cause. List all you know — only two are required.',
+      keys:['renal','renovascular','phaeochromocytoma','pheochromocytoma','aldosteronism','cushing','coarctation','hyperaldosteronism','conn','artery stenosis'],
+      partial:['kidney','adrenal','thyroid','sleep apnoea','endocrine'],
+      explanation:`<strong>All recognised causes of secondary hypertension</strong> (any two are acceptable):<ul>
+        <li><strong>Renal parenchymal disease</strong> — chronic kidney disease, glomerulonephritis (most common cause overall)</li>
+        <li><strong>Renovascular disease</strong> — renal artery stenosis (atherosclerotic or fibromuscular dysplasia) → ↑ renin → ↑ angiotensin II</li>
+        <li><strong>Primary hyperaldosteronism (Conn's syndrome)</strong> — adrenal adenoma secreting excess aldosterone → Na⁺ retention → ↑ blood volume</li>
+        <li><strong>Phaeochromocytoma</strong> — catecholamine-secreting adrenal tumour → episodic severe hypertension, palpitations, sweating</li>
+        <li><strong>Cushing's syndrome</strong> — excess cortisol has mineralocorticoid-like effects → Na⁺ retention</li>
+        <li><strong>Coarctation of the aorta</strong> — congenital narrowing → ↑ BP in upper limbs, ↓ in lower limbs</li>
+        <li><strong>Hyperthyroidism</strong> — ↑ CO and ↑ HR → systolic hypertension</li>
+        <li><strong>Obstructive sleep apnoea</strong> — hypoxia → sympathetic activation → nocturnal and daytime hypertension</li>
+      </ul>`,
+      enc_ok:'Great! You correctly identified causes of secondary hypertension.',
+      enc_part:'Good — you\'re on the right track. Make sure the cause you name is specific (e.g. "renal artery stenosis" or "phaeochromocytoma" rather than just "kidney disease").',
+      enc_no:'Secondary hypertension means BP elevation due to an identifiable cause. The most testable ones are: renal artery stenosis, phaeochromocytoma, Conn\'s syndrome, and Cushing\'s syndrome.'
+    },
+    {
+      id:'htn4', badge:'Q4',
+      text:'Describe the histological vascular changes seen in chronic (benign) hypertension.',
+      hint:'Focus on what happens to arterioles — the wall and the lumen.',
+      keys:['hyaline','arteriolosclerosis','medial hypertrophy','smooth muscle','lumen','wall'],
+      partial:['thickening','fibrosis','vessel','arteriole','intima'],
+      explanation:`Histological changes in benign hypertension affect primarily <strong>arterioles</strong>:<ul>
+        <li><strong>Hyaline arteriolosclerosis</strong> — homogeneous pink (hyaline) material (plasma protein insudation + thickened basement membrane) deposits in arteriolar walls → wall thickens, lumen narrows. Most prominent in renal and retinal arterioles.</li>
+        <li><strong>Medial hypertrophy</strong> — smooth muscle cell hyperplasia/hypertrophy → increased wall-to-lumen ratio → reduced vessel compliance.</li>
+        <li><strong>Intimal fibrosis</strong> — fibroblast proliferation beneath the endothelium → further narrowing.</li>
+        <li>These changes reduce vessel compliance and impair autoregulation → end-organ ischaemia.</li>
+      </ul>`,
+      enc_ok:'Excellent histology knowledge — well done!',
+      enc_part:'Good effort. The key term is <em>hyaline arteriolosclerosis</em> — make sure you describe what the hyaline material is and where it deposits.',
+      enc_no:'The hallmark of benign hypertension is hyaline arteriolosclerosis — pink, homogeneous material in arteriolar walls causing thickening and lumen narrowing. Medial hypertrophy is also important.'
+    },
+    {
+      id:'htn5', badge:'Q5',
+      text:'What histological changes occur in malignant (accelerated) hypertension?',
+      hint:'Malignant hypertension is a more severe, distinct form — what makes it different microscopically?',
+      keys:['fibrinoid necrosis','hyperplastic','onion','onion-skin','malignant','accelerated'],
+      partial:['necrosis','smooth muscle','proliferation','arteriole','concentric'],
+      explanation:`Malignant hypertension (BP typically >180/120 mmHg with end-organ damage) shows two distinct histological lesions:<ul>
+        <li><strong>Hyperplastic arteriolosclerosis ("onion-skin" lesion)</strong> — concentric laminated proliferation of smooth muscle cells in arteriolar walls → markedly narrowed lumen. The layers of smooth muscle cells resemble the layers of an onion.</li>
+        <li><strong>Fibrinoid necrosis</strong> — plasma proteins including fibrin deposit within the vessel wall (bright eosinophilic/pink on H&E) → necrosis of smooth muscle cells → risk of vascular rupture and micro-infarcts.</li>
+        <li>These two features — hyperplastic/onion-skin change and fibrinoid necrosis — are what distinguish <em>malignant</em> from benign hypertension histologically.</li>
+        <li>Gross: "flea-bitten" kidney (petechial haemorrhages on cortical surface from rupture of arterioles).</li>
+      </ul>`,
+      enc_ok:'Impressive — you correctly identified both hallmarks of malignant hypertension!',
+      enc_part:'Good. Remember there are <em>two</em> key features: fibrinoid necrosis AND the hyperplastic "onion-skin" change — try to include both.',
+      enc_no:'Malignant hypertension shows two distinct lesions: (1) fibrinoid necrosis of arterioles, and (2) hyperplastic "onion-skin" arteriolosclerosis — look these up and compare them with the benign form.'
+    },
+    {
+      id:'htn6', badge:'Q6',
+      text:'Describe the morphological changes in organs affected by hypertension (heart, kidneys, brain, eyes).',
+      hint:'Go through each organ systematically.',
+      keys:['heart','kidney','brain','retina','hypertrophy','nephrosclerosis','haemorrhage','microaneurysm'],
+      partial:['left ventricle','glomerular','arteriole','infarct','papilloedema','fundus'],
+      explanation:`<strong>Organ by organ:</strong><ul>
+        <li><strong>Heart</strong> — Left ventricular hypertrophy (concentric; wall >15 mm); increased cardiac weight; may progress to dilated cardiomyopathy and heart failure; accelerated coronary atherosclerosis.</li>
+        <li><strong>Kidneys</strong> — "Flea-bitten" kidney (petechial haemorrhages) in malignant HT; microscopically: hyaline arteriolosclerosis → ischaemic glomerulosclerosis → nephrosclerosis → ↓ GFR; grossly: small, granular, contracted kidneys in end-stage nephrosclerosis.</li>
+        <li><strong>Brain</strong> — Charcot-Bouchard microaneurysms on small penetrating arteries → rupture → intracerebral haemorrhage (especially basal ganglia, pons); lacunar infarcts from small vessel occlusion; accelerated large-vessel atherosclerosis → ischaemic stroke.</li>
+        <li><strong>Retina</strong> — Grades I–IV hypertensive retinopathy: AV nipping (Grade II), flame haemorrhages and exudates (Grade III), papilloedema (Grade IV = malignant hypertension).</li>
+        <li><strong>Aorta</strong> — Accelerated atherosclerosis; aortic aneurysm (especially abdominal); aortic dissection.</li>
+      </ul>`,
+      enc_ok:'Comprehensive answer — you covered all the major organs well!',
+      enc_part:'Good — try to cover all four main targets: heart, kidney, brain, and retina. Each has a distinct morphological pattern.',
+      enc_no:'Think organ by organ: heart (LVH), kidneys (nephrosclerosis), brain (Charcot-Bouchard aneurysms → haemorrhage), and retina (AV nipping, haemorrhages, papilloedema).'
+    },
+    {
+      id:'htn7', badge:'Q7',
+      text:'List FOUR complications of hypertension.',
+      hint:'Complications span all organ systems. List as many as you know — only four are needed.',
+      keys:['stroke','heart failure','myocardial infarction','renal failure','retinopathy','aneurysm','atrial fibrillation','peripheral'],
+      partial:['ischaemic','kidney','heart','brain','eye','vessel'],
+      explanation:`<strong>All recognised complications</strong> (any four are acceptable):<ul>
+        <li><strong>Ischaemic heart disease / Myocardial infarction</strong></li>
+        <li><strong>Heart failure</strong> (from LVH progressing to systolic dysfunction)</li>
+        <li><strong>Ischaemic stroke</strong></li>
+        <li><strong>Haemorrhagic stroke</strong> (intracerebral haemorrhage from Charcot-Bouchard aneurysm rupture)</li>
+        <li><strong>Hypertensive nephropathy → Chronic kidney disease</strong></li>
+        <li><strong>Hypertensive retinopathy</strong> → visual impairment or blindness</li>
+        <li><strong>Aortic aneurysm or aortic dissection</strong></li>
+        <li><strong>Peripheral arterial disease</strong></li>
+        <li><strong>Atrial fibrillation</strong> (from left atrial dilatation secondary to LVH)</li>
+      </ul>`,
+      enc_ok:'Well done — you listed four valid complications correctly!',
+      enc_part:'You\'ve identified some complications. Make sure they are distinct conditions, not just descriptions of the same process.',
+      enc_no:'Think across all organ systems: heart (MI, heart failure), brain (stroke, haemorrhage), kidneys (CKD), eyes (retinopathy), and vessels (aneurysm). Any four of these are acceptable.'
+    },
+    {
+      id:'htn8', badge:'Q8',
+      text:'Which class of drugs targets the RAAS system? Explain the mechanism with one example.',
+      hint:'There is more than one drug class that targets RAAS — name any one with a clear mechanism.',
+      keys:['ace inhibitor','angiotensin','aldosterone','renin','ramipril','losartan','arb','spironolactone','aliskiren'],
+      partial:['block','inhibit','vasoconstriction','blood pressure','enzyme','receptor'],
+      explanation:`<strong>Drug classes targeting the RAAS</strong> (any one with mechanism is acceptable):<ul>
+        <li><strong>ACE inhibitors</strong> (e.g. ramipril, enalapril) — block angiotensin-converting enzyme → ↓ angiotensin II → ↓ vasoconstriction + ↓ aldosterone → ↓ TPR and ↓ blood volume. Also renoprotective.</li>
+        <li><strong>ARBs — Angiotensin II Receptor Blockers</strong> (e.g. losartan, valsartan) — block AT₁ receptors → same downstream effect as ACEi but without bradykinin accumulation (fewer cough/angioedema side effects).</li>
+        <li><strong>Direct renin inhibitors</strong> (e.g. aliskiren) — inhibit renin directly → ↓ conversion of angiotensinogen to angiotensin I.</li>
+        <li><strong>Aldosterone antagonists</strong> (e.g. spironolactone, eplerenone) — block mineralocorticoid receptor → ↓ Na⁺ retention → ↓ blood volume.</li>
+      </ul>`,
+      enc_ok:'Well explained — correct drug class and mechanism!',
+      enc_part:'You\'ve identified a RAAS drug. Try to be more specific about the exact step in the RAAS pathway that is blocked.',
+      enc_no:'The main RAAS drug classes are ACE inhibitors (e.g. ramipril) and ARBs (e.g. losartan). An ACE inhibitor blocks conversion of angiotensin I → II, reducing vasoconstriction and aldosterone secretion.'
+    },
+    {
+      id:'htn9', badge:'Q9',
+      text:'Explain how calcium channel blockers reduce blood pressure.',
+      hint:'What happens to vascular smooth muscle when calcium entry is blocked? Name an example drug.',
+      keys:['calcium','channel','smooth muscle','vasodilation','peripheral resistance','amlodipine','nifedipine'],
+      partial:['l-type','vascular','relax','block','voltage','ca2+','ca²⁺'],
+      explanation:`<ul>
+        <li><strong>Mechanism:</strong> Calcium channel blockers (CCBs) block <strong>L-type voltage-gated Ca²⁺ channels</strong> in vascular smooth muscle cells.</li>
+        <li>Blocking Ca²⁺ entry → less Ca²⁺ available to bind calmodulin → myosin light chain kinase (MLCK) not activated → smooth muscle cannot contract → <strong>vasodilation</strong>.</li>
+        <li>Vasodilation → ↓ total peripheral resistance (TPR) → ↓ BP.</li>
+        <li><strong>Dihydropyridine CCBs</strong> (e.g. amlodipine, nifedipine) — vascular-selective; preferred for hypertension.</li>
+        <li><strong>Non-dihydropyridines</strong> (e.g. verapamil, diltiazem) — also act on cardiac Ca²⁺ channels → slow HR and AV conduction; used for arrhythmias and rate control.</li>
+        <li>Example for hypertension: <strong>amlodipine 5–10 mg once daily</strong>.</li>
+      </ul>`,
+      enc_ok:'Excellent — accurate mechanism and correct drug class!',
+      enc_part:'Good. Make sure you mention the specific channel type (L-type), what happens when Ca²⁺ is blocked (smooth muscle relaxation → vasodilation), and how this reduces BP.',
+      enc_no:'CCBs block L-type Ca²⁺ channels in vascular smooth muscle → muscle cannot contract → vasodilation → ↓ peripheral resistance → ↓ BP. Key drug: amlodipine.'
+    },
+    {
+      id:'htn10', badge:'Q10',
+      text:'Why are thiazide diuretics effective in long-term blood pressure control?',
+      hint:'What is the initial mechanism, and what changes over time to maintain the effect?',
+      keys:['sodium','distal','tubule','volume','diuretic','thiazide','peripheral resistance','ncc','co-transporter'],
+      partial:['kidney','renal','water','blood volume','excretion','hydrochlorothiazide','indapamide'],
+      explanation:`<ul>
+        <li><strong>Initial effect:</strong> Block the Na⁺/Cl⁻ co-transporter (NCC) in the distal convoluted tubule → ↓ Na⁺ reabsorption → ↓ plasma volume → ↓ cardiac output → ↓ BP.</li>
+        <li><strong>Long-term effect:</strong> Plasma volume partially recovers after a few weeks, but BP remains lower. This is because ↓ intracellular Na⁺ in vascular smooth muscle → altered Na⁺/Ca²⁺ exchange → ↓ intracellular Ca²⁺ → reduced vasoconstriction → ↓ total peripheral resistance.</li>
+        <li>Long-term BP control is therefore mainly via <strong>↓ TPR</strong>, not just volume depletion.</li>
+        <li>Examples: hydrochlorothiazide, indapamide, chlortalidone.</li>
+        <li>Particularly effective in elderly and Afro-Caribbean patients (low-renin hypertension).</li>
+        <li><strong>Side effects:</strong> Hypokalaemia, hyperuricaemia (gout), hyperglycaemia.</li>
+      </ul>`,
+      enc_ok:'Well answered — you understood both the early and long-term mechanisms!',
+      enc_part:'Good start. The key distinction is that long-term efficacy is mainly through reduced peripheral resistance (not just reduced volume) — make sure to include this.',
+      enc_no:'Thiazides initially reduce blood volume (blocking Na⁺ reabsorption), but their long-term effect is via reducing vascular smooth muscle tone (↓ TPR). Both mechanisms are important.'
+    },
+    {
+      id:'htn11', badge:'Q11',
+      text:'Name one contraindication for beta-blockers and explain why.',
+      hint:'Think of conditions where blocking beta-receptors would make things worse.',
+      keys:['asthma','av block','bronchospasm','copd','peripheral arterial','phaeochromocytoma','pheochromocytoma','heart block'],
+      partial:['beta','receptor','broncho','cardiac','airway','contraindicated','avoid'],
+      explanation:`<strong>All contraindications for beta-blockers</strong> (any one with explanation is acceptable):<ul>
+        <li><strong>Asthma / COPD with bronchospasm</strong> — β₂ receptors in bronchi mediate bronchodilation; blockade → bronchoconstriction → life-threatening bronchospasm. (Non-selective beta-blockers especially dangerous.)</li>
+        <li><strong>2nd or 3rd degree AV block</strong> — β₁ receptors in AV node mediate conduction; blockade → further slowing → complete heart block.</li>
+        <li><strong>Cardiogenic shock / severe decompensated heart failure</strong> — blocking inotropic support → worsens pump failure (though stable HFrEF is an indication, not a contraindication).</li>
+        <li><strong>Severe peripheral arterial disease</strong> — β₂ blockade → unopposed α-mediated vasoconstriction → worsened limb ischaemia.</li>
+        <li><strong>Phaeochromocytoma without prior alpha-blockade</strong> — blocking beta-mediated vasodilation leaves alpha-vasoconstriction unopposed → severe hypertensive crisis.</li>
+        <li><strong>Sinus bradycardia</strong> — further slowing → symptomatic bradycardia or syncope.</li>
+      </ul>`,
+      enc_ok:'Well done — correct contraindication with a clear pharmacological explanation!',
+      enc_part:'You\'ve named a contraindication. Try to explain the receptor-level mechanism — i.e. exactly which receptor is being blocked and why that causes the problem.',
+      enc_no:'The classic contraindications are asthma (β₂ blockade → bronchoconstriction) and 2nd/3rd degree AV block (β₁ blockade → worsened conduction block). Pick one and explain the mechanism.'
+    }
+  ]
+},
+{
+  id:'rhd', num:2, title:'Rheumatic Heart Disease', depts:'Anatomy · Pathology · Pharmacology',
+  vignette:'A 14-year-old girl presents with fever, migratory joint pain, and breathlessness. She had a sore throat 3 weeks ago. On examination, a mid-diastolic murmur is heard at the apex. Echocardiography shows thickened mitral valve leaflets with commissural fusion.',
+  qs:[
+    {
+      id:'rhd1', badge:'Q1',
+      text:'Describe the anatomy of the mitral valve and its supporting structures.',
+      hint:'Include the leaflets, chordae tendineae, papillary muscles, and annulus.',
+      keys:['anterior','posterior','leaflet','chordae','papillary','annulus','atrioventricular'],
+      partial:['mitral','bicuspid','valve','support','fibrous','left ventricle'],
+      explanation:`<ul>
+        <li><strong>Type:</strong> Bicuspid valve (two leaflets) guarding the left AV orifice.</li>
+        <li><strong>Leaflets:</strong> (1) Anterior (aortic) leaflet — larger, semicircular; (2) Posterior (mural) leaflet — smaller, rectangular.</li>
+        <li><strong>Chordae tendineae</strong> — fibrous cords from free edges of leaflets to the tips of papillary muscles; prevent leaflet prolapse into the LA during systole.</li>
+        <li><strong>Papillary muscles</strong> — anterolateral and posteromedial; project from LV wall; contract during systole to keep chordae taut.</li>
+        <li><strong>Fibrous annulus</strong> — ring of the cardiac fibrous skeleton forming the valve base; maintains the shape of the orifice.</li>
+        <li><strong>Blood supply:</strong> Anterolateral papillary muscle (dual supply: LAD + LCx); posteromedial papillary muscle (single supply: RCA or LCx) — more vulnerable to ischaemic rupture.</li>
+      </ul>`,
+      enc_ok:'Excellent anatomical knowledge of the mitral valve!',
+      enc_part:'Good. Make sure you include all three supporting structures: chordae tendineae, papillary muscles, and the fibrous annulus.',
+      enc_no:'The mitral valve has two leaflets (anterior and posterior) supported by chordae tendineae → papillary muscles → ventricular wall, plus a fibrous annulus at the base.'
+    },
+    {
+      id:'rhd2', badge:'Q2',
+      text:'Which layer of the heart is primarily affected in acute rheumatic fever?',
+      hint:'Rheumatic fever can affect all layers (pancarditis) — which one causes the most important long-term damage?',
+      keys:['endocarditis','endocardium','valve','pancarditis','all three','myocarditis','pericarditis'],
+      partial:['layer','inner','lining','cardiac','inflammation'],
+      explanation:`<ul>
+        <li>Acute rheumatic fever causes <strong>pancarditis</strong> — inflammation of all three layers of the heart.</li>
+        <li><strong>Endocarditis</strong> — Most clinically important for long-term sequelae. Affects primarily the mitral (and aortic) valve leaflets → small verrucous vegetations along the line of closure → long-term fibrosis, commissural fusion → mitral stenosis.</li>
+        <li><strong>Myocarditis</strong> — Aschoff nodules in the myocardium; may cause acute heart failure; usually resolves without permanent damage.</li>
+        <li><strong>Pericarditis</strong> — Fibrinous ("bread-and-butter") pericarditis; usually resolves without significant sequelae.</li>
+        <li><strong>Key point:</strong> The valvular endocardium is the most important layer because repeated valvulitis leads to progressive, irreversible valve disease.</li>
+      </ul>`,
+      enc_ok:'Correct — and well explained with the clinical significance!',
+      enc_part:'Correct that it\'s pancarditis. Try to explain which layer causes the most clinically significant long-term damage and why.',
+      enc_no:'Rheumatic fever causes pancarditis (all three layers). The endocardium/valves are most important because repeated inflammation leads to permanent mitral valve scarring (mitral stenosis).'
+    },
+    {
+      id:'rhd3', badge:'Q3',
+      text:'Explain the immunological basis of rheumatic fever.',
+      hint:'What triggers the immune response, and what is the key mechanism linking the strep infection to heart damage?',
+      keys:['molecular mimicry','cross-react','streptococcal','m-protein','antibod','immune','myosin','laminin'],
+      partial:['autoimmune','streptococcus','strep','group a','pharyngitis','cardiac','protein'],
+      explanation:`<ul>
+        <li><strong>Trigger:</strong> Group A beta-haemolytic Streptococcus (S. pyogenes) pharyngitis.</li>
+        <li><strong>Mechanism — Molecular Mimicry:</strong> Streptococcal M-protein (and N-acetyl-glucosamine) share structural epitopes with human cardiac proteins — myosin, laminin, tropomyosin, and valve collagen.</li>
+        <li>The host immune response (antibodies and T-cells) raised against S. pyogenes <strong>cross-reacts with cardiac proteins</strong> → autoimmune inflammation of heart valves, myocardium, and pericardium.</li>
+        <li><strong>Important:</strong> This is NOT a direct infection of the heart — no bacteria are found in the heart. It is an aberrant autoimmune response.</li>
+        <li>This also explains why only certain M-protein serotypes are "rheumatogenic," and why pharyngitis (not skin infections) triggers rheumatic fever.</li>
+      </ul>`,
+      enc_ok:'Excellent immunological understanding — molecular mimicry explained correctly!',
+      enc_part:'Good. The key term is <em>molecular mimicry</em> — streptococcal antigens resemble cardiac proteins, so the immune response against the bacteria attacks the heart. Include this mechanism.',
+      enc_no:'Molecular mimicry: streptococcal M-protein resembles cardiac proteins (myosin, laminin). Antibodies made against the bacteria cross-react with the heart → autoimmune valvulitis. This is NOT direct bacterial infection of the heart.'
+    },
+    {
+      id:'rhd4', badge:'Q4',
+      text:'Describe the histological features of acute rheumatic fever.',
+      hint:'What is the pathognomonic lesion? Name it and describe its cellular composition.',
+      keys:['aschoff','anitschkow','fibrinoid','necrosis','granuloma','caterpillar','giant cell'],
+      partial:['nodule','inflammation','histol','macrophage','lymphocyte','eosinophilic'],
+      explanation:`<ul>
+        <li>The pathognomonic lesion is the <strong>Aschoff body (Aschoff nodule)</strong>, found in the myocardium and subendocardium.</li>
+        <li><strong>Components of an Aschoff body:</strong>
+          <ul>
+            <li><strong>Central zone of fibrinoid necrosis</strong> — eosinophilic amorphous material</li>
+            <li><strong>Anitschkow cells</strong> (caterpillar cells / Aschoff myocytes) — large activated macrophages with a distinctive elongated nucleus with central chromatin condensation resembling a caterpillar</li>
+            <li><strong>Aschoff giant cells</strong> — multinucleated macrophages</li>
+            <li><strong>Lymphocytes and plasma cells</strong> at the periphery</li>
+          </ul>
+        </li>
+        <li><strong>On valve leaflets:</strong> Small, warty <em>verrucae</em> (vegetations) along the line of closure — composed of fibrin and platelets.</li>
+        <li><strong>Over time:</strong> Fibrosis replaces the Aschoff bodies → chronic rheumatic valve disease with commissural fusion and calcification.</li>
+      </ul>`,
+      enc_ok:'Impressive — you described the Aschoff body accurately!',
+      enc_part:'Good. The key term is the <em>Aschoff body</em>. Make sure you describe its specific cell types, especially the Anitschkow (caterpillar) cells — they are pathognomonic.',
+      enc_no:'The pathognomonic lesion is the Aschoff body: central fibrinoid necrosis surrounded by Anitschkow cells (large macrophages with caterpillar-like nuclei), giant cells, and lymphocytes.'
+    },
+    {
+      id:'rhd5', badge:'Q5',
+      text:'Explain the mechanism of mitral stenosis as a consequence of rheumatic fever.',
+      hint:'Trace the process from acute valvulitis to chronic obstruction of the valve.',
+      keys:['commissural fusion','fibrosis','fusion','narrowed','stenosis','fish mouth','obstruction','left atrial'],
+      partial:['inflammation','scar','thickening','calcification','leaflet','chordae','orifice'],
+      explanation:`<ul>
+        <li><strong>Acute phase:</strong> Autoimmune valvulitis → fibrinous exudate on valve leaflets → organisation into fibrous scar tissue.</li>
+        <li><strong>Progressive changes with each recurrent episode:</strong>
+          <ul>
+            <li><strong>Commissural fusion</strong> — anterior and posterior leaflets fuse at their edges → orifice narrows (normal ~4–5 cm²; severe stenosis <1 cm²)</li>
+            <li><strong>Leaflet thickening and fibrosis</strong> → reduced mobility</li>
+            <li><strong>Chordae tendineae fusion and shortening</strong> → further restriction of leaflet movement</li>
+            <li><strong>Calcification</strong> in advanced disease → "fish-mouth" valve orifice on cross-section</li>
+          </ul>
+        </li>
+        <li><strong>Haemodynamic consequences → Heart failure:</strong>
+          <ul>
+            <li>Obstruction to LV filling → ↑ left atrial pressure → LA dilatation → pulmonary venous hypertension → pulmonary oedema (breathlessness, orthopnoea)</li>
+            <li>↓ Forward cardiac output → fatigue, peripheral oedema</li>
+            <li>LA dilatation → atrial fibrillation → thrombus → systemic embolism</li>
+          </ul>
+        </li>
+      </ul>`,
+      enc_ok:'Excellent — you traced the pathological progression clearly!',
+      enc_part:'Good. Make sure you describe both the structural changes (commissural fusion, fibrosis) AND the haemodynamic consequences (↑ LA pressure → pulmonary oedema).',
+      enc_no:'Repeated valvulitis → fibrosis and commissural fusion → narrowed "fish-mouth" valve → blocks LV filling → ↑ left atrial pressure → pulmonary oedema and eventually heart failure.'
+    },
+    {
+      id:'rhd6', badge:'Q6',
+      text:'Why is penicillin used for secondary prophylaxis in rheumatic fever? Explain the rationale.',
+      hint:'What is secondary prophylaxis trying to prevent, and why specifically penicillin?',
+      keys:['secondary prophylaxis','recurrent','streptococcal','penicillin','benzathine','prevent','throat infection'],
+      partial:['antibiotic','group a','strep','recurrence','pharyngitis','valve','progression'],
+      explanation:`<ul>
+        <li><strong>Goal:</strong> Prevent all future Group A streptococcal (GAS) throat infections → prevent recurrent episodes of acute rheumatic fever → halt cumulative valve damage.</li>
+        <li><strong>Why penicillin:</strong>
+          <ul>
+            <li>GAS remains <strong>universally susceptible</strong> to penicillin — no resistance documented worldwide</li>
+            <li><strong>Benzathine benzylpenicillin G (1.2 MU IM every 3–4 weeks)</strong> — long-acting depot injection ensures compliance with a single monthly dose</li>
+            <li>Highly effective at preventing GAS pharyngitis and streptococcal recolonisation of the throat</li>
+          </ul>
+        </li>
+        <li><strong>Duration:</strong> Minimum 5 years after the last attack or until age 21 (whichever is longer); lifelong if significant valvular disease is present.</li>
+        <li><strong>If penicillin-allergic:</strong> sulfadiazine or azithromycin.</li>
+        <li><strong>Why it matters:</strong> Each recurrent strep infection → another acute RF episode → more valve scarring → faster progression to severe mitral stenosis and heart failure.</li>
+      </ul>`,
+      enc_ok:'Well reasoned — you understood both the pharmacology and the clinical rationale!',
+      enc_part:'Good. Try to also explain why benzathine penicillin specifically (IM, long-acting, once monthly) is preferred over oral penicillin for prophylaxis.',
+      enc_no:'Secondary prophylaxis = long-term penicillin (benzathine penicillin G IM monthly) to prevent recurrent GAS pharyngitis → prevent more RF attacks → halt progressive valve damage. GAS is universally penicillin-sensitive.'
+    },
+    {
+      id:'rhd7', badge:'Q7',
+      text:'Describe one major complication of long-standing rheumatic heart disease.',
+      hint:'Multiple complications are possible — describe any one clearly, including its pathological basis.',
+      keys:['atrial fibrillation','heart failure','thrombus','embolism','pulmonary hypertension','stroke','endocarditis'],
+      partial:['complication','atrial','left atrial','fibrillation','congestion','clot','emboli'],
+      explanation:`<strong>All major complications</strong> (any one described in depth is acceptable):<ul>
+        <li><strong>Atrial fibrillation</strong> — LA dilatation from chronic elevated pressure → electrical remodelling → AF. Worsens haemodynamics (loss of atrial kick) and markedly increases thromboembolic risk.</li>
+        <li><strong>Systemic thromboembolism / Stroke</strong> — LA dilatation + stasis + AF → LA appendage thrombus → embolism to brain (stroke), kidney, spleen, or limbs.</li>
+        <li><strong>Congestive heart failure</strong> — Progressive ↑ LA pressure → pulmonary hypertension → RV failure → hepatomegaly, peripheral oedema, ascites.</li>
+        <li><strong>Pulmonary hypertension</strong> — Chronic ↑ pulmonary venous pressure → reactive pulmonary arterial hypertension → RV strain and eventual RV failure.</li>
+        <li><strong>Infective endocarditis</strong> — Damaged, deformed valve surfaces provide substrate for bacterial adhesion during bacteraemia.</li>
+        <li><strong>Aortic valve disease</strong> — Long-standing RHD can affect the aortic valve (mixed stenosis/regurgitation) in addition to the mitral valve.</li>
+      </ul>`,
+      enc_ok:'Well done — you described a major complication with its pathological basis!',
+      enc_part:'Good. Try to explain the mechanism — why does mitral stenosis lead to this particular complication?',
+      enc_no:'The main complications of long-standing RHD are: atrial fibrillation (from LA dilatation), stroke (from LA thrombus), heart failure (from pulmonary hypertension → RV failure), and infective endocarditis (on damaged valves).'
+    }
+  ]
+},
+{
+  id:'tof', num:3, title:'Tetralogy of Fallot', depts:'Anatomy · Pathology',
+  vignette:'A 3-year-old child presents with cyanosis and dyspnoea on exertion. The child frequently squats after activity. A systolic murmur is heard. Imaging shows right ventricular hypertrophy and a ventricular septal defect.',
+  qs:[
+    {
+      id:'tof1', badge:'Q1',
+      text:'List the four components of Tetralogy of Fallot.',
+      hint:'All four arise from a single embryological defect.',
+      keys:['ventricular septal defect','vsd','pulmonary stenosis','rvot','overriding aorta','right ventricular hypertrophy','rvh'],
+      partial:['right ventricle','outflow','aorta','septal','four','defect'],
+      explanation:`The four components are:<ul>
+        <li><strong>Ventricular septal defect (VSD)</strong> — large, perimembranous, subarterial defect allowing mixing of ventricular blood</li>
+        <li><strong>Right ventricular outflow tract (RVOT) obstruction</strong> — subvalvar (infundibular) stenosis, valvar pulmonary stenosis, or both; restricts blood flow to the lungs</li>
+        <li><strong>Overriding aorta</strong> — aortic root displaced anteriorly, straddling the VSD; receives blood from both ventricles</li>
+        <li><strong>Right ventricular hypertrophy (RVH)</strong> — secondary to increased RV pressure from RVOT obstruction</li>
+      </ul>
+      <strong>Embryological basis:</strong> All four arise from <em>anterior and superior displacement of the infundibular (conal) septum</em> — a single developmental defect explains the entire syndrome.`,
+      enc_ok:'All four components correctly listed — well done!',
+      enc_part:'Good — you got some of the components. Make sure all four are listed: VSD, RVOT obstruction, overriding aorta, and RVH.',
+      enc_no:'The four are: (1) VSD, (2) RVOT obstruction (pulmonary stenosis), (3) Overriding aorta, (4) Right ventricular hypertrophy. All four arise from a single embryological defect in the infundibular septum.'
+    },
+    {
+      id:'tof2', badge:'Q2',
+      text:'What embryological defect leads to Tetralogy of Fallot?',
+      hint:'Think about the partitioning of the cardiac outflow tract during development.',
+      keys:['infundibular','conal','septum','anterior','displaced','displacement','outflow','truncus'],
+      partial:['embryo','development','septal','cardiac','outflow tract','division'],
+      explanation:`<ul>
+        <li>The underlying defect is <strong>abnormal anterior and cephalad (upward) displacement of the infundibular septum</strong> (also called the conal or outlet septum) during division of the primitive cardiac outflow tract.</li>
+        <li><strong>How one defect causes all four features:</strong>
+          <ul>
+            <li>Displaced septum fails to close the VSD → <strong>VSD</strong></li>
+            <li>Displaced septum encroaches on the right outflow tract → <strong>RVOT obstruction / pulmonary stenosis</strong></li>
+            <li>Aortic root carried anteriorly over the VSD → <strong>Overriding aorta</strong></li>
+            <li>RV pumps against high pressure → <strong>RVH</strong></li>
+          </ul>
+        </li>
+        <li>Some cases are associated with <strong>chromosome 22q11 deletion</strong> (DiGeorge syndrome).</li>
+      </ul>`,
+      enc_ok:'Correct embryological basis — excellent understanding!',
+      enc_part:'Good start. Be specific: it is the <em>infundibular (conal) septum</em> that is displaced anteriorly. Explain how this single defect produces all four components.',
+      enc_no:'The single defect is anterior displacement of the infundibular septum during outflow tract development. This one error simultaneously creates the VSD, RVOT obstruction, overriding aorta, and RVH.'
+    },
+    {
+      id:'tof3', badge:'Q3',
+      text:'Explain the type of shunt present in ToF and how it leads to cyanosis.',
+      hint:'Is the shunt left-to-right or right-to-left? What determines the direction?',
+      keys:['right-to-left','right to left','deoxygenated','cyanosis','rvot','obstruction','aorta','mixing'],
+      partial:['shunt','vsd','direction','pressure','pulmonary','systemic','oxygen'],
+      explanation:`<ul>
+        <li><strong>Shunt type:</strong> Right-to-left shunt across the VSD.</li>
+        <li><strong>Why right-to-left?</strong> RVOT obstruction → RV cannot eject blood efficiently into the pulmonary artery → RV pressure rises to equal or exceed LV pressure. Since the aorta overrides the VSD, deoxygenated RV blood is ejected preferentially into the aorta.</li>
+        <li><strong>Mechanism of cyanosis:</strong> Deoxygenated blood bypasses the lungs and enters the systemic circulation → ↓ arterial oxygen saturation → central cyanosis (blue lips, tongue, fingertips).</li>
+        <li><strong>Severity</strong> of cyanosis depends on degree of RVOT obstruction: more obstruction → more right-to-left shunting → more cyanosis (the "pink Tet" vs "blue Tet" spectrum).</li>
+        <li><strong>Contrast with ASD/VSD (acyanotic):</strong> In uncomplicated VSD, there is a left-to-right shunt (no cyanosis); in ToF the RVOT obstruction reverses the shunt direction.</li>
+      </ul>`,
+      enc_ok:'Excellent — correct shunt direction with a clear explanation of the mechanism!',
+      enc_part:'You\'re on the right track. Make sure you explain the direction (right-to-left), what drives it (RVOT obstruction raising RV pressure), and why this causes cyanosis (deoxygenated blood enters systemic circulation).',
+      enc_no:'In ToF there is a right-to-left shunt: RVOT obstruction raises RV pressure → deoxygenated blood flows from RV through the VSD into the overriding aorta → bypasses the lungs → systemic desaturation → cyanosis.'
+    },
+    {
+      id:'tof4', badge:'Q4',
+      text:'Explain why squatting relieves symptoms in a child with Tetralogy of Fallot.',
+      hint:'What does squatting do to systemic vascular resistance? How does that affect the shunt across the VSD?',
+      keys:['systemic vascular resistance','svr','squatting','femoral','right-to-left','shunt','pulmonary'],
+      partial:['vascular','resistance','peripheral','compress','oxygenation','relief','cyanosis'],
+      explanation:`<ul>
+        <li><strong>During exertion:</strong> Sympathetic activation → infundibular muscle spasm → acute worsening of RVOT obstruction → ↑ right-to-left shunting → severe cyanosis (hypercyanotic "tet spell").</li>
+        <li><strong>Squatting mechanism:</strong>
+          <ul>
+            <li>Squatting mechanically <strong>kinks and compresses the femoral arteries</strong> → increases <strong>systemic vascular resistance (SVR)</strong></li>
+            <li>↑ SVR → raises left heart pressure relative to right → <strong>reduces right-to-left shunting</strong> across the VSD</li>
+            <li>More blood is now directed into the pulmonary artery (despite RVOT obstruction) → <strong>improved oxygenation</strong></li>
+          </ul>
+        </li>
+        <li>This is an instinctive adaptive physiological manoeuvre — older children with unrepaired ToF spontaneously squat after exercise.</li>
+        <li>The same principle is used clinically: knee-to-chest position + phenylephrine (↑ SVR) to treat tet spells.</li>
+      </ul>`,
+      enc_ok:'Perfect explanation of the haemodynamic mechanism of squatting!',
+      enc_part:'Good. The key mechanism is: squatting ↑ SVR → ↑ left heart pressure → ↓ right-to-left shunting → ↑ pulmonary blood flow → relief of cyanosis. Make sure this chain is clear.',
+      enc_no:'Squatting compresses the femoral vessels → ↑ systemic vascular resistance (SVR) → raises left heart pressure → reduces right-to-left shunting through the VSD → more blood goes to the lungs → improved oxygenation.'
+    },
+    {
+      id:'tof5', badge:'Q5',
+      text:'List all the cyanotic and acyanotic congenital heart diseases you know.',
+      hint:'Classify them into two groups. There are several in each category.',
+      keys:['tetralogy','transposition','atrial septal','ventricular septal','patent ductus','vsd','asd','pda','truncus','tricuspid atresia'],
+      partial:['cyanotic','acyanotic','congenital','heart disease','shunt'],
+      explanation:`<strong>Cyanotic CHD</strong> (right-to-left shunt, or mixing lesions → ↓ systemic O₂):<ul>
+        <li>Tetralogy of Fallot (most common cyanotic CHD beyond infancy)</li>
+        <li>Transposition of the great arteries — TGA (most common cyanotic CHD in neonates)</li>
+        <li>Tricuspid atresia</li>
+        <li>Total anomalous pulmonary venous return (TAPVR)</li>
+        <li>Truncus arteriosus</li>
+        <li>Hypoplastic left heart syndrome (HLHS)</li>
+        <li>Pulmonary atresia</li>
+        <li>Ebstein's anomaly (with ASD/PFO → right-to-left shunt)</li>
+      </ul>
+      <strong>Acyanotic CHD</strong> (left-to-right shunt → ↑ pulmonary blood flow):<ul>
+        <li>Ventricular septal defect (VSD) — most common CHD overall</li>
+        <li>Atrial septal defect (ASD)</li>
+        <li>Patent ductus arteriosus (PDA)</li>
+        <li>Atrioventricular septal defect (AVSD / endocardial cushion defect)</li>
+        <li>Coarctation of the aorta</li>
+        <li>Pulmonary valve stenosis (without shunt)</li>
+        <li>Aortic valve stenosis (without shunt)</li>
+      </ul>`,
+      enc_ok:'Impressive — you listed a comprehensive range of CHDs in both categories!',
+      enc_part:'Good effort. Make sure you have at least 3–4 examples in each category. The key cyanotic ones are ToF and TGA; the most common acyanotic ones are VSD, ASD, and PDA.',
+      enc_no:'Cyanotic (right-to-left shunt): ToF, TGA, tricuspid atresia, truncus arteriosus. Acyanotic (left-to-right shunt): VSD (most common overall), ASD, PDA. Try to learn 4–5 from each group.'
+    }
+  ]
+},
+{
+  id:'ie', num:4, title:'Infective Endocarditis', depts:'Anatomy · Microbiology · Pharmacology',
+  vignette:'A 45-year-old male with a history of rheumatic heart disease presents with fever, malaise, and weight loss for 3 weeks. Examination reveals splinter haemorrhages. Blood cultures grow Streptococcus viridans. Echocardiography shows vegetations on the mitral valve.',
+  qs:[
+    {
+      id:'ie1', badge:'Q1',
+      text:'Describe how damaged cardiac valves predispose to infective endocarditis.',
+      hint:'Think step by step: damaged valve surface → what forms first → how bacteria colonise it.',
+      keys:['thrombotic','nbte','fibrin','platelet','adhesin','bacteria','endothelium','damaged','biofilm'],
+      partial:['thrombus','damaged','surface','bacterial','colonise','adhere','vegetation'],
+      explanation:`<ul>
+        <li><strong>Normal valve:</strong> Intact endothelium is non-thrombogenic and resistant to bacterial adhesion.</li>
+        <li><strong>Step 1 — Valve damage:</strong> Rheumatic fever, congenital defects, degenerative changes, or prosthetic valves disrupt the endothelial surface → expose subendothelial collagen and extracellular matrix.</li>
+        <li><strong>Step 2 — NBTE formation:</strong> Exposed collagen activates platelets and the coagulation cascade → sterile fibrin-platelet thrombus forms: <em>Non-Bacterial Thrombotic Endocarditis (NBTE)</em>.</li>
+        <li><strong>Step 3 — Bacterial colonisation:</strong> Transient bacteraemia (from dental work, gut manipulation, skin breach) → bacteria with surface adhesins (fibronectin-binding proteins, clumping factors) adhere to the fibrin-platelet thrombus → proliferate within the vegetation.</li>
+        <li><strong>Step 4 — Protection from host defences:</strong> Biofilm matrix shields bacteria from neutrophils, complement, and antibiotics → establishment of infected vegetation.</li>
+      </ul>`,
+      enc_ok:'Excellent — you correctly described the complete sequence from valve damage to bacterial colonisation!',
+      enc_part:'Good. The key intermediate step is the formation of a sterile fibrin-platelet thrombus (NBTE) on the damaged surface — this is what bacteria adhere to during bacteraemia.',
+      enc_no:'Sequence: damaged valve → exposed collagen → NBTE (sterile fibrin-platelet thrombus forms) → bacteraemia → bacteria adhere to NBTE using surface adhesins → grow within the vegetation protected by biofilm.'
+    },
+    {
+      id:'ie2', badge:'Q2',
+      text:'Why is Streptococcus viridans commonly implicated in infective endocarditis in this patient?',
+      hint:'Where does S. viridans normally live, and how does it reach damaged cardiac valves?',
+      keys:['oral flora','mouth','dental','bacteraemia','dextran','adhesin','damaged valve','rheumatic'],
+      partial:['streptococcus','viridans','oral','bacteria','blood','tooth','flora','low virulence'],
+      explanation:`<ul>
+        <li><strong>Normal habitat:</strong> S. viridans group (alpha-haemolytic streptococci: S. mutans, S. sanguinis, S. mitis) are part of the normal oral/dental flora.</li>
+        <li><strong>Route to the heart:</strong> Dental procedures, tooth extraction, or even vigorous tooth brushing → transient bacteraemia → bacteria enter the bloodstream → reach damaged mitral valve (with pre-existing NBTE from rheumatic fever).</li>
+        <li><strong>Virulence factors enabling colonisation:</strong>
+          <ul>
+            <li><strong>Dextran</strong> — polysaccharide that promotes adhesion to fibrin in the NBTE and biofilm formation</li>
+            <li><strong>FimA and other adhesins</strong> — bind collagen and fibronectin on damaged valves</li>
+          </ul>
+        </li>
+        <li><strong>Why this patient specifically:</strong> His rheumatic mitral valve disease provides a damaged, irregular valve surface (NBTE) → ideal substrate for S. viridans to colonise during any dental bacteraemia.</li>
+        <li><strong>Low virulence:</strong> S. viridans is relatively non-virulent — it cannot colonise normal valves; it requires pre-existing valve damage (subacute endocarditis pattern).</li>
+      </ul>`,
+      enc_ok:'Well reasoned — you correctly linked oral flora, dental bacteraemia, and the damaged valve!',
+      enc_part:'Good. The key point is that S. viridans lives in the mouth, enters the blood during dental procedures, and colonises the NBTE on the patient\'s already-damaged rheumatic valve. Include all three steps.',
+      enc_no:'S. viridans = normal oral flora → enters blood during dental procedures (bacteraemia) → adheres to NBTE on damaged rheumatic mitral valve using dextran/adhesins → causes subacute endocarditis. Cannot colonise normal valves.'
+    },
+    {
+      id:'ie3', badge:'Q3',
+      text:'Describe the Duke Criteria for the diagnosis of infective endocarditis.',
+      hint:'There are major and minor criteria. Definite IE requires specific combinations.',
+      keys:['major','minor','blood culture','echocardiography','vegetation','fever','vascular','immunological','duke'],
+      partial:['criteria','diagnosis','positive','culture','echo','emboli','osler','janeway','predispose'],
+      explanation:`<strong>Duke Criteria — Definite IE</strong> requires: 2 major; OR 1 major + 3 minor; OR 5 minor criteria.<br><br>
+      <strong>MAJOR Criteria:</strong><ul>
+        <li><strong>Positive blood cultures</strong> — typical microorganism (S. viridans, S. aureus, Enterococcus, HACEK group) in ≥2 separate cultures; or persistently positive cultures; or single positive for Coxiella burnetii</li>
+        <li><strong>Evidence of endocardial involvement on echocardiography</strong> — oscillating vegetation, abscess, prosthetic valve dehiscence, or new valvular regurgitation</li>
+      </ul>
+      <strong>MINOR Criteria:</strong><ul>
+        <li>Predisposing condition (rheumatic heart disease, congenital HD, IVDU, prosthetic valve)</li>
+        <li>Fever ≥38°C</li>
+        <li>Vascular phenomena — arterial emboli, septic infarcts, mycotic aneurysm, Janeway lesions (painless, palmar/plantar — septic emboli)</li>
+        <li>Immunological phenomena — Osler's nodes (painful, finger pulps — immune complex), Roth spots, glomerulonephritis, positive rheumatoid factor</li>
+        <li>Microbiological evidence not meeting major criteria (e.g. single culture of less typical organism)</li>
+      </ul>`,
+      enc_ok:'Excellent — you described the Duke Criteria comprehensively!',
+      enc_part:'Good. Make sure you include both major criteria (blood cultures AND echocardiography findings) and give examples of minor criteria.',
+      enc_no:'Duke Criteria: 2 major criteria = definite IE. Major: (1) positive blood cultures with typical organism, (2) echo showing vegetation/abscess/new regurgitation. Minor: fever, predisposing condition, Osler\'s nodes, Janeway lesions, immunological phenomena.'
+    },
+    {
+      id:'ie4', badge:'Q4',
+      text:'List the investigations and their role in the diagnosis of infective endocarditis.',
+      hint:'Think systematically: microbiology, imaging, bloods.',
+      keys:['blood culture','echocardiography','echo','fbc','esr','crp','urinalysis','ecg','culture'],
+      partial:['investigation','test','culture','white cell','haemoglobin','renal','chest x-ray','inflammatory'],
+      explanation:`<ul>
+        <li><strong>Blood cultures (≥3 sets from different sites, before antibiotics)</strong> — most important; identify organism and guide antibiotic therapy. Take 30–60 min apart.</li>
+        <li><strong>Echocardiography:</strong>
+          <ul>
+            <li>Transthoracic echo (TTE) — first-line; detects vegetations, valve dysfunction</li>
+            <li>Transoesophageal echo (TOE) — superior sensitivity; use if TTE negative/inconclusive, prosthetic valve, or if abscess suspected</li>
+          </ul>
+        </li>
+        <li><strong>FBC</strong> — leucocytosis; normocytic anaemia of chronic disease</li>
+        <li><strong>ESR / CRP</strong> — markedly elevated; markers of systemic inflammation; useful for monitoring treatment response</li>
+        <li><strong>Rheumatoid factor</strong> — positive in ~50% (immune complex formation)</li>
+        <li><strong>Urinalysis / urine microscopy</strong> — haematuria, proteinuria (immune complex glomerulonephritis)</li>
+        <li><strong>ECG</strong> — PR interval prolongation suggests perivalvular abscess extending to AV node</li>
+        <li><strong>Chest X-ray</strong> — pulmonary infiltrates / abscesses if right-sided IE</li>
+        <li><strong>CT/MRI brain</strong> — if neurological complications suspected (embolic stroke, mycotic aneurysm)</li>
+      </ul>`,
+      enc_ok:'Comprehensive investigation list — well structured!',
+      enc_part:'Good. Remember to prioritise blood cultures (most important, must be taken BEFORE antibiotics) and echocardiography (TTE then TOE). Also mention inflammatory markers and urinalysis.',
+      enc_no:'Key investigations: blood cultures ×3 (before antibiotics) → identify organism; echocardiography (TTE/TOE) → visualise vegetations; FBC, ESR/CRP (inflammation); urinalysis (immune GN); ECG (AV block from abscess).'
+    },
+    {
+      id:'ie5', badge:'Q5',
+      text:'List FOUR complications that can occur in infective endocarditis.',
+      hint:'Complications affect multiple organ systems. List as many as you know — only four are needed.',
+      keys:['emboli','embolism','cardiac failure','abscess','mycotic aneurysm','glomerulonephritis','renal','stroke','heart block'],
+      partial:['complication','rupture','septic','infarct','arrhythmia','pulmonary','spleen','brain'],
+      explanation:`<strong>All possible complications</strong> (any four are acceptable):<ul>
+        <li><strong>Systemic emboli</strong> — vegetation fragments → brain (stroke), kidney (renal infarct), spleen (splenic abscess), coronary arteries (MI), retina</li>
+        <li><strong>Acute valve regurgitation → cardiac failure</strong> — valve leaflet destruction from infection → sudden severe regurgitation → haemodynamic collapse</li>
+        <li><strong>Perivalvular / myocardial abscess</strong> — especially S. aureus; can extend to AV node → complete heart block; or cause aortic root disruption</li>
+        <li><strong>Septic pulmonary emboli</strong> — right-sided IE → lung abscesses, cavitating lesions</li>
+        <li><strong>Mycotic aneurysm</strong> — infected emboli to arterial walls → aneurysm → rupture (intracranial rupture is catastrophic)</li>
+        <li><strong>Immune complex glomerulonephritis</strong> → haematuria, proteinuria, renal failure</li>
+        <li><strong>Metastatic infection</strong> — septic arthritis, osteomyelitis, epidural abscess</li>
+        <li><strong>Splenic abscess</strong></li>
+        <li><strong>Prosthetic valve dysfunction or dehiscence</strong></li>
+      </ul>`,
+      enc_ok:'Well done — you listed four valid complications!',
+      enc_part:'Good. Make sure each complication is distinct. The key ones to remember are: systemic emboli (stroke), acute valve destruction → heart failure, perivalvular abscess → heart block, and mycotic aneurysm.',
+      enc_no:'The four most important: (1) systemic emboli → stroke/renal infarct, (2) acute valve rupture → heart failure, (3) perivalvular abscess → heart block, (4) immune complex glomerulonephritis. Try to learn the full list above.'
+    },
+    {
+      id:'ie6', badge:'Q6',
+      text:'What is the principle of antibiotic therapy in infective endocarditis?',
+      hint:'Why is IE treatment so different from a typical infection? Think about the nature of the vegetation.',
+      keys:['bactericidal','prolonged','parenteral','iv','intravenous','biofilm','high dose','avascular','4 weeks','6 weeks'],
+      partial:['antibiotic','bacteria','treat','sterilise','weeks','penetration','biofilm','dose','route'],
+      explanation:`The principles of antibiotic therapy in IE are:<ul>
+        <li><strong>Bactericidal (not bacteriostatic)</strong> — Vegetations impair opsonisation and phagocytosis; bacteriostatic drugs suppress but don't eliminate bacteria. Bactericidal agents (beta-lactams, aminoglycosides, vancomycin) are needed to sterilise the vegetation.</li>
+        <li><strong>High doses</strong> — Antibiotics must penetrate the dense fibrin-platelet biofilm matrix; high serum concentrations are needed to achieve adequate drug levels within the vegetation.</li>
+        <li><strong>Prolonged course (4–6 weeks minimum)</strong> — Organisms in biofilm are metabolically slow (stationary phase) and less susceptible; sustained therapy is needed to prevent relapse.</li>
+        <li><strong>Parenteral (IV) route</strong> — Ensures reliable high serum levels; oral absorption is too variable for the drug concentrations required.</li>
+        <li><strong>Guided by blood culture sensitivities</strong> — Empirical therapy is started, then adjusted to the specific organism and its MIC (minimum inhibitory concentration).</li>
+      </ul>`,
+      enc_ok:'Excellent — you identified all the key principles of IE antibiotic therapy!',
+      enc_part:'Good. The critical principles are: bactericidal (not bacteriostatic), prolonged (4–6 weeks), IV route, and guided by sensitivities. Make sure you explain WHY each principle applies.',
+      enc_no:'IE principles: (1) bactericidal drugs (vegetation prevents phagocytosis), (2) high doses (poor antibiotic penetration into biofilm), (3) 4–6 weeks (organisms in stationary phase need sustained killing), (4) IV route (reliable levels), (5) sensitivity-guided.'
+    },
+    {
+      id:'ie7', badge:'Q7',
+      text:'Why is combination antibiotic therapy sometimes used in infective endocarditis?',
+      hint:'What is the pharmacological benefit of combining two antibiotics? Give an example.',
+      keys:['synergy','synergistic','gentamicin','aminoglycoside','penicillin','beta-lactam','enterococcus','combination','resistance'],
+      partial:['two drugs','bactericidal','additive','cell wall','ribosome','penetration','broad'],
+      explanation:`<ul>
+        <li><strong>Primary reason — Synergy:</strong> Combining two agents achieves greater bactericidal activity than either drug alone.
+          <ul>
+            <li>Classic example: <strong>penicillin/ampicillin + gentamicin</strong> for Enterococcal IE</li>
+            <li>Beta-lactam disrupts the cell wall → ↑ permeability → aminoglycoside (gentamicin) enters more easily → inhibits ribosomes → <em>synergistic bactericidal effect</em></li>
+            <li>Enterococcus is inherently resistant to aminoglycosides alone (high-level resistance); the combination overcomes this</li>
+          </ul>
+        </li>
+        <li><strong>Broader spectrum coverage</strong> — for polymicrobial infections or when the organism is unknown (empirical therapy covers both gram-positive and gram-negative organisms).</li>
+        <li><strong>Prevention of resistance emergence</strong> — combining two mechanisms of action reduces the chance of selecting resistant mutants.</li>
+        <li><strong>Trade-offs:</strong> Gentamicin adds nephrotoxicity and ototoxicity risk; current guidelines limit its use to the first few days or avoid it in some settings.</li>
+      </ul>`,
+      enc_ok:'Well explained — synergy and the penicillin + gentamicin example are correct!',
+      enc_part:'Good. The key point is synergy — the two drugs work at different sites so that together they are more bactericidal than either alone. Use the beta-lactam + aminoglycoside example.',
+      enc_no:'Combination is used for synergy: penicillin (disrupts cell wall) + gentamicin (inhibits ribosomes) → greater bactericidal effect together than either alone. Particularly important for Enterococcal IE where aminoglycosides alone are ineffective.'
+    },
+    {
+      id:'ie8', badge:'Q8',
+      text:'Describe one mechanism of antibiotic resistance relevant to infective endocarditis.',
+      hint:'Multiple mechanisms exist — describe any one clearly with the pharmacological basis.',
+      keys:['beta-lactamase','mrsa','pbp2a','meca','biofilm','efflux','enzyme','modify','vancomycin'],
+      partial:['resistance','penicillin','staphylococcus','cell wall','antibiotic','mutant','pump'],
+      explanation:`<strong>All recognised resistance mechanisms</strong> (any one with explanation is acceptable):<ul>
+        <li><strong>Beta-lactamase production</strong> — e.g. penicillinase-producing S. aureus: enzyme hydrolyses the beta-lactam ring → inactivates penicillin. Overcome by: beta-lactamase-stable antibiotics (flucloxacillin) or inhibitor combinations (amoxicillin-clavulanate).</li>
+        <li><strong>Altered penicillin-binding proteins (PBPs)</strong> — MRSA produces PBP2a encoded by mecA gene; low affinity for all beta-lactams → beta-lactam resistance. Overcome by: vancomycin, daptomycin.</li>
+        <li><strong>Biofilm-mediated resistance</strong> — bacteria in vegetation biofilm are in stationary phase (↓ metabolic rate); polysaccharide matrix reduces antibiotic penetration → dramatically reduced susceptibility. Not overcome by a single antibiotic class — requires prolonged therapy.</li>
+        <li><strong>Aminoglycoside-modifying enzymes</strong> — acetyltransferases, phosphotransferases in Enterococcus → high-level aminoglycoside resistance. Overcome by: combination with cell-wall-active agent (synergy mechanism).</li>
+        <li><strong>Efflux pumps</strong> — actively export antibiotics from bacterial cells; seen in gram-negative organisms and staphylococci.</li>
+      </ul>`,
+      enc_ok:'Correct mechanism with a clear pharmacological explanation!',
+      enc_part:'Good. Make sure you explain the specific molecular mechanism — not just that resistance exists, but HOW the bacterium resists the drug (and how it can be overcome).',
+      enc_no:'Key mechanisms: (1) beta-lactamase (destroys penicillin\'s ring → use flucloxacillin or add clavulanate); (2) PBP2a in MRSA (low affinity for beta-lactams → use vancomycin); (3) biofilm (reduces antibiotic penetration → need prolonged therapy).'
+    },
+    {
+      id:'ie9', badge:'Q9',
+      text:'What prophylactic measures are recommended before dental procedures in patients at risk of infective endocarditis?',
+      hint:'Who is considered high risk? What drug, dose, and timing are used?',
+      keys:['amoxicillin','penicillin','prophylaxis','dental','high risk','prosthetic','congenital','rheumatic'],
+      partial:['antibiotic','prophylactic','before','procedure','single dose','clindamycin','allergy','oral hygiene'],
+      explanation:`<ul>
+        <li><strong>Who receives prophylaxis:</strong> Only high-risk patients (NICE guidelines):
+          <ul>
+            <li>Prosthetic cardiac valves (mechanical or biological)</li>
+            <li>Previous infective endocarditis</li>
+            <li>Unrepaired cyanotic congenital heart disease</li>
+            <li>Repaired CHD with residual defects or prosthetic material (within 6 months of repair)</li>
+            <li>Cardiac transplant recipients with valvulopathy</li>
+          </ul>
+        </li>
+        <li><strong>Note:</strong> Routine antibiotic prophylaxis for all RHD patients before dental procedures is <em>no longer recommended by NICE</em> (2008) — only for the above high-risk groups.</li>
+        <li><strong>Drug regimen:</strong> <strong>Amoxicillin 3 g oral</strong> single dose, 30–60 minutes before the procedure.</li>
+        <li><strong>If penicillin-allergic:</strong> Clindamycin 600 mg or azithromycin 500 mg (single dose).</li>
+        <li><strong>Most important long-term measure:</strong> <strong>Good oral hygiene</strong> — reduces daily bacteraemia from routine activities (chewing, tooth brushing) → most effective prevention over time.</li>
+      </ul>`,
+      enc_ok:'Well answered — correct drug, indication, and the important caveat about oral hygiene!',
+      enc_part:'Good. Remember: amoxicillin 3 g single dose, 30–60 min before the procedure. Also note that prophylaxis is now only for specifically high-risk groups, not all RHD patients.',
+      enc_no:'High-risk patients (prosthetic valve, previous IE, unrepaired cyanotic CHD) receive amoxicillin 3 g orally 30–60 min before dental procedures. If penicillin-allergic: clindamycin 600 mg. Best long-term prevention: excellent oral hygiene.'
+    }
+  ]
+},
+{
+  id:'mi', num:5, title:'Myocardial Infarction', depts:'Anatomy · Biochemistry · Pathology · Pharmacology',
+  vignette:'A 58-year-old diabetic male presents with severe chest pain radiating to the left arm for 2 hours. ECG shows ST elevation in leads II, III, and aVF. Serum troponin is elevated. Lipid profile: LDL 4.8 mmol/L, HDL 0.8 mmol/L.',
+  qs:[
+    {
+      id:'mi1', badge:'Q1',
+      text:'Identify the coronary artery most likely involved and explain why.',
+      hint:'Which ECG leads show ST elevation, and which territory does that represent?',
+      keys:['right coronary','rca','inferior','leads ii','leads iii','avf','posterior descending','av node','sa node'],
+      partial:['right','coronary','artery','inferior wall','posterior','dominant','territory'],
+      explanation:`<ul>
+        <li><strong>Artery occluded: Right Coronary Artery (RCA)</strong></li>
+        <li><strong>ECG reasoning:</strong> Leads II, III, and aVF are the <em>inferior leads</em> — they face the inferior wall of the left ventricle (and right ventricle).</li>
+        <li><strong>RCA territory (right-dominant, 85% of people):</strong>
+          <ul>
+            <li>Inferior wall of LV (via posterior descending artery, PDA)</li>
+            <li>Posterior interventricular septum</li>
+            <li>Right ventricle</li>
+            <li>SA node (60% of people)</li>
+            <li>AV node (80–90% of people)</li>
+          </ul>
+        </li>
+        <li><strong>Clinical implication:</strong> RCA occlusion → inferior STEMI + risk of <strong>bradyarrhythmias and AV block</strong> (from AV nodal artery occlusion) — important to anticipate in management.</li>
+        <li>Also: right ventricular infarction is common in inferior MI (RCA supplies RV) → hypotension without pulmonary oedema; management differs (fluid loading, avoid nitrates).</li>
+      </ul>`,
+      enc_ok:'Correct artery identified with good reasoning from the ECG leads!',
+      enc_part:'Good. Make sure you explain the ECG basis (leads II/III/aVF = inferior territory = RCA territory) and mention the clinically important complication of AV block.',
+      enc_no:'Leads II, III, aVF = inferior territory → Right Coronary Artery (RCA) occlusion. In right-dominant hearts (85%), the RCA supplies the inferior LV, posterior septum, and the AV node → risk of AV block in inferior MI.'
+    },
+    {
+      id:'mi2', badge:'Q2',
+      text:'Describe coronary dominance — what does it mean and why does it matter clinically?',
+      hint:'Which artery gives rise to the posterior descending artery (PDA)? What are the clinical implications?',
+      keys:['posterior descending','pda','dominant','right dominant','left dominant','codominant','av node','left circumflex','rca'],
+      partial:['dominance','dominant','coronary','posterior','territory','artery'],
+      explanation:`<ul>
+        <li><strong>Definition:</strong> Coronary dominance is defined by which artery gives rise to the <strong>posterior descending artery (PDA)</strong>, which supplies the inferior LV wall and posterior interventricular septum.</li>
+        <li><strong>Types:</strong>
+          <ul>
+            <li><strong>Right dominant (~85%)</strong> — RCA gives rise to PDA</li>
+            <li><strong>Left dominant (~8%)</strong> — Left circumflex artery (LCx) gives rise to PDA</li>
+            <li><strong>Codominant (~7%)</strong> — Both RCA and LCx contribute to PDA</li>
+          </ul>
+        </li>
+        <li><strong>Clinical importance:</strong>
+          <ul>
+            <li>Determines which vessel is responsible for inferior MI — in left-dominant anatomy, LCx occlusion (not RCA) causes inferior MI</li>
+            <li>Guides coronary angiography and PCI — interventionalist must know which vessel to target</li>
+            <li>Right-dominant: RCA also supplies AV node → inferior MI from RCA has high risk of AV block</li>
+            <li>Right ventricular infarction is primarily a right-dominant complication</li>
+          </ul>
+        </li>
+      </ul>`,
+      enc_ok:'Well explained — dominance correctly defined with clinical implications!',
+      enc_part:'Good. Make sure you define dominance by which artery gives rise to the PDA (not just which is "bigger"), and give the approximate percentages of each type.',
+      enc_no:'Dominance = which artery gives rise to the PDA. Right dominant (85%): RCA → PDA → inferior MI from RCA occlusion → risk AV block. Left dominant (8%): LCx → PDA → inferior MI from LCx occlusion. Clinically important for angiography planning.'
+    },
+    {
+      id:'mi3', badge:'Q3',
+      text:'Explain the biochemical basis of troponin elevation in myocardial infarction.',
+      hint:'What happens to the cardiomyocyte cell membrane during ischaemia? How does troponin get into the blood?',
+      keys:['ischaemia','atp','membrane','sarcomere','leak','damage','release','oxidative phosphorylation'],
+      partial:['troponin','cardiomyocyte','cell','damage','ischaemia','hypoxia','oxygen','rise'],
+      explanation:`<ul>
+        <li><strong>Ischaemia → ATP depletion:</strong> Coronary occlusion stops oxidative phosphorylation within seconds → ATP falls rapidly.</li>
+        <li><strong>Cascade of cell damage:</strong>
+          <ul>
+            <li>ATP depletion → Na⁺/K⁺-ATPase fails → Na⁺ accumulates inside cell → Ca²⁺ enters via Na⁺/Ca²⁺ exchanger → Ca²⁺ overload → mitochondrial dysfunction</li>
+            <li>Cellular swelling → cell membrane disruption → becomes permeable</li>
+          </ul>
+        </li>
+        <li><strong>Troponin release:</strong>
+          <ul>
+            <li>Initially, cytosolic (free) troponin I (cTnI) leaks across the damaged membrane into blood</li>
+            <li>Later, structural (sarcomere-bound) troponin is released as myofibrils disintegrate</li>
+          </ul>
+        </li>
+        <li><strong>Time course:</strong> Rise at 3–4 h → peak 12–24 h → detectable for 7–14 days (useful for late presenters).</li>
+        <li><strong>Why troponin specifically:</strong> cTnI and cTnT are cardiac-specific isoforms → highly specific for myocardial injury.</li>
+      </ul>`,
+      enc_ok:'Excellent biochemistry — you traced the pathway from ischaemia to troponin release clearly!',
+      enc_part:'Good. Make sure you explain the chain: ischaemia → ATP depletion → membrane damage → troponin leaks out. Include the time course (rises 3–4 h, peaks 12–24 h).',
+      enc_no:'Ischaemia → ATP depletion → Na⁺/K⁺-ATPase fails → Ca²⁺ overload → membrane rupture → troponin (a sarcomeric protein) leaks into blood. Rises at 3–4 h, peaks 12–24 h, stays elevated for 7–14 days.'
+    },
+    {
+      id:'mi4', badge:'Q4',
+      text:'Compare troponin and CK-MB as diagnostic markers for myocardial infarction.',
+      hint:'Consider: specificity, sensitivity, time of rise, duration, and clinical utility.',
+      keys:['troponin','ck-mb','specificity','sensitivity','specific','skeletal','cardiac','duration','14 days','48 hours','re-infarction'],
+      partial:['marker','biomarker','compare','cardiac','enzyme','rise','peak','detect'],
+      explanation:`<table style="width:100%;font-size:.83rem;border-collapse:collapse">
+        <tr style="background:#f0f0f0"><th style="padding:5px 8px;text-align:left;border:1px solid #ddd">Feature</th><th style="padding:5px 8px;border:1px solid #ddd">Troponin (cTnI/cTnT)</th><th style="padding:5px 8px;border:1px solid #ddd">CK-MB</th></tr>
+        <tr><td style="padding:5px 8px;border:1px solid #ddd">Specificity</td><td style="padding:5px 8px;border:1px solid #ddd">High — cardiac isoforms not in skeletal muscle</td><td style="padding:5px 8px;border:1px solid #ddd">Lower — CK-MB also in skeletal muscle (rhabdomyolysis, polymyositis)</td></tr>
+        <tr><td style="padding:5px 8px;border:1px solid #ddd">Sensitivity</td><td style="padding:5px 8px;border:1px solid #ddd">Superior — detects minor/small infarcts</td><td style="padding:5px 8px;border:1px solid #ddd">Lower sensitivity for small infarcts</td></tr>
+        <tr><td style="padding:5px 8px;border:1px solid #ddd">Rise</td><td style="padding:5px 8px;border:1px solid #ddd">3–4 hours</td><td style="padding:5px 8px;border:1px solid #ddd">3–4 hours</td></tr>
+        <tr><td style="padding:5px 8px;border:1px solid #ddd">Peak</td><td style="padding:5px 8px;border:1px solid #ddd">12–24 hours</td><td style="padding:5px 8px;border:1px solid #ddd">12–24 hours</td></tr>
+        <tr><td style="padding:5px 8px;border:1px solid #ddd">Duration elevated</td><td style="padding:5px 8px;border:1px solid #ddd"><strong>7–14 days</strong></td><td style="padding:5px 8px;border:1px solid #ddd"><strong>48–72 hours</strong></td></tr>
+        <tr><td style="padding:5px 8px;border:1px solid #ddd">Clinical use</td><td style="padding:5px 8px;border:1px solid #ddd">Gold standard; late presenters; high-sensitivity assays now available</td><td style="padding:5px 8px;border:1px solid #ddd">Potentially useful for detecting <strong>re-infarction</strong> (troponin may still be elevated from first MI)</td></tr>
+      </table>`,
+      enc_ok:'Excellent comparison — all key differences identified!',
+      enc_part:'Good effort. Focus on three key differences: cardiac specificity (troponin is more specific), duration of elevation (troponin 7–14 days vs CK-MB 48–72 h), and re-infarction detection (CK-MB\'s advantage).',
+      enc_no:'Key differences: Troponin is cardiac-specific and stays elevated 7–14 days (better for late presenters). CK-MB is less specific and normalises in 48–72 h — making it useful for detecting re-infarction (when troponin is still elevated from the first MI). Troponin is now the gold standard.'
+    },
+    {
+      id:'mi5', badge:'Q5',
+      text:'Describe the sequence of pathological changes following myocardial infarction from onset to scar formation.',
+      hint:'Go through each time period: 0–6 h, 6–24 h, 1–3 days, 3–7 days, 1–3 weeks, 1–3 months.',
+      keys:['coagulative necrosis','neutrophil','macrophage','granulation tissue','scar','fibrosis','hypereosinophilia','wavy','rupture'],
+      partial:['necrosis','inflammation','fibrosis','healing','scar','infiltrate','3-7 days','weeks'],
+      explanation:`<ul>
+        <li><strong>0–6 hours:</strong> No light microscopic change. EM: wavy fibres, mitochondrial swelling. Irreversible injury by 20–40 min.</li>
+        <li><strong>6–24 hours:</strong> Coagulative necrosis — hypereosinophilia, nuclear pyknosis/karyolysis, loss of cross-striations. Neutrophil infiltration begins.</li>
+        <li><strong>1–3 days:</strong> Dense neutrophil infiltration ("demolition phase") — phagocytosis of necrotic debris. Gross: pale/yellow infarct.</li>
+        <li><strong>3–7 days:</strong> Macrophage infiltration replaces neutrophils. Granulation tissue begins at periphery. <strong>Maximum softening of the infarct wall → highest risk of rupture</strong> (free wall, papillary muscle, VSD). Central softening, yellow tissue.</li>
+        <li><strong>1–3 weeks:</strong> Progressive granulation tissue — neovascularisation, fibroblast proliferation, early collagen deposition.</li>
+        <li><strong>1–3 months:</strong> Dense collagenous scar — pale grey, firm, contracted. Non-contractile → regional wall motion abnormality. Electrically heterogeneous border → arrhythmia substrate. May progress to ventricular remodelling and heart failure.</li>
+      </ul>`,
+      enc_ok:'Excellent — you described the full sequence accurately with the key clinical correlates!',
+      enc_part:'Good. Make sure you include the time points (0–6 h, 6–24 h, 3–7 days, weeks, months) and mention that days 3–7 is the highest risk period for cardiac rupture.',
+      enc_no:'Sequence: 0–6 h (no change on LM) → 6–24 h (coagulative necrosis, neutrophils) → 3–7 days (macrophages, granulation tissue, MAXIMUM RUPTURE RISK) → 1–3 weeks (granulation tissue) → 1–3 months (fibrous scar).'
+    },
+    {
+      id:'mi6', badge:'Q6',
+      text:'What is the most common underlying cause of myocardial infarction?',
+      hint:'Think about the pathological process in the coronary arteries over years.',
+      keys:['atherosclerosis','plaque','rupture','thrombosis','thrombus','coronary artery disease','ldl','foam cell','fibrous cap'],
+      partial:['atheroma','plaque','lipid','cholesterol','coronary','artery','occlusion','clot'],
+      explanation:`<ul>
+        <li><strong>Most common cause: Atherosclerotic coronary artery disease complicated by plaque rupture and thrombosis.</strong></li>
+        <li><strong>The atherosclerotic process:</strong>
+          <ul>
+            <li>LDL enters the intima → oxidised by ROS → ox-LDL</li>
+            <li>Monocytes recruited → differentiate into macrophages → engulf ox-LDL via scavenger receptors → <strong>foam cells</strong> → fatty streak</li>
+            <li>Smooth muscle cells migrate from media → secrete collagen → fibrous cap forms over lipid core → <strong>atherosclerotic plaque</strong></li>
+          </ul>
+        </li>
+        <li><strong>Vulnerable (unstable) plaque:</strong> Thin fibrous cap + large lipid core + macrophage-rich shoulders → prone to rupture.</li>
+        <li><strong>Plaque rupture:</strong> Exposes subendothelial collagen and lipid → platelet adhesion and aggregation → fibrin clot → acute coronary thrombosis → complete coronary occlusion → <strong>STEMI</strong>.</li>
+        <li><strong>Risk factors</strong> accelerating atherosclerosis in this patient: diabetes mellitus (↑ oxidative stress, glycation of LDL), dyslipidaemia (↑ LDL 4.8 mmol/L, ↓ HDL 0.8 mmol/L), likely smoking.</li>
+      </ul>`,
+      enc_ok:'Well explained — you described the full atherosclerotic pathway to MI!',
+      enc_part:'Good. The key sequence is: atherosclerosis (foam cells → plaque) → vulnerable plaque → rupture → platelet aggregation → thrombosis → coronary occlusion. Make sure this chain is in your answer.',
+      enc_no:'The cause is atherosclerotic plaque rupture → coronary thrombosis → occlusion. Years of LDL deposition → foam cells → fibrous plaque → vulnerable plaque ruptures → platelets aggregate → clot forms → total occlusion → STEMI.'
+    },
+    {
+      id:'mi7', badge:'Q7',
+      text:'What complications may occur within the first 24 hours of myocardial infarction?',
+      hint:'Think electrical, haemodynamic, and structural complications in the early period.',
+      keys:['arrhythmia','ventricular fibrillation','vf','cardiogenic shock','heart failure','pulmonary oedema','bradycardia','av block'],
+      partial:['complication','rhythm','shock','failure','early','acute','electrical','cardiac'],
+      explanation:`<strong>Early (within 24 hours) complications:</strong><ul>
+        <li><strong>Arrhythmias</strong> — most common early complication:
+          <ul>
+            <li>Ventricular fibrillation (VF) — leading cause of early death; treated with immediate defibrillation</li>
+            <li>Ventricular tachycardia (VT)</li>
+            <li>Bradyarrhythmias and AV block — especially in inferior MI (AV nodal ischaemia from RCA occlusion)</li>
+            <li>Accelerated idioventricular rhythm (AIVR) — "reperfusion arrhythmia" after thrombolysis/PCI</li>
+          </ul>
+        </li>
+        <li><strong>Acute LV failure / pulmonary oedema</strong> — extensive LV dysfunction → ↑ LVEDP → ↑ LA pressure → pulmonary venous hypertension → breathlessness, crackles.</li>
+        <li><strong>Cardiogenic shock</strong> — >40% LV myocardium infarcted → severe pump failure → ↓ CO → ↓ BP → ↓ organ perfusion; very high mortality.</li>
+        <li><strong>Right ventricular infarction</strong> (in inferior MI) — hypotension, raised JVP without pulmonary oedema; requires IV fluid loading (not diuretics).</li>
+        <li><strong>Early pericarditis</strong> (within 24–48 h) — fibrinous pericarditis overlying the infarct zone → pleuritic chest pain, friction rub.</li>
+      </ul>`,
+      enc_ok:'Comprehensive early complication list — well done!',
+      enc_part:'Good. The must-knows are: VF (commonest cause of early death), cardiogenic shock (>40% LV damage), acute LV failure/pulmonary oedema, and AV block in inferior MI.',
+      enc_no:'Within 24 hours: (1) VF/VT → sudden cardiac death, (2) AV block (inferior MI), (3) acute LV failure → pulmonary oedema, (4) cardiogenic shock (if >40% LV infarcted), (5) RV infarction (inferior MI → hypotension without pulmonary oedema).'
+    },
+    {
+      id:'mi8', badge:'Q8',
+      text:'What structural complication occurs 3–7 days post-MI and why is this the most dangerous period?',
+      hint:'What is happening to the necrotic wall at this time point? What can rupture?',
+      keys:['rupture','softening','neutrophil','enzyme','collagen','granulation','weakest','cardiac rupture','papillary','vsd'],
+      partial:['rupture','wall','3-7','soften','necrotic','structural','weak','complication'],
+      explanation:`<ul>
+        <li><strong>Main structural complication: Cardiac rupture</strong> — of the free wall, papillary muscle, or interventricular septum (VSD).</li>
+        <li><strong>Why days 3–7 is most dangerous:</strong>
+          <ul>
+            <li>Neutrophils have released proteolytic enzymes (matrix metalloproteinases, elastases, collagenases) that have digested the necrotic myocardium → <strong>maximum softening ("yellow softening")</strong></li>
+            <li>Fibroblasts and granulation tissue have not yet laid down new collagen to restore structural integrity</li>
+            <li>The necrotic wall is therefore at its <em>weakest point</em> between days 3–7</li>
+          </ul>
+        </li>
+        <li><strong>Types of rupture:</strong>
+          <ul>
+            <li><strong>Free wall rupture</strong> → haemopericardium → cardiac tamponade → Beck's triad (↓ BP, ↑ JVP, muffled heart sounds) → sudden death</li>
+            <li><strong>Papillary muscle rupture</strong> (posterior more common — single RCA supply) → acute severe mitral regurgitation → acute pulmonary oedema</li>
+            <li><strong>VSD rupture</strong> → acute left-to-right shunt → biventricular failure → new pansystolic murmur</li>
+          </ul>
+        </li>
+        <li>All are <strong>surgical emergencies</strong> with high mortality.</li>
+      </ul>`,
+      enc_ok:'Excellent — you explained why days 3–7 are the most dangerous and described the types of rupture!',
+      enc_part:'Good. Explain the mechanism of why the wall is weakest at this time: neutrophil enzymes have digested the tissue but granulation tissue/collagen has not yet replaced it.',
+      enc_no:'Days 3–7 = maximum softening: neutrophil enzymes digest necrotic tissue, but collagen replacement hasn\'t started yet. The wall is at its weakest → risk of: (1) free wall rupture → tamponade, (2) papillary muscle rupture → acute MR, (3) VSD rupture → left-to-right shunt.'
+    },
+    {
+      id:'mi9', badge:'Q9',
+      text:'Name two drugs used in acute management of MI and explain their roles.',
+      hint:'Multiple drugs are used. Name any two with clear explanations.',
+      keys:['aspirin','ticagrelor','clopidogrel','heparin','gtn','morphine','oxygen','antiplatelet','anticoagulant'],
+      partial:['platelet','thrombus','pain','anticoagul','clot','nitrate','dual antiplatelet','dapt'],
+      explanation:`<strong>All acute MI drugs</strong> (any two with mechanisms are acceptable):<ul>
+        <li><strong>Aspirin 300 mg</strong> — irreversibly inhibits COX-1 → ↓ thromboxane A₂ → ↓ platelet aggregation → reduces thrombus propagation</li>
+        <li><strong>P2Y12 inhibitor (ticagrelor 180 mg or clopidogrel)</strong> — blocks ADP receptor on platelets → additional antiplatelet effect; combined with aspirin = DAPT (dual antiplatelet therapy)</li>
+        <li><strong>Heparin / enoxaparin</strong> — activates antithrombin III → inhibits thrombin (IIa) and factor Xa → prevents thrombus extension</li>
+        <li><strong>Sublingual GTN</strong> — → nitric oxide → smooth muscle relaxation → venodilation (↓ preload) + coronary vasodilation → ↓ O₂ demand and ↑ supply</li>
+        <li><strong>IV Morphine</strong> — analgesia; ↓ sympathetic drive; reduces preload and anxiety</li>
+        <li><strong>Oxygen</strong> — supplement only if SpO₂ <94% (hyperoxia worsens reperfusion injury)</li>
+        <li><strong>Beta-blocker (metoprolol)</strong> — ↓ HR and contractility → ↓ O₂ demand; anti-arrhythmic</li>
+      </ul>
+      Then: primary PCI (door-to-balloon <90 min) for definitive reperfusion.`,
+      enc_ok:'Well done — correct drugs with clear mechanisms!',
+      enc_part:'Good. For each drug, make sure you state the mechanism (which receptor/enzyme is blocked and what the downstream effect is on the heart).',
+      enc_no:'The main acute MI drugs are: Aspirin (COX-1 inhibitor → ↓ thromboxane A₂ → ↓ platelet aggregation) and a P2Y12 inhibitor like ticagrelor (blocks ADP receptor → ↓ aggregation) = DAPT. Plus heparin, GTN, and morphine. Any two with mechanisms are fine.'
+    },
+    {
+      id:'mi10', badge:'Q10',
+      text:'What is the role of beta-blockers post-MI? Explain both the immediate and long-term benefits.',
+      hint:'Why is the heart vulnerable after MI, and how does beta-blockade help acutely and in the long term?',
+      keys:['heart rate','oxygen demand','remodelling','arrhythmia','mortality','contractility','beta-1','sympathetic','carvedilol','bisoprolol','metoprolol'],
+      partial:['beta blocker','beta-blocker','sympathetic','reduce','infarct','heart failure','death','protection'],
+      explanation:`<ul>
+        <li><strong>Immediate benefits (in hospital):</strong>
+          <ul>
+            <li>↓ Heart rate and contractility → ↓ myocardial O₂ demand → limits infarct extension into the border zone</li>
+            <li>Prolongs diastole → more time for coronary perfusion</li>
+            <li>Anti-arrhythmic — ↓ sympathetic tone → raises VF threshold → reduces sudden cardiac death risk</li>
+          </ul>
+        </li>
+        <li><strong>Long-term benefits:</strong>
+          <ul>
+            <li>Prevent ventricular remodelling — catecholamine-driven remodelling causes LV dilatation and dysfunction; beta-blockade attenuates this → preserves LV geometry and EF</li>
+            <li>Proven reduction in <strong>all-cause mortality and sudden cardiac death</strong> post-MI</li>
+            <li>Benefit in heart failure with reduced EF (HFrEF) — carvedilol, bisoprolol, and metoprolol succinate have all shown significant mortality reduction in large RCTs</li>
+          </ul>
+        </li>
+        <li><strong>When to start:</strong> Initiate when haemodynamically stable (not in cardiogenic shock, severe bradycardia, or significant AV block).</li>
+        <li>Example drugs: carvedilol (beta-1, beta-2, alpha-1 blocker); bisoprolol (selective beta-1).</li>
+      </ul>`,
+      enc_ok:'Excellent — you covered both immediate (anti-ischaemic, anti-arrhythmic) and long-term (anti-remodelling, mortality) benefits!',
+      enc_part:'Good. Make sure you distinguish the immediate benefits (↓ O₂ demand, anti-arrhythmic) from the long-term benefits (prevent remodelling, reduce mortality in HFrEF).',
+      enc_no:'Immediate: ↓ HR → ↓ O₂ demand → limit infarct size; ↓ arrhythmias. Long-term: prevent ventricular remodelling; proven to reduce mortality post-MI and in heart failure (HFrEF). Start when haemodynamically stable.'
+    }
+  ]
+}
+];
+
+/* ══════════════════════════════════════════════════
+   GRADING ENGINE (keyword-based, no API needed)
+══════════════════════════════════════════════════ */
+function grade(text, keys, partial){
+  const t = text.toLowerCase();
+  const hitKeys = keys.filter(k => t.includes(k.toLowerCase()));
+  const hitPartial = partial.filter(k => t.includes(k.toLowerCase()));
+  const keyScore = hitKeys.length / keys.length;
+  if(keyScore >= 0.5) return 'ok';
+  if(keyScore >= 0.25 || hitPartial.length >= 2) return 'part';
+  return 'no';
+}
+
+/* ══════════════════════════════════════════════════
+   RENDER
+══════════════════════════════════════════════════ */
+const nav = document.getElementById('snav');
+const pg  = document.getElementById('pg');
+
+CASES.forEach((cas, ci) => {
+  // nav btn
+  const btn = document.createElement('button');
+  btn.className = 'snav-btn' + (ci===0?' on':'');
+  btn.id = `nb${ci}`;
+  btn.textContent = `Case ${cas.num}: ${cas.title}`;
+  btn.onclick = () => document.getElementById(`cb${ci}`).scrollIntoView({behavior:'smooth',block:'start'});
+  nav.appendChild(btn);
+
+  // case block
+  const block = document.createElement('section');
+  block.className = 'cb';
+  block.id = `cb${ci}`;
+
+  let html = `
+    <div class="ch">
+      <div class="ch-eye">Case ${cas.num}</div>
+      <div class="ch-title">${cas.title}</div>
+      <div class="ch-dept">${cas.depts}</div>
+    </div>
+    <div class="vig">
+      <div class="vig-lbl">Clinical Vignette</div>
+      <p>${cas.vignette}</p>
+    </div>
+  `;
+
+  cas.qs.forEach(q => {
+    html += `
+      <div class="qc" id="qc-${q.id}">
+        <div class="qt">
+          <div class="qb">${q.badge}</div>
+          <div>
+            <div class="qtx">${q.text}</div>
+            <div class="qhint">Hint: ${q.hint}</div>
+          </div>
+        </div>
+        <textarea class="qa" id="ta-${q.id}" placeholder="Write your answer here…" rows="4"></textarea><br>
+        <button class="sbtn" id="sb-${q.id}" onclick="submit('${q.id}')">Submit answer</button>
+        <div class="fb" id="fb-${q.id}">
+          <div class="fb-lbl" id="fbl-${q.id}"></div>
+          <div class="fb-sum" id="fbs-${q.id}"></div>
+          <div class="fb-exp" id="fbe-${q.id}"></div>
+          <div class="fb-enc" id="fbenc-${q.id}"></div>
+        </div>
+        <button class="rbtn" id="rb-${q.id}" onclick="retry('${q.id}')">↺ Try again</button>
+      </div>
+    `;
+  });
+
+  block.innerHTML = html;
+  pg.appendChild(block);
+
+  if(ci < CASES.length - 1){
+    const hr = document.createElement('hr');
+    hr.className = 'cb-hr';
+    pg.appendChild(hr);
+  }
+});
+
+/* build answer map */
+const ANS = {};
+CASES.forEach(cas => cas.qs.forEach(q => { ANS[q.id] = q; }));
+
+function submit(qid){
+  const ta  = document.getElementById(`ta-${qid}`);
+  const sb  = document.getElementById(`sb-${qid}`);
+  const fb  = document.getElementById(`fb-${qid}`);
+  const rb  = document.getElementById(`rb-${qid}`);
+  const q   = ANS[qid];
+  const txt = ta.value.trim();
+
+  if(!txt){ ta.style.borderColor='#e0807a'; ta.focus(); return; }
+
+  const verdict = grade(txt, q.keys, q.partial);
+  const labels  = {ok:'✓  Correct', part:'◑  Partially Correct', no:'✗  Incorrect'};
+  const summs   = {
+    ok:'Great answer! You covered the key points.',
+    part:'You\'ve got some of it right, but there are important points missing — see the explanation below.',
+    no:'Not quite — review the explanation below and try again.'
+  };
+
+  document.getElementById(`fbl-${qid}`).textContent = labels[verdict];
+  document.getElementById(`fbs-${qid}`).textContent = summs[verdict];
+  document.getElementById(`fbe-${qid}`).innerHTML = q.explanation;
+  document.getElementById(`fbenc-${qid}`).textContent = q[`enc_${verdict}`] || '';
+
+  fb.className = `fb show ${verdict}`;
+  ta.disabled  = true;
+  sb.disabled  = true;
+  rb.style.display = 'inline-block';
+}
+
+function retry(qid){
+  const ta = document.getElementById(`ta-${qid}`);
+  const sb = document.getElementById(`sb-${qid}`);
+  const fb = document.getElementById(`fb-${qid}`);
+  const rb = document.getElementById(`rb-${qid}`);
+  ta.value = ''; ta.disabled = false; ta.style.borderColor = '';
+  sb.disabled = false;
+  fb.className = 'fb'; rb.style.display = 'none';
+  ta.focus();
+}
+
+/* active nav highlight */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      const i = e.target.id.replace('cb','');
+      document.querySelectorAll('.snav-btn').forEach((b,j) => b.classList.toggle('on', j==i));
+    }
+  });
+},{threshold:0.2});
+CASES.forEach((_,ci) => { const el=document.getElementById(`cb${ci}`); if(el) obs.observe(el); });
+</script>
+</body>
+</html>
