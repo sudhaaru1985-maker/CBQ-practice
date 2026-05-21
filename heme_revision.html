@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Haematology Revision – MBBS Year 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lora:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red:    #c0392b;
+    --red-lt: #f9e9e8;
+    --red-md: #e8a09a;
+    --blue:   #1a5276;
+    --blue-lt:#eaf2fb;
+    --green:  #1e8449;
+    --green-lt:#e9f7ef;
+    --amber:  #d68910;
+    --amber-lt:#fef9e7;
+    --purple: #6c3483;
+    --purple-lt:#f5eef8;
+    --grey:   #5d6d7e;
+    --bg:     #f4f6f9;
+    --white:  #ffffff;
+    --shadow: 0 4px 18px rgba(0,0,0,.10);
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; margin:0; padding:0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    background: var(--bg);
+    color: #1c2833;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, var(--red) 0%, #922b21 100%);
+    color: white;
+    padding: 28px 24px 22px;
+    text-align: center;
+    box-shadow: 0 3px 12px rgba(0,0,0,.20);
+  }
+  header h1 { font-size: 28px; font-weight: 900; letter-spacing: -.5px; }
+  header p  { font-size: 15px; margin-top: 6px; opacity: .88; }
+
+  /* ── PROGRESS BAR ── */
+  #progress-wrap {
+    background: rgba(255,255,255,.25);
+    border-radius: 30px;
+    height: 10px;
+    margin: 14px auto 0;
+    max-width: 420px;
+    overflow: hidden;
+  }
+  #progress-bar {
+    height: 100%;
+    background: #f9e79f;
+    border-radius: 30px;
+    transition: width .5s ease;
+    width: 0%;
+  }
+  #progress-label { font-size: 13px; margin-top: 6px; opacity: .85; }
+
+  /* ── NAV TABS ── */
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 18px 16px 0;
+    justify-content: center;
+  }
+  nav button {
+    background: var(--white);
+    border: 2px solid #d5d8dc;
+    border-radius: 30px;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 9px 18px;
+    transition: all .2s;
+    color: var(--grey);
+  }
+  nav button.active, nav button:hover {
+    background: var(--red);
+    border-color: var(--red);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(192,57,43,.35);
+  }
+
+  /* ── MAIN CONTAINER ── */
+  main { padding: 20px 16px 50px; max-width: 860px; margin: 0 auto; }
+
+  section.topic { display: none; }
+  section.topic.active { display: block; }
+
+  .section-title {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--red);
+    margin-bottom: 6px;
+  }
+  .section-subtitle {
+    font-size: 15px;
+    color: var(--grey);
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 22px 24px;
+    margin-bottom: 22px;
+  }
+  .card-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .tag {
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 20px;
+    padding: 3px 11px;
+    letter-spacing: .3px;
+    text-transform: uppercase;
+  }
+  .tag-red    { background: var(--red-lt); color: var(--red); }
+  .tag-blue   { background: var(--blue-lt); color: var(--blue); }
+  .tag-green  { background: var(--green-lt); color: var(--green); }
+  .tag-amber  { background: var(--amber-lt); color: var(--amber); }
+  .tag-purple { background: var(--purple-lt); color: var(--purple); }
+
+  /* ── KEY POINT BOX ── */
+  .key-box {
+    border-left: 5px solid var(--red);
+    background: var(--red-lt);
+    border-radius: 0 10px 10px 0;
+    padding: 12px 16px;
+    font-size: 15px;
+    font-weight: 700;
+    margin: 14px 0;
+    color: var(--red);
+  }
+  .key-box.blue   { border-color: var(--blue); background: var(--blue-lt); color: var(--blue); }
+  .key-box.green  { border-color: var(--green); background: var(--green-lt); color: var(--green); }
+  .key-box.amber  { border-color: var(--amber); background: var(--amber-lt); color: var(--amber); }
+  .key-box.purple { border-color: var(--purple); background: var(--purple-lt); color: var(--purple); }
+
+  /* ── SUMMARY TABLE ── */
+  .tbl-wrap { overflow-x: auto; border-radius: 10px; }
+  table { width:100%; border-collapse: collapse; font-size: 15px; }
+  th { background: var(--red); color: white; padding: 11px 14px; text-align: left; font-size: 14px; }
+  td { padding: 10px 14px; border-bottom: 1px solid #eaecee; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: #fafafa; }
+  th:first-child { border-radius: 10px 0 0 0; }
+  th:last-child  { border-radius: 0 10px 0 0; }
+
+  /* ── MCQ / QUIZ ── */
+  .quiz-q {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.55;
+    margin-bottom: 16px;
+  }
+  .quiz-opts { display: flex; flex-direction: column; gap: 10px; }
+  .quiz-opt {
+    background: #f2f3f4;
+    border: 2px solid #d5d8dc;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 13px 18px;
+    text-align: left;
+    transition: all .18s;
+    width: 100%;
+  }
+  .quiz-opt:hover:not(:disabled) {
+    border-color: var(--blue);
+    background: var(--blue-lt);
+  }
+  .quiz-opt.correct { background: var(--green-lt); border-color: var(--green); color: var(--green); }
+  .quiz-opt.wrong   { background: var(--red-lt); border-color: var(--red); color: var(--red); }
+  .quiz-opt:disabled { cursor: default; }
+  .quiz-feedback {
+    margin-top: 14px;
+    padding: 13px 16px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok  { background: var(--green-lt); color: var(--green); }
+  .quiz-feedback.err { background: var(--red-lt); color: var(--red); }
+  .btn-next {
+    display: none;
+    margin-top: 14px;
+    background: var(--blue);
+    border: none;
+    border-radius: 30px;
+    color: white;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    padding: 11px 28px;
+    transition: background .2s;
+  }
+  .btn-next.show { display: inline-block; }
+  .btn-next:hover { background: #154360; }
+
+  /* ── ACCORDION ── */
+  .accord-btn {
+    background: none;
+    border: 2px solid #d5d8dc;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 13px 18px;
+    text-align: left;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    transition: background .2s;
+    color: var(--blue);
+  }
+  .accord-btn:hover, .accord-btn.open { background: var(--blue-lt); border-color: var(--blue); }
+  .accord-body {
+    display: none;
+    background: var(--blue-lt);
+    border-radius: 0 0 10px 10px;
+    font-size: 15px;
+    line-height: 1.65;
+    margin-top: -8px;
+    margin-bottom: 8px;
+    padding: 14px 18px;
+    border: 2px solid var(--blue);
+    border-top: none;
+  }
+  .accord-body.open { display: block; }
+
+  /* ── MATCH GAME ── */
+  .match-wrap { display: flex; gap: 14px; flex-wrap: wrap; }
+  .match-col  { flex: 1; min-width: 200px; }
+  .match-col h4 { font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; color: var(--grey); margin-bottom: 10px; }
+  .match-item {
+    background: #f2f3f4;
+    border: 2px solid #d5d8dc;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    padding: 11px 14px;
+    transition: all .18s;
+    user-select: none;
+  }
+  .match-item:hover { background: var(--purple-lt); border-color: var(--purple); }
+  .match-item.selected { background: var(--purple-lt); border-color: var(--purple); color: var(--purple); }
+  .match-item.matched  { background: var(--green-lt); border-color: var(--green); color: var(--green); cursor: default; }
+  .match-item.wrong-flash { background: var(--red-lt); border-color: var(--red); }
+  #match-score { font-size: 16px; font-weight: 800; color: var(--green); margin-top: 12px; }
+  #match-reset { margin-top: 8px; background: var(--grey); border: none; border-radius: 30px; color: white; cursor: pointer; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800; padding: 9px 22px; }
+
+  /* ── FLASHCARD ── */
+  .flashcard-wrap { perspective: 900px; height: 200px; cursor: pointer; margin-bottom: 18px; }
+  .flashcard {
+    width: 100%; height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform .5s;
+  }
+  .flashcard.flipped { transform: rotateY(180deg); }
+  .fc-face {
+    position: absolute; top:0; left:0; right:0; bottom:0;
+    border-radius: var(--radius);
+    backface-visibility: hidden;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+    box-shadow: var(--shadow);
+  }
+  .fc-front { background: var(--blue); color: white; }
+  .fc-back  { background: var(--green-lt); color: var(--green); transform: rotateY(180deg); font-size: 15px; }
+  .fc-hint  { position: absolute; bottom: 10px; font-size: 12px; opacity: .6; }
+  .fc-nav   { display: flex; gap: 12px; align-items: center; justify-content: center; }
+  .fc-nav button { background: var(--blue); border: none; border-radius: 30px; color: white; cursor: pointer; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800; padding: 9px 22px; }
+  .fc-nav button:hover { background: #154360; }
+  #fc-counter { font-size: 15px; font-weight: 700; color: var(--grey); }
+
+  /* ── COAG PATHWAY ── */
+  .coag-table td { font-size: 14px; }
+  .coag-table th { font-size: 13px; }
+
+  /* ── SCORE BANNER ── */
+  #score-banner {
+    display: none;
+    background: linear-gradient(135deg, var(--green) 0%, #145a32 100%);
+    border-radius: var(--radius);
+    color: white;
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 22px;
+    padding: 18px 24px;
+    text-align: center;
+  }
+
+  /* ── FILL BLANK ── */
+  .fill-q { font-size: 16px; font-weight: 700; margin-bottom: 10px; line-height: 1.6; }
+  .fill-input {
+    border: 2px solid #d5d8dc;
+    border-radius: 8px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 9px 14px;
+    width: 180px;
+    text-align: center;
+    text-transform: uppercase;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .fill-input:focus { border-color: var(--blue); }
+  .fill-input.ok    { border-color: var(--green); background: var(--green-lt); color: var(--green); }
+  .fill-input.err   { border-color: var(--red); background: var(--red-lt); color: var(--red); }
+  .btn-check {
+    background: var(--amber);
+    border: none; border-radius: 30px;
+    color: white; cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px; font-weight: 800;
+    padding: 9px 22px; margin-left: 10px;
+    transition: background .2s;
+  }
+  .btn-check:hover { background: #b7770d; }
+
+  /* ── RESPONSIVE ── */
+  @media(max-width: 600px){
+    header h1 { font-size: 22px; }
+    .card { padding: 16px; }
+    .match-wrap { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🩸 Haematology Revision</h1>
+  <p>MBBS Year 1 · Dr. Sudha Arumugam · Keep it simple, keep it clear!</p>
+  <div id="progress-wrap"><div id="progress-bar"></div></div>
+  <div id="progress-label">Quiz progress: 0 / 0 answered</div>
+</header>
+
+<nav>
+  <button onclick="showTopic('anaemia')" class="active">Anaemia</button>
+  <button onclick="showTopic('coag')">Coagulation</button>
+  <button onclick="showTopic('leuk')">Leukaemia</button>
+  <button onclick="showTopic('lymph')">Lymphoma</button>
+  <button onclick="showTopic('misc')">Mixed MCQ</button>
+</nav>
+
+<main>
+
+<!-- ════════════════════════════
+     SECTION 1 – ANAEMIA
+════════════════════════════ -->
+<section class="topic active" id="anaemia">
+  <div class="section-title">🔴 Anaemia</div>
+  <div class="section-subtitle">Types, causes & investigations — the basics</div>
+
+  <!-- Concept card -->
+  <div class="card">
+    <div class="card-title"><span class="tag tag-red">Concept</span> Classifying Anaemia by MCV</div>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>MCV</th><th>Type</th><th>Common Causes</th></tr>
+        <tr><td>↓ Low (&lt;80)</td><td>Microcytic</td><td>Iron deficiency, Thalassaemia</td></tr>
+        <tr><td>Normal (80–100)</td><td>Normocytic</td><td>Haemolysis, Bone marrow failure, Sickle cell, CKD</td></tr>
+        <tr><td>↑ High (&gt;100)</td><td>Macrocytic</td><td>B12/Folate deficiency, Liver disease, Hypothyroid</td></tr>
+      </table>
+    </div>
+    <div class="key-box">💡 MCV = Mean Corpuscular Volume. It tells you the SIZE of the red blood cell.</div>
+  </div>
+
+  <!-- Iron deficiency accordion -->
+  <div class="card">
+    <div class="card-title"><span class="tag tag-red">Quick Notes</span> Iron Deficiency Anaemia (IDA)</div>
+    <button class="accord-btn" onclick="toggleAccord(this)">What lab findings tell you it's IDA? <span>▼</span></button>
+    <div class="accord-body">
+      Low Hgb · Low MCV (microcytic) · Low ferritin (&lt;30 ng/mL) · Low serum iron · High TIBC
+    </div>
+    <button class="accord-btn" onclick="toggleAccord(this)">Why do we do colonoscopy in a 60-year-old male with IDA? <span>▼</span></button>
+    <div class="accord-body">
+      In an older man, IDA = hidden bleeding until proven otherwise. The GI tract (colon cancer, ulcer) is the most common source. Colonoscopy rules this out. Direct Coombs test is for haemolytic anaemia — NOT needed here.
+    </div>
+    <button class="accord-btn" onclick="toggleAccord(this)">Why does a pregnant woman get IDA? <span>▼</span></button>
+    <div class="accord-body">
+      Growing baby demands more iron. Mother's iron stores deplete, especially in 3rd trimester. Give oral iron supplementation. Check serum ferritin to confirm.
+    </div>
+    <div class="key-box amber">🤰 Pregnant woman + Low Hgb + Low MCV → Iron deficiency first!</div>
+  </div>
+
+  <!-- Thalassaemia vs IDA -->
+  <div class="card">
+    <div class="card-title"><span class="tag tag-blue">Compare</span> β-Thalassaemia vs Iron Deficiency</div>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>Feature</th><th>β-Thalassaemia</th><th>Iron Deficiency</th></tr>
+        <tr><td>Age of onset</td><td>Infancy / childhood</td><td>Any age</td></tr>
+        <tr><td>Ferritin</td><td>Normal / ↑</td><td>↓ Low</td></tr>
+        <tr><td>Fetal Hgb (HbF)</td><td>↑ Elevated</td><td>Normal</td></tr>
+        <tr><td>Splenomegaly</td><td>Yes (extravascular haemolysis)</td><td>No</td></tr>
+        <tr><td>Jaundice</td><td>Yes (haemolysis)</td><td>No</td></tr>
+        <tr><td>Blood smear</td><td>Target cells, nucleated RBCs</td><td>Pencil cells, hypochromic</td></tr>
+        <tr><td>Key test</td><td>Hb electrophoresis</td><td>Serum ferritin</td></tr>
+      </table>
+    </div>
+    <div class="key-box blue">🧒 10-month-old + splenomegaly + jaundice + ↑HbF → β-Thalassaemia Major</div>
+  </div>
+
+  <!-- Sickle cell -->
+  <div class="card">
+    <div class="card-title"><span class="tag tag-amber">Sickle Cell</span> Sickle Cell Anaemia — Pain Crisis</div>
+    <button class="accord-btn" onclick="toggleAccord(this)">Why does sickle cell cause bone & chest pain? <span>▼</span></button>
+    <div class="accord-body">
+      Sickle-shaped RBCs block small blood vessels → <strong>Ischemia</strong> (lack of oxygen to tissues). This causes painful vaso-occlusive crises affecting bones, chest, and abdomen. NOT coagulopathy, NOT vasculitis.
+    </div>
+    <button class="accord-btn" onclick="toggleAccord(this)">What does the blood smear look like? <span>▼</span></button>
+    <div class="accord-body">
+      Sickle/crescent-shaped RBCs · Target cells · Normocytic anaemia · Howell-Jolly bodies (functional asplenia)
+    </div>
+    <div class="key-box amber">⚠️ Mechanism of pain = ISCHEMIA (vaso-occlusion by sickle cells)</div>
+  </div>
+
+  <!-- PNH -->
+  <div class="card">
+    <div class="card-title"><span class="tag tag-purple">Special</span> Dark Urine at Night — What is this?</div>
+    <p style="font-size:15px; line-height:1.65; margin-bottom:12px;">Patient passes dark urine at night & in the morning, but normal urine during the day. This is <strong>Paroxysmal Nocturnal Haemoglobinuria (PNH)</strong>.</p>
+    <button class="accord-btn" onclick="toggleAccord(this)">Why does haemolysis happen at night? <span>▼</span></button>
+    <div class="accord-body">
+      During sleep, CO₂ accumulates → blood pH drops → activates complement → destroys RBCs <em>inside vessels</em> (intravascular haemolysis) → free haemoglobin spills into urine (haemoglobinuria). Answer = <strong>C: Premature destruction of RBCs within blood vessels.</strong>
+    </div>
+  </div>
+
+  <!-- MCQ 1 -->
+  <div class="card">
+    <div class="card-title"><span class="tag tag-green">MCQ 1</span> 60-year-old male, IDA — Best next investigation?</div>
+    <div class="quiz-q">A 60-year-old man has Hgb 9.0, MCV 70, ferritin 15. Normal WBC and platelets. What investigation should be done?</div>
+    <div class="quiz-opts" id="q1">
+      <button class="quiz-opt" onclick="answer(this,'q1','wrong')">A. Direct Coombs test</button>
+      <button class="quiz-opt" onclick="answer(this,'q1','wrong')">B. Bone marrow aspiration</button>
+      <button class="quiz-opt" onclick="answer(this,'q1','wrong')">C. Haemoglobin electrophoresis</button>
+      <button class="quiz-opt" onclick="answer(this,'q1','correct')">D. Colonoscopy</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q1"></div>
+    <button class="btn-next" id="next-q1" onclick="this.style.display='none'">Got it ✓</button>
+  </div>
+
+  <!-- MCQ 2 -->
+  <div class="card">
+    <div class="card-title"><span class="tag tag-green">MCQ 2</span> 10-month-old boy — Diagnosis?</div>
+    <div class="quiz-q">A 10-month-old boy has splenomegaly, jaundice, microcytic anaemia Hgb 7.4, and elevated fetal haemoglobin. What is the diagnosis?</div>
+    <div class="quiz-opts" id="q2">
+      <button class="quiz-opt" onclick="answer(this,'q2','wrong')">A. Hereditary elliptocytosis</button>
+      <button class="quiz-opt" onclick="answer(this,'q2','wrong')">B. Hereditary spherocytosis</button>
+      <button class="quiz-opt" onclick="answer(this,'q2','wrong')">C. Iron deficiency anaemia</button>
+      <button class="quiz-opt" onclick="answer(this,'q2','correct')">D. β-Thalassaemia</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q2"></div>
+    <button class="btn-next" id="next-q2" onclick="this.style.display='none'">Got it ✓</button>
+  </div>
+
+  <!-- MCQ 3 -->
+  <div class="card">
+    <div class="card-title"><span class="tag tag-green">MCQ 3</span> Sickle cell — Mechanism of pain?</div>
+    <div class="quiz-q">A 10-year-old girl has chest, bone and abdominal pain, jaundice, normocytic anaemia with marked poikilocytosis. Anaemia since birth. Mechanism of pain?</div>
+    <div class="quiz-opts" id="q3">
+      <button class="quiz-opt" onclick="answer(this,'q3','wrong')">A. Coagulopathy</button>
+      <button class="quiz-opt" onclick="answer(this,'q3','wrong')">B. Infection</button>
+      <button class="quiz-opt" onclick="answer(this,'q3','correct')">C. Ischemia</button>
+      <button class="quiz-opt" onclick="answer(this,'q3','wrong')">D. Vasculitis</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q3"></div>
+    <button class="btn-next" id="next-q3" onclick="this.style.display='none'">Got it ✓</button>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════
+     SECTION 2 – COAGULATION
+════════════════════════════ -->
+<section class="topic" id="coag">
+  <div class="section-title">🔵 Coagulation Disorders</div>
+  <div class="section-subtitle">Pathways, tests, and bleeding disorders</div>
+
+  <!-- Pathway summary -->
+  <div class="card">
+    <div class="card-title"><span class="tag tag-blue">Concept</span> Coagulation Pathway — Simple Summary</div>
+    <div class="tbl-wrap">
+      <table class="coag-table">
+        <tr><th>Pathway</th><th>Factors Involved</th><th>Test Used</th></tr>
+        <tr><td>Extrinsic</td><td>Factor VII</td><td>PT (Prothrombin Time)</td></tr>
+        <tr><td>Intrinsic</td><td>XII, XI, IX, VIII</td><td>aPTT</td></tr>
+        <tr><td>Common</td><td>X, V, II (thrombin), I (fibrinogen)</td><td>PT + aPTT + TT</td></tr>
+      </table>
+    </div>
+    <div class="key-box blue">💡 PT tests EXTRINSIC (Factor VII). aPTT tests INTRINSIC (VIII, IX, XI, XII).</div>
+  </div>
+
+  <!-- Disorder table -->
+  <div class="card">
+    <div class="card-title"><span class="tag tag-blue">Compare</span> Common Bleeding Disorders</div>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>Disorder</th><th>PT</th><th>aPTT</th><th>Bleeding Time</th><th>Platelets</th></tr>
+        <tr><td>Haemophilia A (↓ VIII)</td><td>Normal</td><td>↑ Prolonged</td><td>Normal</td><td>Normal</td></tr>
+        <tr><td>Haemophilia B (↓ IX)</td><td>Normal</td><td>↑ Prolonged</td><td>Normal</td><td>Normal</td></tr>
+        <tr><td>Von Willebrand Disease</td><td>Normal</td><td>↑ Prolonged</td><td>↑ Prolonged</td><td>Normal</td></tr>
+        <tr><td>ITP (↓ platelets)</td><td>Normal</td><td>Normal</td><td>↑ Prolonged</td><td>↓ Low</td></tr>
+        <tr><td>DIC</td><td>↑ Prolonged</td><td>↑ Prolonged</td><td>↑ Prolonged</td><td>↓ Low</td></tr>
+        <tr><td>Vit K deficiency / Liver Dz</td><td>↑ Prolonged</td><td>Normal/↑</td><td>Normal</td><td>Normal</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- VWD vs Haemophilia -->
+  <div class="card">
+    <div class="card-title"><span class="tag tag-purple">Key Clue</span> Von Willebrand Disease</div>
+    <p style="font-size:15px; line-height:1.65;">vWD = most common inherited bleeding disorder. vWF acts as a bridge for platelets AND carries Factor VIII.</p>
+    <div class="key-box purple">🔑 Ristocetin test → decreased aggregation = vWD. Both aPTT AND bleeding time are prolonged.</div>
+    <button class="accord-btn" onclick="toggleAccord(this)">How to distinguish vWD from Haemophilia A? <span>▼</span></button>
+    <div class="accord-body">
+      <strong>Haemophilia A</strong>: Bleeding time NORMAL (platelets fine). Only aPTT prolonged.<br>
+      <strong>vWD</strong>: Bleeding time PROLONGED (platelet adhesion affected) + aPTT prolonged.<br>
+      Also, vWD affects females too — haemophilia A/B mainly affects males (X-linked).
+    </div>
+  </div>
+
+  <!-- DIC -->
+  <div class="card">
+    <div class="card-title"><span class="tag tag-red">DIC</span> Disseminated Intravascular Coagulation</div>
+    <button class="accord-btn" onclick="toggleAccord(this)">What causes DIC? <span>▼</span></button>
+    <div class="accord-body">
+      Sepsis (most common) · Placental abruption · Snake bites · Burns · Trauma · Graft vs host disease
+    </div>
+    <button class="accord-btn" onclick="toggleAccord(this)">What are the lab findings in DIC? <span>▼</span></button>
+    <div class="accord-body">
+      ↓ Platelets · ↑ PT · ↑ aPTT · ↑ Thrombin time · ↓ Fibrinogen · ↑↑ D-dimer · Schistocytes on smear
+    </div>
+    <div class="key-box">⚠️ Everything is abnormal in DIC — clotting factors AND platelets are consumed!</div>
+  </div>
+
+  <!-- Thrombocytopenia -->
+  <div class="card">
+    <div class="card-title"><span class="tag tag-amber">Thrombocytopenia</span> Low Platelet Count — How to Approach</div>
+    <button class="accord-btn" onclick="toggleAccord(this)">Step-by-step approach to thrombocytopenia <span>▼</span></button>
+    <div class="accord-body">
+      1. Is there an obvious cause? (drug, infection, DIC) → yes → treat cause<br>
+      2. No obvious cause → do bone marrow biopsy<br>
+      3. Bone marrow shows no megakaryocytes → aplastic anaemia or infiltrative disease<br>
+      4. Bone marrow shows normal/↑ megakaryocytes → peripheral destruction → likely <strong>ITP</strong><br>
+      5. Confirm ITP with serological studies (anti-platelet antibodies)
+    </div>
+    <div class="key-box green">ITP = Immune Thrombocytopenic Purpura — body makes antibodies that destroy platelets. No splenomegaly.</div>
+  </div>
+
+  <!-- MCQs coag -->
+  <div class="card">
+    <div class="card-title"><span class="tag tag-green">MCQ 4</span> Haemophilia A — Lab findings?</div>
+    <div class="quiz-q">A 4-year-old boy has classic Haemophilia A (Factor VIII deficiency). Which coagulation test result is expected?</div>
+    <div class="quiz-opts" id="q4">
+      <button class="quiz-opt" onclick="answer(this,'q4','correct')">A. Normal BT, platelets, TT and PT; prolonged aPTT</button>
+      <button class="quiz-opt" onclick="answer(this,'q4','wrong')">B. Normal BT, platelets, TT; prolonged PT and aPTT</button>
+      <button class="quiz-opt" onclick="answer(this,'q4','wrong')">C. Normal BT, platelets, TT and aPTT; prolonged PT</button>
+      <button class="quiz-opt" onclick="answer(this,'q4','wrong')">D. Normal platelets; prolonged BT, PT and aPTT</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q4"></div>
+    <button class="btn-next" id="next-q4" onclick="this.style.display='none'">Got it ✓</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-green">MCQ 5</span> Von Willebrand Disease — Diagnosis?</div>
+    <div class="quiz-q">A 16-year-old girl has nosebleeds, easy bruising, and menorrhagia since menarche. Platelets normal. Prolonged bleeding time AND aPTT. Decreased ristocetin aggregation. Diagnosis?</div>
+    <div class="quiz-opts" id="q5">
+      <button class="quiz-opt" onclick="answer(this,'q5','wrong')">A. Haemophilia B</button>
+      <button class="quiz-opt" onclick="answer(this,'q5','wrong')">B. Megakaryocytic aplasia</button>
+      <button class="quiz-opt" onclick="answer(this,'q5','correct')">C. Von Willebrand Disease</button>
+      <button class="quiz-opt" onclick="answer(this,'q5','wrong')">D. Glanzmann thromboasthenia</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q5"></div>
+    <button class="btn-next" id="next-q5" onclick="this.style.display='none'">Got it ✓</button>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════
+     SECTION 3 – LEUKAEMIA
+════════════════════════════ -->
+<section class="topic" id="leuk">
+  <div class="section-title">🟡 Leukaemia</div>
+  <div class="section-subtitle">Understand what goes wrong in the bone marrow</div>
+
+  <!-- Concept -->
+  <div class="card">
+    <div class="card-title"><span class="tag tag-amber">Concept</span> What is Leukaemia?</div>
+    <p style="font-size:15px; line-height:1.7; margin-bottom:12px;">Leukaemia = cancer of white blood cells. Abnormal immature WBCs (blasts) crowd out normal cells in the bone marrow → anaemia + thrombocytopenia + infections.</p>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>Type</th><th>Age Group</th><th>Key Feature</th><th>Stain / Marker</th></tr>
+        <tr><td>ALL (Acute Lymphoblastic)</td><td>Children (peak 2–5 yrs)</td><td>PAS positive; common in Down syndrome</td><td>PAS stain</td></tr>
+        <tr><td>AML (Acute Myeloid)</td><td>Adults</td><td>Auer rods; MPO positive</td><td>MPO, Sudan black</td></tr>
+        <tr><td>CML (Chronic Myeloid)</td><td>Middle age adults</td><td>Philadelphia chromosome (bcr-abl)</td><td>bcr-abl t(9;22)</td></tr>
+        <tr><td>CLL (Chronic Lymphocytic)</td><td>Elderly (&gt;60)</td><td>Smudge cells on smear</td><td>CD5+, CD23+</td></tr>
+        <tr><td>Hairy Cell Leukaemia</td><td>Middle age adults</td><td>TRAP positive; "hairy" cytoplasmic projections</td><td>TRAP stain</td></tr>
+      </table>
+    </div>
+    <div class="key-box amber">💡 AML = Auer rods = MPO/Sudan black positive. ALL = children = PAS positive.</div>
+  </div>
+
+  <!-- AML vs ALL vs DIC scenario -->
+  <div class="card">
+    <div class="card-title"><span class="tag tag-red">Case Focus</span> 10-yr-old girl with gum bleeding & fever</div>
+    <p style="font-size:15px; line-height:1.65; margin-bottom:10px;">Hgb 5.3 · WBC 60,000 · 60% Promyelocytes + 33% Myeloblasts · Platelets 5000 · D-dimer elevated</p>
+    <button class="accord-btn" onclick="toggleAccord(this)">What is the diagnosis and why is she bleeding? <span>▼</span></button>
+    <div class="accord-body">
+      <strong>Diagnosis: AML-M3 (Acute Promyelocytic Leukaemia)</strong><br>
+      The leukemic promyelocytes release tissue factor → activates coagulation cascade systemically → <strong>DIC</strong>.<br>
+      This causes: Bleeding (low platelets + consumed factors) + bruising + prolonged PT/aPTT + elevated D-dimer.
+    </div>
+    <div class="key-box">⚠️ AML-M3 + DIC = EMERGENCY. Treat with All-trans retinoic acid (ATRA).</div>
+  </div>
+
+  <!-- Match game -->
+  <div class="card">
+    <div class="card-title"><span class="tag tag-purple">Match Game</span> Match the Leukaemia/Lymphoma to its Marker</div>
+    <div class="match-wrap">
+      <div class="match-col">
+        <h4>Condition</h4>
+        <div class="match-item" data-pair="cml" onclick="selectMatch(this,'left')">Chronic Myelogenous Leukaemia</div>
+        <div class="match-item" data-pair="hcl" onclick="selectMatch(this,'left')">Hairy Cell Leukaemia</div>
+        <div class="match-item" data-pair="hl" onclick="selectMatch(this,'left')">Classical Hodgkin Lymphoma</div>
+        <div class="match-item" data-pair="bk" onclick="selectMatch(this,'left')">Burkitt Lymphoma</div>
+      </div>
+      <div class="match-col">
+        <h4>Marker / Feature</h4>
+        <div class="match-item" data-pair="bk" onclick="selectMatch(this,'right')">t(8;14)</div>
+        <div class="match-item" data-pair="hl" onclick="selectMatch(this,'right')">CD15 &amp; CD30</div>
+        <div class="match-item" data-pair="cml" onclick="selectMatch(this,'right')">Bcr-abl translocation t(9;22)</div>
+        <div class="match-item" data-pair="hcl" onclick="selectMatch(this,'right')">TRAP positive</div>
+      </div>
+    </div>
+    <div id="match-score"></div>
+    <button id="match-reset" onclick="resetMatch()">🔄 Reset</button>
+  </div>
+
+  <!-- MCQ leuk -->
+  <div class="card">
+    <div class="card-title"><span class="tag tag-green">MCQ 6</span> AML — Pathophysiology</div>
+    <div class="quiz-q">A 32-year-old has anaemia, thrombocytopenia, leukocytosis. Bone marrow shows >20% blasts and reduced normal cells. Best explanation?</div>
+    <div class="quiz-opts" id="q6">
+      <button class="quiz-opt" onclick="answer(this,'q6','wrong')">A. Ineffective haematopoiesis due to abnormal myeloid cell infiltration</button>
+      <button class="quiz-opt" onclick="answer(this,'q6','wrong')">B. Increased destruction of RBCs by autoantibodies</button>
+      <button class="quiz-opt" onclick="answer(this,'q6','correct')">C. Suppression of normal haematopoiesis by excess proliferation of abnormal immature cells</button>
+      <button class="quiz-opt" onclick="answer(this,'q6','wrong')">D. Suppression of haemopoietic stem cell by chemotherapy</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q6"></div>
+    <button class="btn-next" id="next-q6" onclick="this.style.display='none'">Got it ✓</button>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════
+     SECTION 4 – LYMPHOMA
+════════════════════════════ -->
+<section class="topic" id="lymph">
+  <div class="section-title">🟣 Lymphoma</div>
+  <div class="section-subtitle">Hodgkin vs Non-Hodgkin, and the subtypes</div>
+
+  <!-- HL vs NHL -->
+  <div class="card">
+    <div class="card-title"><span class="tag tag-purple">Compare</span> Hodgkin vs Non-Hodgkin Lymphoma</div>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>Feature</th><th>Hodgkin (HL)</th><th>Non-Hodgkin (NHL)</th></tr>
+        <tr><td>Hallmark cell</td><td>Reed-Sternberg cells (owl-eye nuclei)</td><td>No RS cells</td></tr>
+        <tr><td>Cell of origin</td><td>B cells (RS cells)</td><td>B or T cells</td></tr>
+        <tr><td>Spread</td><td>Contiguous (orderly)</td><td>Non-contiguous (skip areas)</td></tr>
+        <tr><td>Extranodal disease</td><td>Rare</td><td>Common</td></tr>
+        <tr><td>B symptoms</td><td>Often present</td><td>May or may not be present</td></tr>
+        <tr><td>Age</td><td>Bimodal: 20s + >60 yrs</td><td>More common in older adults</td></tr>
+        <tr><td>Prognosis</td><td>Generally good (curable)</td><td>Varies widely</td></tr>
+      </table>
+    </div>
+    <div class="key-box purple">🦉 Reed-Sternberg cells = OWL eyes = Hodgkin Lymphoma!</div>
+  </div>
+
+  <!-- HL subtypes flashcards -->
+  <div class="card">
+    <div class="card-title"><span class="tag tag-purple">Flashcards</span> Hodgkin Lymphoma Subtypes</div>
+    <div class="flashcard-wrap" onclick="flipCard('fc1')">
+      <div class="flashcard" id="fc1">
+        <div class="fc-face fc-front">
+          <div>
+            <div style="font-size:13px;opacity:.7;margin-bottom:8px;">TAP TO REVEAL</div>
+            Mixed Cellularity Hodgkin Lymphoma — what cells are seen on biopsy?
+          </div>
+          <span class="fc-hint">Tap to flip</span>
+        </div>
+        <div class="fc-face fc-back">Lymphocytes, plasma cells, eosinophils, macrophages + classical Reed-Sternberg cells. Most common in HIV+ patients.</div>
+      </div>
+    </div>
+    <div class="fc-nav">
+      <button onclick="prevCard()">← Prev</button>
+      <span id="fc-counter">1 / 5</span>
+      <button onclick="nextCard()">Next →</button>
+    </div>
+  </div>
+
+  <!-- NHL subtypes -->
+  <div class="card">
+    <div class="card-title"><span class="tag tag-purple">Quick Notes</span> NHL Subtypes — Key Features</div>
+    <button class="accord-btn" onclick="toggleAccord(this)">Follicular Lymphoma <span>▼</span></button>
+    <div class="accord-body">
+      Low grade · Indolent (slow growing) · t(14;18) translocation → overexpresses BCL-2 (anti-apoptosis protein) → cells don't die · Difficult to cure but manageable
+    </div>
+    <button class="accord-btn" onclick="toggleAccord(this)">Diffuse Large B-Cell Lymphoma (DLBCL) <span>▼</span></button>
+    <div class="accord-body">
+      Most common NHL (~30-40%) · Intermediate grade · Aggressive but potentially curable with chemotherapy (R-CHOP) · Rapidly enlarging lymph node mass
+    </div>
+    <button class="accord-btn" onclick="toggleAccord(this)">MALT Lymphoma <span>▼</span></button>
+    <div class="accord-body">
+      Low grade B-cell lymphoma · Common sites: stomach (H. pylori!), lung, thyroid, salivary gland · Gastric MALT can regress with H. pylori eradication
+    </div>
+    <button class="accord-btn" onclick="toggleAccord(this)">Burkitt Lymphoma <span>▼</span></button>
+    <div class="accord-body">
+      High grade B-cell lymphoma · t(8;14) — MYC oncogene overexpression · 100% proliferation index (Ki-67 = 100%) · "Starry sky" pattern on histology · Endemic in Africa, associated with EBV
+    </div>
+    <button class="accord-btn" onclick="toggleAccord(this)">Mantle Cell Lymphoma <span>▼</span></button>
+    <div class="accord-body">
+      Intermediate to aggressive · t(11;14) → Cyclin D1 overexpression · Arises from mantle zone of lymphoid follicles · May have widespread disease (nodes, spleen, GI)
+    </div>
+  </div>
+
+  <!-- Multiple Myeloma -->
+  <div class="card">
+    <div class="card-title"><span class="tag tag-red">Special</span> Multiple Myeloma</div>
+    <p style="font-size:15px; line-height:1.65; margin-bottom:12px;">Clonal proliferation of plasma cells in bone marrow → produces monoclonal immunoglobulin (M protein).</p>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>Feature</th><th>Finding</th></tr>
+        <tr><td>Bone marrow</td><td>>10% (diagnostic: >30%) clonal plasma cells</td></tr>
+        <tr><td>Serum electrophoresis</td><td>M spike (monoclonal band) — DIAGNOSTIC</td></tr>
+        <tr><td>Urine</td><td>Bence Jones protein</td></tr>
+        <tr><td>Blood smear</td><td>Rouleaux formation (stacked coins)</td></tr>
+        <tr><td>Radiology</td><td>Lytic bone lesions ("punched out")</td></tr>
+        <tr><td>ESR</td><td>Very high (due to excess immunoglobulins)</td></tr>
+      </table>
+    </div>
+    <div class="key-box">🔬 M spike on serum electrophoresis = DIAGNOSTIC of Multiple Myeloma</div>
+  </div>
+
+  <!-- MCQ lymphoma -->
+  <div class="card">
+    <div class="card-title"><span class="tag tag-green">MCQ 7</span> Hodgkin Lymphoma Subtype</div>
+    <div class="quiz-q">A 50-year-old with cervical lump, night sweats, fever, weight loss. Biopsy shows lymphocytes, plasma cells, eosinophils, macrophages, and classical Reed-Sternberg cells. Diagnosis?</div>
+    <div class="quiz-opts" id="q7">
+      <button class="quiz-opt" onclick="answer(this,'q7','correct')">A. Mixed cellularity</button>
+      <button class="quiz-opt" onclick="answer(this,'q7','wrong')">B. Nodular sclerosis</button>
+      <button class="quiz-opt" onclick="answer(this,'q7','wrong')">C. Lymphocyte rich</button>
+      <button class="quiz-opt" onclick="answer(this,'q7','wrong')">D. Lymphocyte predominant</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q7"></div>
+    <button class="btn-next" id="next-q7" onclick="this.style.display='none'">Got it ✓</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-green">MCQ 8</span> MALT Lymphoma</div>
+    <div class="quiz-q">A 55-year-old man has recurrent epigastric pain. Gastric biopsy shows neoplastic lymphocytic infiltrate. Giemsa stain is positive for H. pylori. Diagnosis?</div>
+    <div class="quiz-opts" id="q8">
+      <button class="quiz-opt" onclick="answer(this,'q8','wrong')">A. Mantle cell lymphoma</button>
+      <button class="quiz-opt" onclick="answer(this,'q8','correct')">B. MALT lymphoma</button>
+      <button class="quiz-opt" onclick="answer(this,'q8','wrong')">C. Diffuse large B cell lymphoma</button>
+      <button class="quiz-opt" onclick="answer(this,'q8','wrong')">D. Burkitt lymphoma</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q8"></div>
+    <button class="btn-next" id="next-q8" onclick="this.style.display='none'">Got it ✓</button>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════
+     SECTION 5 – MIXED MCQ
+════════════════════════════ -->
+<section class="topic" id="misc">
+  <div class="section-title">🟢 Mixed Practice MCQs</div>
+  <div class="section-subtitle">Test yourself across all topics!</div>
+
+  <div id="score-banner"></div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-green">MCQ 9</span> Polycythaemia Vera</div>
+    <div class="quiz-q">A 55-year-old man has fatigue, leukocytosis, thrombocytosis and Hct 67%. Serum erythropoietin is LOW. Diagnosis?</div>
+    <div class="quiz-opts" id="q9">
+      <button class="quiz-opt" onclick="answer(this,'q9','correct')">A. Primary polycythaemia vera</button>
+      <button class="quiz-opt" onclick="answer(this,'q9','wrong')">B. Acute myeloid leukaemia</button>
+      <button class="quiz-opt" onclick="answer(this,'q9','wrong')">C. Chronic myeloid leukaemia</button>
+      <button class="quiz-opt" onclick="answer(this,'q9','wrong')">D. Primary myelofibrosis</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q9"></div>
+    <button class="btn-next" id="next-q9" onclick="this.style.display='none'">Got it ✓</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-green">MCQ 10</span> Multiple Myeloma — Diagnostic Finding</div>
+    <div class="quiz-q">A 69-year-old man has anaemia, malaise, rouleaux on smear, and is diagnosed with Multiple Myeloma. Which finding is DIAGNOSTIC?</div>
+    <div class="quiz-opts" id="q10">
+      <button class="quiz-opt" onclick="answer(this,'q10','wrong')">A. >30% plasma cells in bone marrow</button>
+      <button class="quiz-opt" onclick="answer(this,'q10','correct')">B. Serum electrophoresis shows 'M' spike</button>
+      <button class="quiz-opt" onclick="answer(this,'q10','wrong')">C. High ESR level</button>
+      <button class="quiz-opt" onclick="answer(this,'q10','wrong')">D. Lytic lesions in the bone</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q10"></div>
+    <button class="btn-next" id="next-q10" onclick="this.style.display='none'">Got it ✓</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-green">MCQ 11</span> Reactive Lymphadenopathy</div>
+    <div class="quiz-q">A 22-year-old has sore throat, fever, then 6 weeks of malaise with tender cervical lymphadenopathy. Biopsy shows prominent germinal centres, polyclonal lymphocytes, plasma cells, macrophages. Diagnosis?</div>
+    <div class="quiz-opts" id="q11">
+      <button class="quiz-opt" onclick="answer(this,'q11','wrong')">A. Follicular lymphoma</button>
+      <button class="quiz-opt" onclick="answer(this,'q11','wrong')">B. Mixed cellularity Hodgkin lymphoma</button>
+      <button class="quiz-opt" onclick="answer(this,'q11','wrong')">C. Granulomatous lymphadenitis</button>
+      <button class="quiz-opt" onclick="answer(this,'q11','correct')">D. Reactive follicular hyperplasia</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q11"></div>
+    <button class="btn-next" id="next-q11" onclick="this.style.display='none'">Got it ✓</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-green">MCQ 12</span> DIC — Diagnosis & Lab</div>
+    <div class="quiz-q">A 26-year-old woman with septicaemia develops skin purpura. D-dimer is markedly ↑. PT and aPTT are prolonged. Platelet count and fibrinogen are DECREASED. Diagnosis?</div>
+    <div class="quiz-opts" id="q12">
+      <button class="quiz-opt" onclick="answer(this,'q12','wrong')">A. ITP</button>
+      <button class="quiz-opt" onclick="answer(this,'q12','wrong')">B. Haemophilia A</button>
+      <button class="quiz-opt" onclick="answer(this,'q12','correct')">C. Disseminated Intravascular Coagulation (DIC)</button>
+      <button class="quiz-opt" onclick="answer(this,'q12','wrong')">D. Von Willebrand Disease</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q12"></div>
+    <button class="btn-next" id="next-q12" onclick="this.style.display='none'">Got it ✓</button>
+  </div>
+
+  <!-- Fill in blank -->
+  <div class="card">
+    <div class="card-title"><span class="tag tag-amber">Fill in the Blank</span> Quick Recall</div>
+
+    <div style="margin-bottom:18px;">
+      <div class="fill-q">1. The Philadelphia chromosome in CML is a translocation between chromosomes 9 and ___.</div>
+      <input class="fill-input" id="fib1" placeholder="?" maxlength="4">
+      <button class="btn-check" onclick="checkFill('fib1','22','t(9;22) = Bcr-Abl = Philadelphia chromosome')">Check</button>
+      <div id="fib1-fb" style="font-size:14px;font-weight:700;margin-top:8px;display:none;"></div>
+    </div>
+
+    <div style="margin-bottom:18px;">
+      <div class="fill-q">2. The hallmark cell of Hodgkin Lymphoma is the ___ cell (2 words, start with R).</div>
+      <input class="fill-input" id="fib2" placeholder="?" maxlength="20" style="width:240px;">
+      <button class="btn-check" onclick="checkFill('fib2','REED-STERNBERG','Reed-Sternberg cells have owl-eye nuclei and are CD15/CD30 positive in classical HL')">Check</button>
+      <div id="fib2-fb" style="font-size:14px;font-weight:700;margin-top:8px;display:none;"></div>
+    </div>
+
+    <div style="margin-bottom:18px;">
+      <div class="fill-q">3. In DIC, D-dimer is ___ (high/low) and fibrinogen is ___ (high/low).</div>
+      <input class="fill-input" id="fib3" placeholder="high / low" maxlength="10" style="width:140px;">
+      <button class="btn-check" onclick="checkFill('fib3','HIGH','D-dimer is HIGH (fibrin degradation products). Fibrinogen is LOW (consumed). Both help diagnose DIC.')">Check</button>
+      <div id="fib3-fb" style="font-size:14px;font-weight:700;margin-top:8px;display:none;"></div>
+    </div>
+  </div>
+
+  <div class="card" style="text-align:center; background: linear-gradient(135deg,#f9e79f,#fdebd0);">
+    <div style="font-size:22px;font-weight:900;color:#7d6608;margin-bottom:8px;">📊 Your Quiz Score</div>
+    <div id="final-score" style="font-size:48px;font-weight:900;color:var(--red);">0/12</div>
+    <div id="final-msg" style="font-size:16px;color:var(--grey);margin-top:8px;">Answer more questions to see your score!</div>
+    <button onclick="resetAll()" style="margin-top:16px;background:var(--red);border:none;border-radius:30px;color:white;cursor:pointer;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;padding:13px 32px;">🔄 Reset All Quizzes</button>
+  </div>
+</section>
+
+</main>
+
+<script>
+// ── STATE ──
+let quizState = {};
+const totalQ = 12;
+let answered = 0;
+let correct = 0;
+
+const feedbacks = {
+  q1:  { correct: "✅ Correct! In a 60-year-old male with IDA and no obvious dietary deficiency, hidden GI bleeding (e.g. colon cancer) must be excluded. Colonoscopy is essential.", wrong: "❌ Incorrect. Direct Coombs is for haemolytic anaemia. Bone marrow biopsy and Hb electrophoresis are not needed here. IDA in an older man = rule out GI bleeding first!" },
+  q2:  { correct: "✅ Correct! β-Thalassaemia Major. Infant + splenomegaly + jaundice + elevated HbF + microcytic hypochromic anaemia = classic presentation.", wrong: "❌ Incorrect. The elevated fetal haemoglobin (HbF) is the key clue — this is β-Thalassaemia. Spherocytosis and elliptocytosis are normocytic. IDA wouldn't cause splenomegaly/jaundice." },
+  q3:  { correct: "✅ Correct! Ischemia. Sickle-shaped RBCs occlude small vessels → oxygen deprivation to tissues → pain. This is vaso-occlusion, not coagulopathy or vasculitis.", wrong: "❌ Incorrect. The mechanism is Ischemia (vaso-occlusion). Sickle cells physically block blood vessels, cutting off oxygen supply to bone marrow, chest, and other organs." },
+  q4:  { correct: "✅ Correct! Haemophilia A = Factor VIII deficiency → only the intrinsic pathway is affected → only aPTT is prolonged. PT, BT, platelet count and TT are all normal.", wrong: "❌ Incorrect. In Haemophilia A, only Factor VIII is missing. This only affects the INTRINSIC pathway → only aPTT is prolonged. PT is normal (extrinsic pathway is intact)." },
+  q5:  { correct: "✅ Correct! Von Willebrand Disease. Key features: both BT and aPTT prolonged + decreased ristocetin aggregation + menorrhagia in a female. vWF helps platelets adhere AND carries Factor VIII.", wrong: "❌ Incorrect. The combination of prolonged BOTH bleeding time AND aPTT + ristocetin aggregation defect = Von Willebrand Disease. Haemophilia only prolongs aPTT, not bleeding time." },
+  q6:  { correct: "✅ Correct! In AML, leukaemic blasts proliferate massively and crowd out the normal haematopoietic cells in the bone marrow → pancytopenia (anaemia, thrombocytopenia, neutropenia).", wrong: "❌ Incorrect. AML involves suppression by overcrowding — abnormal immature cells take up all the space. This is not autoimmune or drug-related in this scenario." },
+  q7:  { correct: "✅ Correct! Mixed cellularity subtype has a diverse cellular background: lymphocytes, plasma cells, eosinophils, histiocytes + classical RS cells. Common in HIV+ and elderly patients.", wrong: "❌ Incorrect. Mixed cellularity = diverse inflammatory cells + classic RS cells. Nodular sclerosis has collagen bands. Lymphocyte predominant has popcorn RS cells (CD20+, CD15/30 negative)." },
+  q8:  { correct: "✅ Correct! MALT lymphoma in the stomach is strongly associated with H. pylori infection. Treating H. pylori can cause regression of low-grade gastric MALT lymphoma!", wrong: "❌ Incorrect. The clue is gastric neoplastic lymphocytic infiltrate + H. pylori = MALT lymphoma. This is a low-grade B-cell lymphoma." },
+  q9:  { correct: "✅ Correct! Polycythaemia Vera (PV). Low erythropoietin is the key! In PV, the bone marrow produces too many cells autonomously — EPO is suppressed because there are already too many RBCs.", wrong: "❌ Incorrect. LOW erythropoietin + pancytosis (↑RBC, ↑WBC, ↑platelets) = Primary Polycythaemia Vera (JAK2 mutation). CML has a different profile." },
+  q10: { correct: "✅ Correct! The M spike on serum protein electrophoresis (the monoclonal immunoglobulin band) is the hallmark diagnostic finding in Multiple Myeloma.", wrong: "❌ Incorrect. While all the options are seen in myeloma, the DIAGNOSTIC finding is the M spike on serum electrophoresis — it proves monoclonal plasma cell proliferation." },
+  q11: { correct: "✅ Correct! Reactive follicular hyperplasia. This is EBV (infectious mononucleosis) — sore throat, malaise, tender cervical nodes, polyclonal reactive lymph nodes. NOT a lymphoma (which would be monoclonal).", wrong: "❌ Incorrect. The key is 'polyclonal hyperplasia' — this means REACTIVE, not neoplastic. Lymphomas are monoclonal. The presentation fits EBV/infectious mononucleosis causing reactive follicular hyperplasia." },
+  q12: { correct: "✅ Correct! DIC. The combination of: ↑D-dimer + ↑PT/aPTT + ↓platelets + ↓fibrinogen + sepsis = DIC. Everything is consumed — factors, platelets, and fibrinogen.", wrong: "❌ Incorrect. DIC shows EVERYTHING abnormal: prolonged PT, aPTT, low fibrinogen, low platelets, high D-dimer — all due to widespread coagulation activation consuming clotting factors." }
+};
+
+function answer(btn, qid, result) {
+  if (quizState[qid]) return;
+  quizState[qid] = result;
+  const opts = document.querySelectorAll(`#${qid} .quiz-opt`);
+  opts.forEach(o => o.disabled = true);
+  opts.forEach(o => {
+    if (o.getAttribute('onclick').includes("'correct'")) o.classList.add('correct');
+    if (o === btn && result === 'wrong') o.classList.add('wrong');
+  });
+  const fb = document.getElementById(`fb-${qid}`);
+  fb.textContent = feedbacks[qid][result];
+  fb.className = `quiz-feedback show ${result === 'correct' ? 'ok' : 'err'}`;
+  const nextBtn = document.getElementById(`next-${qid}`);
+  if (nextBtn) nextBtn.classList.add('show');
+  answered++;
+  if (result === 'correct') correct++;
+  updateProgress();
+  updateScore();
+}
+
+function updateProgress() {
+  const pct = Math.round((answered / totalQ) * 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `Quiz progress: ${answered} / ${totalQ} answered`;
+}
+
+function updateScore() {
+  document.getElementById('final-score').textContent = `${correct}/${totalQ}`;
+  const pct = Math.round((correct / Math.max(answered,1)) * 100);
+  let msg = '';
+  if (answered === 0) msg = 'Answer more questions to see your score!';
+  else if (pct >= 90) msg = '🌟 Excellent! You are ready for the exam!';
+  else if (pct >= 70) msg = '👍 Good work! Review the ones you got wrong.';
+  else if (pct >= 50) msg = '📚 Keep going! Re-read the concept cards.';
+  else msg = '💪 Don\'t give up! Read each topic carefully and try again.';
+  document.getElementById('final-msg').textContent = msg;
+}
+
+function resetAll() {
+  quizState = {}; answered = 0; correct = 0;
+  document.querySelectorAll('.quiz-opt').forEach(o => { o.disabled=false; o.className='quiz-opt'; });
+  document.querySelectorAll('.quiz-feedback').forEach(f => { f.className='quiz-feedback'; f.textContent=''; });
+  document.querySelectorAll('.btn-next').forEach(b => b.classList.remove('show'));
+  updateProgress(); updateScore();
+}
+
+// ── ACCORDION ──
+function toggleAccord(btn) {
+  const body = btn.nextElementSibling;
+  const isOpen = body.classList.contains('open');
+  btn.classList.toggle('open', !isOpen);
+  body.classList.toggle('open', !isOpen);
+  btn.querySelector('span').textContent = isOpen ? '▼' : '▲';
+}
+
+// ── TOPIC NAV ──
+function showTopic(id) {
+  document.querySelectorAll('section.topic').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ── FLASHCARDS ──
+const cards = [
+  { q:"Mixed Cellularity Hodgkin Lymphoma — what cells are seen on biopsy?",
+    a:"Lymphocytes, plasma cells, eosinophils, macrophages + classical Reed-Sternberg cells. Most common in HIV+ patients." },
+  { q:"Classical Hodgkin Lymphoma — what are the CD markers of Reed-Sternberg cells?",
+    a:"CD15 and CD30 POSITIVE. The RS cell looks like an 'owl eye' with 2 large nuclei and prominent nucleoli." },
+  { q:"Nodular Lymphocyte Predominant HL — how is it different from classical HL?",
+    a:"RS cells are CD15 & CD30 NEGATIVE. CD20 POSITIVE. RS cells look like 'popcorn cells' (lobulated nuclei)." },
+  { q:"Burkitt Lymphoma — what is the translocation and what gene is affected?",
+    a:"t(8;14) — moves MYC oncogene near the immunoglobulin heavy chain locus → MYC overexpression → uncontrolled B-cell proliferation." },
+  { q:"Follicular Lymphoma — what is the key translocation and what does it cause?",
+    a:"t(14;18) — brings BCL-2 gene under Ig promoter → BCL-2 overexpression → cells can't undergo apoptosis → accumulate slowly (indolent)." }
+];
+let cardIndex = 0;
+
+function flipCard(id) {
+  document.getElementById(id).classList.toggle('flipped');
+}
+function nextCard() {
+  cardIndex = (cardIndex + 1) % cards.length;
+  updateCard();
+}
+function prevCard() {
+  cardIndex = (cardIndex - 1 + cards.length) % cards.length;
+  updateCard();
+}
+function updateCard() {
+  const fc = document.getElementById('fc1');
+  fc.classList.remove('flipped');
+  fc.querySelector('.fc-front').querySelector('div').innerHTML =
+    `<div style="font-size:13px;opacity:.7;margin-bottom:8px;">TAP TO REVEAL</div>${cards[cardIndex].q}`;
+  fc.querySelector('.fc-back').textContent = cards[cardIndex].a;
+  document.getElementById('fc-counter').textContent = `${cardIndex+1} / ${cards.length}`;
+}
+updateCard();
+
+// ── MATCH GAME ──
+let selectedLeft = null, selectedRight = null, matchedPairs = 0;
+function selectMatch(item, side) {
+  if (item.classList.contains('matched')) return;
+  if (side === 'left') {
+    document.querySelectorAll('.match-col:first-child .match-item').forEach(i => { if (!i.classList.contains('matched')) i.classList.remove('selected'); });
+    selectedLeft = item;
+    item.classList.add('selected');
+  } else {
+    document.querySelectorAll('.match-col:last-child .match-item').forEach(i => { if (!i.classList.contains('matched')) i.classList.remove('selected'); });
+    selectedRight = item;
+    item.classList.add('selected');
+  }
+  if (selectedLeft && selectedRight) {
+    if (selectedLeft.dataset.pair === selectedRight.dataset.pair) {
+      selectedLeft.classList.remove('selected'); selectedLeft.classList.add('matched');
+      selectedRight.classList.remove('selected'); selectedRight.classList.add('matched');
+      matchedPairs++;
+      document.getElementById('match-score').textContent = matchedPairs === 4 ? '🎉 All matched! Well done!' : `✅ ${matchedPairs}/4 matched`;
+    } else {
+      [selectedLeft, selectedRight].forEach(el => {
+        el.classList.add('wrong-flash');
+        setTimeout(() => { el.classList.remove('wrong-flash','selected'); }, 500);
+      });
+    }
+    selectedLeft = null; selectedRight = null;
+  }
+}
+function resetMatch() {
+  document.querySelectorAll('.match-item').forEach(i => i.className = 'match-item');
+  selectedLeft = null; selectedRight = null; matchedPairs = 0;
+  document.getElementById('match-score').textContent = '';
+}
+
+// ── FILL IN BLANK ──
+function checkFill(id, answer, explanation) {
+  const input = document.getElementById(id);
+  const fb = document.getElementById(id + '-fb');
+  const val = input.value.trim().toUpperCase();
+  const correct = val === answer.toUpperCase() || val === answer.replace('-',' ').toUpperCase();
+  input.className = 'fill-input ' + (correct ? 'ok' : 'err');
+  fb.style.display = 'block';
+  fb.style.color = correct ? 'var(--green)' : 'var(--red)';
+  fb.textContent = correct ? `✅ Correct! ${explanation}` : `❌ The answer is: ${answer}. ${explanation}`;
+}
+</script>
+</body>
+</html>
