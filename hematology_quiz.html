@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hematology Pathology — MCQ Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F5F0;
+    --surface: #FFFFFF;
+    --surface2: #F0EDE6;
+    --border: #E2DDD4;
+    --text: #1A1814;
+    --text-muted: #6B6560;
+    --accent: #C84B2F;
+    --accent-light: #FAF0ED;
+    --correct: #1D7A4F;
+    --correct-light: #EAF5EF;
+    --wrong: #C0392B;
+    --wrong-light: #FEF0EE;
+    --gold: #B8860B;
+    --gold-light: #FDF8E6;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  .shell {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* HEADER */
+  .quiz-header {
+    margin-bottom: 36px;
+    border-bottom: 1.5px solid var(--border);
+    padding-bottom: 24px;
+  }
+  .quiz-header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 30px;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .quiz-header p {
+    font-size: 15px;
+    color: var(--text-muted);
+  }
+  .meta-row {
+    display: flex;
+    gap: 20px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .meta-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-muted);
+    background: var(--surface2);
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 0.5px solid var(--border);
+  }
+  .meta-pill svg { width: 14px; height: 14px; }
+
+  /* PROGRESS */
+  .progress-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .progress-track {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+  }
+  .progress-text {
+    font-size: 13px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .score-badge {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-light);
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 0.5px solid #F0C4BB;
+  }
+
+  /* QUESTION CARD */
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    margin-bottom: 20px;
+    animation: fadeUp 0.3s ease;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .topic-tag {
+    display: inline-flex;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-light);
+    border: 0.5px solid #F0C4BB;
+    padding: 4px 12px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 16px;
+  }
+  .q-number {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .vignette {
+    font-family: 'DM Serif Display', serif;
+    font-size: 19px;
+    line-height: 1.6;
+    color: var(--text);
+    margin-bottom: 24px;
+    font-style: italic;
+    padding: 20px 24px;
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--accent);
+  }
+  .vignette em {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .q-stem {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 20px;
+    line-height: 1.4;
+  }
+
+  /* OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 18px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    background: var(--surface);
+    transition: border-color 0.15s, background 0.15s, transform 0.1s;
+    user-select: none;
+  }
+  .opt:hover:not(.locked) {
+    border-color: #C8B8A8;
+    background: var(--surface2);
+    transform: translateX(2px);
+  }
+  .opt.locked { cursor: default; }
+  .opt.selected { border-color: #378ADD; background: #EDF4FC; }
+  .opt.correct  { border-color: var(--correct); background: var(--correct-light); }
+  .opt.wrong    { border-color: var(--wrong);   background: var(--wrong-light); }
+
+  .opt-badge {
+    width: 30px; height: 30px; min-width: 30px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600;
+    color: var(--text-muted);
+    background: var(--surface2);
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    margin-top: 1px;
+  }
+  .opt.selected .opt-badge { background: #378ADD; color: #fff; border-color: #378ADD; }
+  .opt.correct  .opt-badge { background: var(--correct); color: #fff; border-color: var(--correct); }
+  .opt.wrong    .opt-badge { background: var(--wrong);   color: #fff; border-color: var(--wrong); }
+  .opt-text { font-size: 16px; color: var(--text); line-height: 1.5; padding-top: 3px; }
+  .opt.correct .opt-text { color: #0D4D2F; font-weight: 500; }
+  .opt.wrong .opt-text   { color: #7A1F1A; }
+
+  /* EXPLANATION */
+  .explanation {
+    margin-top: 20px;
+    padding: 20px 22px;
+    border-radius: var(--radius-sm);
+    font-size: 16px;
+    line-height: 1.7;
+    animation: fadeUp 0.3s ease;
+  }
+  .explanation.correct-exp { background: var(--correct-light); border: 1px solid #A8DFC1; color: #0D4D2F; }
+  .explanation.wrong-exp   { background: var(--wrong-light);   border: 1px solid #F5B8B4; color: #5C1410; }
+  .exp-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .explanation.correct-exp .exp-label { color: var(--correct); }
+  .explanation.wrong-exp   .exp-label { color: var(--wrong); }
+  .exp-body { font-size: 16px; }
+  .exp-body strong { font-weight: 600; }
+
+  /* BUTTONS */
+  .btn-row { display: flex; gap: 12px; margin-top: 24px; }
+  .btn {
+    padding: 12px 26px;
+    border-radius: var(--radius-sm);
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    transition: background 0.15s, transform 0.1s;
+    letter-spacing: 0.01em;
+  }
+  .btn:hover { background: var(--surface2); transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn:disabled { opacity: 0.35; cursor: default; transform: none; }
+  .btn.primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .btn.primary:hover { background: #A83A22; }
+
+  /* LAB PANEL */
+  .lab-panel {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    margin-bottom: 22px;
+    overflow: hidden;
+  }
+  .lab-panel-header {
+    padding: 10px 18px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    background: #EAE7E0;
+  }
+  .lab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0;
+  }
+  .lab-item {
+    padding: 10px 18px;
+    border-right: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+  }
+  .lab-item:last-child { border-right: none; }
+  .lab-name { font-size: 12px; color: var(--text-muted); margin-bottom: 2px; font-weight: 500; }
+  .lab-val  { font-size: 16px; font-weight: 600; color: var(--text); }
+  .lab-val.abnormal { color: var(--accent); }
+  .lab-val.low  { color: #1D7A4F; }
+
+  /* RESULTS PAGE */
+  .results-page { animation: fadeUp 0.4s ease; }
+  .results-hero {
+    text-align: center;
+    padding: 40px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+  }
+  .results-pct {
+    font-family: 'DM Serif Display', serif;
+    font-size: 80px;
+    line-height: 1;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .results-frac { font-size: 20px; color: var(--text-muted); margin-bottom: 16px; }
+  .results-verdict {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+    max-width: 420px;
+    margin: 0 auto;
+    line-height: 1.4;
+  }
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .res-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 18px 12px;
+    text-align: center;
+  }
+  .res-card-val { font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .res-card-lbl { font-size: 13px; color: var(--text-muted); }
+  .results-btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="quiz-header">
+    <h1>Hematology Pathology<br>MCQ Challenge</h1>
+    <p>Interpret clinical vignettes and laboratory findings — MBBS Year 1</p>
+    <div class="meta-row">
+      <div class="meta-pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        19 Questions
+      </div>
+      <div class="meta-pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        Clinical Vignette Format
+      </div>
+      <div class="meta-pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        High Performers
+      </div>
+    </div>
+  </div>
+
+  <div class="progress-section">
+    <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    <div class="progress-text" id="prog-text">0 / 19</div>
+    <div class="score-badge" id="score-badge">Score: 0</div>
+  </div>
+
+  <div id="main"></div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    topic: "Coagulation & Liver Disease",
+    vignette: "A <em>45-year-old woman</em> has experienced malaise with nausea and vomiting for 3 months. On physical examination, she has <em>scleral icterus</em> and a yellowish hue to her skin. She has difficulty remembering three objects after 3 minutes.",
+    labs: [
+      { name: "Hepatitis C serology", val: "Positive", flag: "abnormal" },
+      { name: "ALT", val: "310 U/L", flag: "abnormal" },
+      { name: "AST", val: "275 U/L", flag: "abnormal" },
+      { name: "Total bilirubin", val: "7.6 mg/dL", flag: "abnormal" },
+      { name: "Direct bilirubin", val: "5.8 mg/dL", flag: "abnormal" },
+      { name: "Alkaline phosphatase", val: "75 U/L", flag: "" },
+      { name: "Ammonia", val: "55 µmol/L", flag: "abnormal" }
+    ],
+    stem: "Based on these findings, which hemostatic laboratory study is most likely to yield an abnormal result?",
+    opts: ["Plasma von Willebrand factor immunoassay","Platelet count","Prothrombin time","Fibrin split products"],
+    ans: 2,
+    exp: "<strong>Prothrombin time (PT)</strong> is most likely to be prolonged. The liver synthesises clotting factors I, II, V, VII, IX, and X. Hepatocellular injury reduces factor VII (shortest half-life ~4–6 hours), prolonging the PT first. Von Willebrand factor is produced by vascular endothelium and megakaryocytes — its synthesis is independent of hepatocyte function."
+  },
+  {
+    topic: "RBC Morphology & Electrophoresis",
+    vignette: "A <em>25-year-old woman</em> has a 3-year history of arthralgias. She appears pale on examination.",
+    labs: [
+      { name: "RBC count", val: "4.7 million/mm³", flag: "" },
+      { name: "Haemoglobin", val: "12.5 g/dL", flag: "" },
+      { name: "Haematocrit", val: "37.1%", flag: "" },
+      { name: "MCV", val: "Low (microcytic)", flag: "abnormal" },
+      { name: "MCH", val: "Low (hypochromic)", flag: "abnormal" },
+      { name: "Platelet count", val: "217,000/mm³", flag: "" },
+      { name: "WBC count", val: "5,890/mm³", flag: "" },
+      { name: "Serum iron", val: "Normal", flag: "" },
+      { name: "Serum ferritin", val: "Normal", flag: "" },
+      { name: "HbA2 (electrophoresis)", val: "5.8%", flag: "abnormal" }
+    ],
+    stem: "Integrating the peripheral smear and haemoglobin electrophoresis results, what is the most likely diagnosis?",
+    opts: ["Autoimmune haemolytic anaemia","β-Thalassaemia minor","Anaemia of chronic disease","Iron deficiency anaemia"],
+    ans: 1,
+    exp: "<strong>β-Thalassaemia minor</strong>. Defective β-globin chain synthesis causes compensatory elevation of HbA2 (α₂δ₂) above 3.5% — here 5.8%, which is diagnostic. Iron stores are normal, ruling out IDA. The mild microcytic hypochromic picture with preserved iron is the classic laboratory fingerprint of β-thalassaemia trait."
+  },
+  {
+    topic: "Hereditary Haemolytic Anaemia",
+    vignette: "A <em>30-year-old woman</em> has had a constant feeling of lethargy since childhood. She is afebrile; the spleen tip is palpable with no tenderness.",
+    labs: [
+      { name: "Haemoglobin", val: "11.7 g/dL", flag: "abnormal" },
+      { name: "Platelet count", val: "159,000/mm³", flag: "" },
+      { name: "WBC count", val: "5,390/mm³", flag: "" },
+      { name: "Peripheral smear", val: "Spherocytosis", flag: "abnormal" },
+      { name: "Osmotic fragility test", val: "Increased", flag: "abnormal" }
+    ],
+    stem: "These laboratory and smear findings point to which inherited RBC component defect?",
+    opts: ["Glucose-6-phosphate dehydrogenase","Membrane cytoskeletal protein","α-Globin chain","Heme"],
+    ans: 1,
+    exp: "<strong>Membrane cytoskeletal protein defect</strong> (hereditary spherocytosis). Mutations in spectrin, ankyrin, or band 3 destabilise the lipid bilayer, causing membrane loss and spherocyte formation. Spherocytes are osmotically fragile and are trapped in splenic sinusoids, producing chronic compensated haemolytic anaemia with splenomegaly."
+  },
+  {
+    topic: "Anaemia — Peripheral Smear Interpretation",
+    vignette: "A <em>69-year-old previously healthy woman</em> has been feeling increasingly tired and weak for 4 months. She is afebrile with no hepatosplenomegaly or lymphadenopathy. The peripheral blood smear shows hypochromic microcytic RBCs with pencil cells.",
+    labs: [
+      { name: "Haemoglobin", val: "9.3 g/dL", flag: "abnormal" },
+      { name: "Platelet count", val: "250,600/mm³", flag: "" },
+      { name: "WBC count", val: "6,820/mm³", flag: "" },
+      { name: "Peripheral smear", val: "Hypochromic microcytic + pencil cells", flag: "abnormal" }
+    ],
+    stem: "Considering her age and these laboratory findings, which condition is the most likely underlying cause?",
+    opts: ["Pernicious anaemia","Gastrointestinal blood loss","Aplastic anaemia","β-Thalassaemia major"],
+    ans: 1,
+    exp: "<strong>Gastrointestinal blood loss</strong>. Hypochromic microcytic RBCs with pencil cells indicate iron deficiency anaemia. In a 69-year-old, occult GI blood loss from colorectal carcinoma is the most common aetiology and must be excluded. β-Thalassaemia major presents in infancy; aplastic anaemia shows pancytopenia; pernicious anaemia shows macrocytosis."
+  },
+  {
+    topic: "Vascular Bleeding Disorders",
+    vignette: "A <em>76-year-old woman</em> notices pinpoint-to-blotchy superficial haemorrhages on her gums and extremity skin over 3 weeks. She is afebrile with no organomegaly.",
+    labs: [
+      { name: "Prothrombin time", val: "Normal", flag: "" },
+      { name: "PTT", val: "Normal", flag: "" },
+      { name: "Haemoglobin", val: "12.7 g/dL", flag: "" },
+      { name: "MCV", val: "80 µm³", flag: "" },
+      { name: "Platelet count", val: "276,000/mm³", flag: "" },
+      { name: "WBC count", val: "5,600/mm³", flag: "" },
+      { name: "Platelet function studies", val: "Normal", flag: "" },
+      { name: "Fibrinogen", val: "Normal", flag: "" },
+      { name: "Fibrin split products", val: "Not detectable", flag: "" }
+    ],
+    stem: "With all haemostatic parameters completely normal, which condition best explains the bleeding?",
+    opts: ["Macronodular cirrhosis","Chronic renal failure","Meningococcaemia","Vitamin C deficiency"],
+    ans: 3,
+    exp: "<strong>Vitamin C deficiency (scurvy)</strong>. Vitamin C is essential for hydroxylation of proline/lysine residues in collagen. Deficiency weakens perivascular connective tissue → perifollicular petechiae and gum bleeding despite entirely normal PT, PTT, platelet count, and platelet function. The key teaching point: normal haemostasis with clinical bleeding = structural/vascular cause."
+  },
+  {
+    topic: "Autoimmune Haemolysis",
+    vignette: "A <em>65-year-old man</em> with follicular non-Hodgkin's lymphoma is on chemotherapy. He develops fever, cough, and bilateral pulmonary rales. Sputum shell vial assay is positive for <em>cytomegalovirus</em>. He develops scleral icterus.",
+    labs: [
+      { name: "Haemoglobin", val: "10.3 g/dL", flag: "abnormal" },
+      { name: "Haematocrit", val: "41.3%", flag: "" },
+      { name: "MCV", val: "101 µm³", flag: "abnormal" },
+      { name: "WBC count", val: "7,600/mm³", flag: "" },
+      { name: "Platelet count", val: "205,000/mm³", flag: "" },
+      { name: "Total bilirubin", val: "6 mg/dL", flag: "abnormal" },
+      { name: "Direct bilirubin", val: "0.8 mg/dL", flag: "" },
+      { name: "LDH", val: "1,020 U/L", flag: "abnormal" },
+      { name: "Coombs test", val: "Positive", flag: "abnormal" }
+    ],
+    stem: "Interpreting the bilirubin fractionation, LDH, and Coombs result — what is the mechanism of his anaemia?",
+    opts: ["IgM binding to red blood cells","Chemotherapy bone marrow toxicity","Cytomegalovirus hepatitis","Dietary folate deficiency"],
+    ans: 0,
+    exp: "<strong>IgM binding to RBCs (cold agglutinin disease)</strong>. The pattern — high total bilirubin with predominantly indirect fraction (indirect = 5.2 mg/dL), markedly elevated LDH, and positive Coombs test — confirms extravascular haemolysis. Follicular lymphoma produces monoclonal IgM cold agglutinins that bind RBCs in cooler peripheral circulation, activating complement and causing splenic destruction."
+  },
+  {
+    topic: "Aplastic Crisis",
+    vignette: "A <em>29-year-old woman</em> with known chronic hereditary spherocytosis (baseline haematocrit 35–38%) presents with malaise and low-grade fever for one week. She appears very pale.",
+    labs: [
+      { name: "Haematocrit", val: "28%", flag: "abnormal" },
+      { name: "Reticulocyte count", val: "Very low", flag: "abnormal" },
+      { name: "Peripheral smear", val: "Spherocytes present", flag: "abnormal" },
+      { name: "Serum bilirubin", val: "0.9 mg/dL", flag: "" }
+    ],
+    stem: "The drop in haematocrit, the very low reticulocyte count, and the near-normal bilirubin together indicate which underlying event?",
+    opts: ["Development of anti-RBC antibodies","Disseminated intravascular coagulation","Accelerated extravascular haemolysis in the spleen","Reduced erythropoiesis from parvovirus B19 infection"],
+    ans: 3,
+    exp: "<strong>Parvovirus B19 aplastic crisis</strong>. Parvovirus B19 infects erythroid progenitors via the P-antigen receptor, transiently halting RBC production. In a patient with compensated haemolytic anaemia who relies on a high reticulocyte count, this causes sudden severe anaemia. The near-normal bilirubin (no increased haemolysis) combined with a very low reticulocyte count is the diagnostic signature — production failure, not increased destruction."
+  },
+  {
+    topic: "Disseminated Intravascular Coagulation",
+    vignette: "A <em>60-year-old man</em> with mucinous adenocarcinoma of the rectum and multiple hepatic metastases has developed widespread ecchymoses over the past month. He appears cachectic and pale.",
+    labs: [
+      { name: "Prothrombin time", val: "30 seconds", flag: "abnormal" },
+      { name: "PTT", val: "55 seconds", flag: "abnormal" },
+      { name: "Platelet count", val: "15,200/mm³", flag: "abnormal" },
+      { name: "Fibrinogen", val: "75 mg/dL", flag: "abnormal" },
+      { name: "D-dimer (FSP)", val: "Very elevated", flag: "abnormal" }
+    ],
+    stem: "Given this coagulation profile, which morphologic finding is most expected on peripheral blood smear?",
+    opts: ["Howell-Jolly bodies","Teardrop cells","Macro-ovalocytes","Schistocytes"],
+    ans: 3,
+    exp: "<strong>Schistocytes (helmet cells)</strong>. DIC generates widespread microvascular fibrin strands. As RBCs traverse these strands, they are physically sheared into fragments — schistocytes. This is the hallmark of microangiopathic haemolytic anaemia (MAHA). Mucin-secreting carcinomas trigger DIC via Trousseau syndrome (tumour mucins activate factor X and platelets)."
+  },
+  {
+    topic: "Enzyme Deficiency Anaemia",
+    vignette: "Three days after starting a phenacetin-containing anti-inflammatory, a <em>23-year-old African-American man</em> passes dark reddish-brown urine. He has been healthy his whole life and has had no prior illnesses.",
+    labs: [
+      { name: "Urine colour", val: "Dark reddish-brown", flag: "abnormal" },
+      { name: "Haemoglobin", val: "Mildly reduced", flag: "abnormal" },
+      { name: "MCV", val: "Normal (normocytic)", flag: "" },
+      { name: "Peripheral smear (supravital)", val: "Heinz bodies present", flag: "abnormal" },
+      { name: "Peripheral smear", val: "Scattered bite cells", flag: "abnormal" }
+    ],
+    stem: "Integrating the precipitating drug, ethnicity, Heinz bodies, and bite cells — what is the diagnosis?",
+    opts: ["α-Thalassaemia","Sickle cell trait","Glucose-6-phosphate dehydrogenase deficiency","Autoimmune haemolytic anaemia"],
+    ans: 2,
+    exp: "<strong>G6PD deficiency</strong>. G6PD is essential for generating NADPH via the HMP shunt, which maintains reduced glutathione. Oxidant drugs (phenacetin, primaquine, dapsone) overwhelm the depleted antioxidant defence → haemoglobin oxidation → Heinz body formation → macrophages 'bite' Heinz bodies out → bite cells. X-linked disorder, prevalent in African-Americans. Haemolysis is self-limited as older, more-deficient cells are destroyed first."
+  },
+  {
+    topic: "Anaemia of Chronic Disease",
+    vignette: "A <em>50-year-old man</em> has chronic fatigue and weight loss for 3 months. No remarkable findings on physical examination.",
+    labs: [
+      { name: "Haemoglobin", val: "11.2 g/dL", flag: "abnormal" },
+      { name: "Haematocrit", val: "33.3%", flag: "abnormal" },
+      { name: "MCV", val: "91 µm³ (normocytic)", flag: "" },
+      { name: "Platelet count", val: "240,000/mm³", flag: "" },
+      { name: "WBC count", val: "7,550/mm³", flag: "" },
+      { name: "Serum iron", val: "80 µg/dL", flag: "" },
+      { name: "TIBC", val: "145 µg/dL (low)", flag: "abnormal" },
+      { name: "Serum ferritin", val: "565 ng/mL (high)", flag: "abnormal" },
+      { name: "ANA test", val: "Positive", flag: "abnormal" }
+    ],
+    stem: "The combination of low TIBC, high ferritin, normal MCV, and positive ANA points to which diagnosis?",
+    opts: ["Iron deficiency anaemia","Aplastic anaemia","Anaemia of chronic disease","Microangiopathic haemolytic anaemia"],
+    ans: 2,
+    exp: "<strong>Anaemia of chronic disease (ACD)</strong>. The key pattern: ↓ serum iron + ↓ TIBC (unlike IDA where TIBC rises) + ↑↑ ferritin (iron stored, not utilised). Hepcidin — upregulated by IL-6 in inflammatory states — sequesters iron in macrophages. The positive ANA indicates an underlying autoimmune condition (likely SLE) as the inflammatory driver. ACD is normocytic or mildly microcytic."
+  },
+  {
+    topic: "Coagulation Factor Deficiency",
+    vignette: "A <em>5-year-old boy</em> has had a history of easy bruising and blood in his urine since infancy. He has several ecchymoses on his lower extremities. No organomegaly.",
+    labs: [
+      { name: "Haemoglobin", val: "13.1 g/dL", flag: "" },
+      { name: "Platelet count", val: "287,600/mm³", flag: "" },
+      { name: "WBC count", val: "6,830/mm³", flag: "" },
+      { name: "Prothrombin time", val: "13 seconds (normal)", flag: "" },
+      { name: "PTT", val: "54 seconds (prolonged)", flag: "abnormal" },
+      { name: "Factor VIII activity", val: "< 1%", flag: "abnormal" }
+    ],
+    stem: "Without factor VIII concentrate replacement, which complication will most likely develop from this coagulation profile?",
+    opts: ["Splenomegaly","Haemolysis","Haemochromatosis","Haemarthroses"],
+    ans: 3,
+    exp: "<strong>Haemarthroses (joint bleeding)</strong>. Haemophilia A (<1% factor VIII activity = severe). The intrinsic coagulation pathway is disrupted → prolonged PTT with normal PT (extrinsic pathway intact). Deep tissue bleeding — particularly into joints (knees, elbows, ankles) — is the hallmark. Repeated haemarthroses cause synovial inflammation, iron deposition, cartilage destruction, and permanent haemophilic arthropathy."
+  },
+  {
+    topic: "Plasma Cell Dyscrasia",
+    vignette: "A <em>67-year-old man</em> has increasing weakness, fatigue, weight loss, decreasing vision in both eyes, headaches, dizziness, and cold-sensitive hands over 5 months. He has generalised lymphadenopathy and hepatosplenomegaly. Bone marrow biopsy shows infiltration by small plasmacytoid lymphoid cells with Russell bodies.",
+    labs: [
+      { name: "Serum protein", val: "15.5 g/dL (markedly elevated)", flag: "abnormal" },
+      { name: "Albumin", val: "3.2 g/dL", flag: "abnormal" },
+      { name: "Globulin (calculated)", val: "~12.3 g/dL", flag: "abnormal" }
+    ],
+    stem: "Given the bone marrow finding, the hyperviscosity syndrome, and the extreme hyperproteinaemia, which laboratory result is most expected?",
+    opts: ["Monoclonal IgM spike in serum","WBC count of 255,000/mm³","Hypercalcaemia","Bence Jones proteinuria"],
+    ans: 0,
+    exp: "<strong>Monoclonal IgM spike (Waldenström macroglobulinaemia)</strong>. Plasmacytoid lymphocytes producing monoclonal IgM create hyperviscosity syndrome (visual disturbance, neurological symptoms, cold sensitivity — Raynaud phenomenon). Russell bodies represent immunoglobulin inclusions in plasma cells. Unlike multiple myeloma, lytic bone lesions and hypercalcaemia are uncommon. TIBC rises reflect the humoral paraprotein."
+  },
+  {
+    topic: "Lymphoma Genetics",
+    vignette: "A <em>12-year-old boy</em> presents with 3 days of increasing abdominal distention and pain. A 7-cm ileocaecal mass is found. Histology: sheets of intermediate-sized lymphoid cells with coarse chromatin, multiple nucleoli, and many mitoses. Bone marrow biopsy is negative.",
+    labs: [
+      { name: "Bone marrow biopsy", val: "Negative for tumour cells", flag: "" },
+      { name: "Cytogenetics", val: "t(8;14)", flag: "abnormal" },
+      { name: "Flow cytometry S-phase", val: "40% of cells", flag: "abnormal" }
+    ],
+    stem: "Integrating the ileocaecal location, the cytogenetic translocation, and the extremely high proliferation index, what is the diagnosis?",
+    opts: ["Diffuse large B-cell lymphoma","Follicular lymphoma","Acute lymphoblastic leukaemia","Burkitt lymphoma"],
+    ans: 3,
+    exp: "<strong>Burkitt lymphoma</strong>. t(8;14) juxtaposes the MYC oncogene onto the Ig heavy chain locus, driving relentless B-cell proliferation. Virtually 100% S-phase fraction and the 'starry sky' pattern (macrophages ingesting apoptotic cells) are characteristic. The ileocaecal/jaw location in children, dramatic chemosensitivity, and negative bone marrow at this stage all fit. It is the fastest-growing human tumour."
+  },
+  {
+    topic: "Multiple Myeloma",
+    vignette: "A <em>61-year-old man</em> has 5 months of back pain. He develops productive cough; sputum grows Streptococcus pneumoniae. The skull radiograph shows multiple punched-out lytic lesions. No lymphadenopathy or splenomegaly.",
+    labs: [
+      { name: "Serum creatinine", val: "3.7 mg/dL", flag: "abnormal" },
+      { name: "Urea nitrogen (BUN)", val: "35 mg/dL", flag: "abnormal" },
+      { name: "Skull X-ray", val: "Punched-out lytic lesions", flag: "abnormal" },
+      { name: "Sputum culture", val: "Streptococcus pneumoniae", flag: "abnormal" }
+    ],
+    stem: "Given the skeletal lesions, renal impairment, and susceptibility to encapsulated organisms, what will the bone marrow biopsy most likely show?",
+    opts: ["Scattered small granulomas","Numerous plasma cells","Nodules of small mature lymphocytes","Occasional Reed-Sternberg cells"],
+    ans: 1,
+    exp: "<strong>Numerous plasma cells</strong>. The classic triad of multiple myeloma: lytic bone lesions (osteoclast activation by RANK-L), renal failure (light chain cast nephropathy = myeloma kidney), and susceptibility to encapsulated bacteria (S. pneumoniae, H. influenzae) from immune paresis. Bone marrow >10–30% clonal plasma cells confirms the diagnosis. Back pain from vertebral compression fractures is the most common initial symptom."
+  },
+  {
+    topic: "Lymphoma Immunophenotyping",
+    vignette: "A <em>62-year-old man</em> has prolonged fever, 4-kg weight loss over 6 months, generalised nontender lymphadenopathy, and a palpable spleen tip. A cervical lymph node biopsy shows a nodular pattern of small lymphoid cells. Bone marrow shows similar small cells.",
+    labs: [
+      { name: "Haemoglobin", val: "10.1 g/dL", flag: "abnormal" },
+      { name: "Platelet count", val: "140,000/mm³", flag: "abnormal" },
+      { name: "WBC count", val: "24,500/mm³", flag: "abnormal" },
+      { name: "Differential", val: "86% lymphocytes, 10% neutrophils", flag: "abnormal" },
+      { name: "Bone marrow immunophenotype", val: "CD5+, CD10−, surface Ig+", flag: "abnormal" },
+      { name: "Cytogenetics", val: "t(11;14)", flag: "abnormal" }
+    ],
+    stem: "The CD5+/CD10− phenotype combined with t(11;14) identifies which specific lymphoma subtype?",
+    opts: ["Mantle cell lymphoma","Follicular lymphoma","Acute lymphoblastic leukaemia","Burkitt lymphoma"],
+    ans: 0,
+    exp: "<strong>Mantle cell lymphoma</strong>. t(11;14) → cyclin D1 overexpression is diagnostic. Cells are CD5+/CD10−/surface Ig+ — resembling CLL (also CD5+) but distinguished by t(11;14) and cyclin D1. Mantle cell lymphoma has a nodular or diffuse architecture, affects middle-aged/elderly males, presents with lymphadenopathy, splenomegaly, and bone marrow involvement, and pursues an aggressive course."
+  },
+  {
+    topic: "Leukaemia — Molecular Genetics",
+    vignette: "In a laboratory experiment, bone marrow aspirates from patients with lymphoproliferative disorders are analysed by cytogenetics. A subset is found to carry the BCR-ABL fusion gene from t(9;22)(q34;11), resulting in constitutively increased tyrosine kinase activity.",
+    labs: [
+      { name: "Cytogenetic finding", val: "t(9;22) — Philadelphia chromosome", flag: "abnormal" },
+      { name: "BCR-ABL fusion gene", val: "Present", flag: "abnormal" },
+      { name: "Tyrosine kinase activity", val: "Markedly increased", flag: "abnormal" }
+    ],
+    stem: "In which condition is the BCR-ABL / Philadelphia chromosome most characteristically found?",
+    opts: ["Follicular lymphoma","Chronic myelogenous leukaemia","Hodgkin lymphoma — lymphocyte depletion type","Acute promyelocytic leukaemia"],
+    ans: 1,
+    exp: "<strong>Chronic myelogenous leukaemia (CML)</strong>. The Philadelphia chromosome t(9;22) producing BCR-ABL is present in >95% of CML. The constitutively active tyrosine kinase drives unchecked myeloid proliferation. Imatinib (Gleevec) competitively inhibits this kinase. Key comparisons: follicular lymphoma → t(14;18)/BCL2; APL → t(15;17)/PML-RARα; Burkitt → t(8;14)/MYC."
+  },
+  {
+    topic: "Lymphoma — Translocation & Phenotype",
+    vignette: "A <em>64-year-old man</em> has painless inguinal, axillary, and cervical lymphadenopathy. Cervical node biopsy: nodular aggregates of small cleaved lymphoid cells (centrocytes) and larger cells (centroblasts) with open chromatin. Bone marrow biopsy: similar lymphoid aggregates.",
+    labs: [
+      { name: "Bone marrow immunophenotype", val: "CD10+, CD5−, surface Ig+", flag: "abnormal" },
+      { name: "Cytogenetics", val: "t(14;18)", flag: "abnormal" }
+    ],
+    stem: "The CD10+/CD5− phenotype with t(14;18) and centrocyte/centroblast nodular architecture — what is the diagnosis?",
+    opts: ["Hodgkin lymphoma","Acute lymphadenitis","Follicular lymphoma","Mantle cell lymphoma"],
+    ans: 2,
+    exp: "<strong>Follicular lymphoma</strong>. t(14;18) juxtaposes BCL2 onto the Ig heavy chain locus → constitutive BCL2 overexpression → blocked apoptosis. CD10+/CD5− with nodular architecture of centrocytes and centroblasts is classic. It is the most common indolent B-cell lymphoma in adults. Contrast with mantle cell: CD5+, t(11;14); CLL: CD5+/CD23+, no t(14;18); Burkitt: t(8;14), 100% proliferation index."
+  },
+  {
+    topic: "CML Blast Crisis",
+    vignette: "A <em>45-year-old man</em> with Ph1+ CML achieves remission on imatinib for 3 years. He then develops fatigue, 10-kg weight loss, and petechial haemorrhages. Peripheral smear (part B) shows large immature blasts.",
+    labs: [
+      { name: "Haemoglobin", val: "10.5 g/dL", flag: "abnormal" },
+      { name: "Haematocrit", val: "30%", flag: "abnormal" },
+      { name: "Platelet count", val: "60,000/µL", flag: "abnormal" },
+      { name: "WBC count", val: "40,000/µL", flag: "abnormal" },
+      { name: "Cytogenetics", val: "Two Ph1 chromosomes + aneuploidy", flag: "abnormal" },
+      { name: "Flow cytometry", val: "CD19+, CD10+, sIg−, CD3−", flag: "abnormal" }
+    ],
+    stem: "The flow cytometry immunophenotype combined with clonal evolution (dual Ph1 + aneuploidy) indicates which complication of CML?",
+    opts: ["Chronic myelogenous leukaemia","Myelodysplastic syndrome","Hairy cell leukaemia","B lymphoblastic leukaemia"],
+    ans: 3,
+    exp: "<strong>B lymphoblastic leukaemia (blast crisis)</strong>. Approximately 20% of CML cases undergo blast crisis, transforming into ALL (most often B-ALL: CD19+/CD10+/sIg−/CD3−) or AML. Clonal evolution with additional chromosomal abnormalities (here: two Ph1 chromosomes + aneuploidy) signals transformation. TdT would be positive, confirming B-lymphoblastic precursor origin. This represents disease progression despite imatinib therapy."
+  },
+  {
+    topic: "Chronic Lymphoproliferative Disorder",
+    vignette: "An elderly woman (former Olympic figure skater) becomes progressively fatigued in her late 50s. She has palpable nontender axillary and inguinal lymph nodes, and the spleen tip is palpable. The peripheral blood picture shows a predominance of small mature lymphocytes with smudge cells.",
+    labs: [
+      { name: "Haemoglobin", val: "10.1 g/dL", flag: "abnormal" },
+      { name: "Haematocrit", val: "30.5%", flag: "abnormal" },
+      { name: "MCV", val: "90 µm³", flag: "" },
+      { name: "Platelet count", val: "89,000/mm³", flag: "abnormal" },
+      { name: "WBC count", val: "31,300/mm³", flag: "abnormal" },
+      { name: "Peripheral smear", val: "Predominantly small mature lymphocytes + smudge cells", flag: "abnormal" }
+    ],
+    stem: "The peripheral blood picture — smudge cells, absolute lymphocytosis of small mature lymphocytes, thrombocytopenia, and splenomegaly — is diagnostic of which condition?",
+    opts: ["Infectious mononucleosis","Chronic lymphocytic leukaemia","Iron deficiency anaemia","Leukemoid reaction"],
+    ans: 1,
+    exp: "<strong>Chronic lymphocytic leukaemia (CLL)</strong>. CLL is the most common adult leukaemia (>60 years). Classic features: absolute lymphocytosis of small mature-appearing B lymphocytes (CD5+/CD23+/CD19+), smudge/basket cells on smear (mechanically fragile cells), insidious fatigue, painless lymphadenopathy, splenomegaly, anaemia, and thrombocytopenia. Indolent but progressive; immune paresis leads to susceptibility to infections."
+  }
+];
+
+let cur = 0, score = 0, answered = false;
+
+function renderQ() {
+  if (cur >= QUESTIONS.length) { renderResults(); return; }
+  const q = QUESTIONS[cur];
+  answered = false;
+
+  document.getElementById('prog-fill').style.width = ((cur / QUESTIONS.length) * 100) + '%';
+  document.getElementById('prog-text').textContent = cur + ' / ' + QUESTIONS.length;
+  document.getElementById('score-badge').textContent = 'Score: ' + score;
+
+  const labsHTML = q.labs ? `
+    <div class="lab-panel">
+      <div class="lab-panel-header">Laboratory Findings</div>
+      <div class="lab-grid">
+        ${q.labs.map(l => `
+          <div class="lab-item">
+            <div class="lab-name">${l.name}</div>
+            <div class="lab-val ${l.flag}">${l.val}</div>
+          </div>`).join('')}
+      </div>
+    </div>` : '';
+
+  document.getElementById('main').innerHTML = `
+    <div class="q-card">
+      <div class="topic-tag">${q.topic}</div>
+      <div class="q-number">Question ${cur + 1} of ${QUESTIONS.length}</div>
+      <div class="vignette">${q.vignette}</div>
+      ${labsHTML}
+      <div class="q-stem">${q.stem}</div>
+      <div class="options" id="opts">
+        ${q.opts.map((o, i) => `
+          <div class="opt" data-i="${i}" onclick="pick(${i})">
+            <div class="opt-badge">${'ABCD'[i]}</div>
+            <div class="opt-text">${o}</div>
+          </div>`).join('')}
+      </div>
+      <div id="exp-area"></div>
+      <div class="btn-row">
+        <button class="btn primary" id="next-btn" onclick="nextQ()" disabled>
+          ${cur === QUESTIONS.length - 1 ? 'See Results →' : 'Next Question →'}
+        </button>
+      </div>
+    </div>`;
+}
+
+function pick(i) {
+  if (answered) return;
+  answered = true;
+  const q = QUESTIONS[cur];
+  document.querySelectorAll('.opt').forEach(o => o.classList.add('locked'));
+  const opts = document.querySelectorAll('.opt');
+  opts[q.ans].classList.add('correct');
+  if (i !== q.ans) {
+    opts[i].classList.add('wrong');
+  } else {
+    score++;
+    document.getElementById('score-badge').textContent = 'Score: ' + score;
+  }
+  document.getElementById('exp-area').innerHTML = `
+    <div class="explanation ${i === q.ans ? 'correct-exp' : 'wrong-exp'}">
+      <div class="exp-label">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          ${i === q.ans
+            ? '<path d="M20 6L9 17l-5-5"/>'
+            : '<path d="M18 6L6 18M6 6l12 12"/>'}
+        </svg>
+        ${i === q.ans ? 'Correct — Explanation' : 'Incorrect — Correct Answer & Explanation'}
+      </div>
+      <div class="exp-body">${q.exp}</div>
+    </div>`;
+  document.getElementById('next-btn').disabled = false;
+}
+
+function nextQ() { cur++; renderQ(); }
+
+function renderResults() {
+  document.getElementById('prog-fill').style.width = '100%';
+  document.getElementById('prog-text').textContent = QUESTIONS.length + ' / ' + QUESTIONS.length;
+  const pct = Math.round((score / QUESTIONS.length) * 100);
+  const verdict =
+    pct >= 85 ? 'Outstanding — you have mastered hematology pathology!' :
+    pct >= 70 ? 'Strong performance — review your incorrect answers carefully.' :
+    pct >= 55 ? 'Good effort — target your weak topics for revision.' :
+                'Keep revising — revisit lecture notes and try again.';
+
+  document.getElementById('main').innerHTML = `
+    <div class="results-page">
+      <div class="results-hero">
+        <div class="results-pct">${pct}%</div>
+        <div class="results-frac">${score} out of ${QUESTIONS.length} correct</div>
+        <div class="results-verdict">${verdict}</div>
+      </div>
+      <div class="results-grid">
+        <div class="res-card"><div class="res-card-val">${score}</div><div class="res-card-lbl">Correct</div></div>
+        <div class="res-card"><div class="res-card-val">${QUESTIONS.length - score}</div><div class="res-card-lbl">Incorrect</div></div>
+        <div class="res-card"><div class="res-card-val">${pct}%</div><div class="res-card-lbl">Score</div></div>
+        <div class="res-card"><div class="res-card-val">${QUESTIONS.length}</div><div class="res-card-lbl">Total Qs</div></div>
+      </div>
+      <div class="results-btn-row">
+        <button class="btn primary" onclick="restart()">Restart Quiz</button>
+      </div>
+    </div>`;
+}
+
+function restart() { cur = 0; score = 0; renderQ(); }
+
+renderQ();
+</script>
+</body>
+</html>
