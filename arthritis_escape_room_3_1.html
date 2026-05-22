@@ -1,0 +1,928 @@
+
+<h2 class="sr-only">Arthritis Escape Room — unlock 4 wards by answering clinical questions on OA, RA, Gout and Bonus conditions. MBBS Year 2 pathology.</h2>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&family=Merriweather+Sans:wght@400;600&display=swap');
+
+:root {
+  --er-bg: #f5f0eb;
+  --er-surface: #ffffff;
+  --er-surface2: #fdf7f2;
+  --er-border: #e8ddd3;
+  --er-border2: #d5c8bc;
+  --er-text: #2d1f14;
+  --er-text2: #6b5244;
+  --er-text3: #a0877a;
+  --er-accent: #b5451b;
+  --er-accent-bg: #fdf0eb;
+  --er-accent-border: #e8a58a;
+  --er-green: #1a7a50;
+  --er-green-bg: #eaf6ef;
+  --er-green-border: #7dcea0;
+  --er-amber: #9a6200;
+  --er-amber-bg: #fef8e7;
+  --er-amber-border: #f0c040;
+  --er-red: #c0392b;
+  --er-red-bg: #fdeeec;
+  --er-red-border: #e8a09a;
+  --er-blue: #1a5f8a;
+  --er-blue-bg: #eaf3fb;
+  --er-blue-border: #7ab8dc;
+  --er-purple: #6a3d8f;
+  --er-purple-bg: #f5eefa;
+  --er-purple-border: #c09adc;
+  --er-shadow: 0 2px 12px rgba(45,31,20,0.10);
+  --er-radius: 14px;
+  --er-radius-sm: 8px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+.er {
+  padding: 1rem 0;
+  font-family: 'Nunito', sans-serif;
+  background: var(--er-bg);
+  background-image:
+    radial-gradient(ellipse at 10% 20%, rgba(181,69,27,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 80%, rgba(26,95,138,0.07) 0%, transparent 50%);
+  border-radius: 18px;
+  min-height: 100%;
+}
+
+.er-hdr {
+  text-align: center;
+  padding: 1.25rem 1rem 0.75rem;
+  background: linear-gradient(135deg, #b5451b 0%, #8c3010 60%, #5c1e08 100%);
+  border-radius: 16px 16px 0 0;
+  margin: -1rem 0 0.75rem 0;
+}
+.er-title {
+  font-family: 'Merriweather Sans', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.3px;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+.er-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,0.82);
+  margin-top: 4px;
+}
+
+/* HUD */
+.hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--er-surface);
+  border: 1.5px solid var(--er-border);
+  border-radius: var(--er-radius);
+  padding: 10px 16px;
+  margin: 0 0 0.75rem 0;
+  box-shadow: var(--er-shadow);
+}
+.hud-item { text-align: center; }
+.hud-val {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--er-text);
+}
+.hud-lbl {
+  font-size: 12px;
+  color: var(--er-text3);
+  margin-top: 1px;
+}
+
+/* MAP */
+.map { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0.75rem 0; }
+
+.ward {
+  border: 1.5px solid var(--er-border);
+  border-radius: var(--er-radius);
+  padding: 14px 16px 12px;
+  cursor: pointer;
+  background: var(--er-surface);
+  transition: all 0.18s;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--er-shadow);
+}
+.ward::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--er-accent), var(--er-amber));
+  opacity: 0;
+  transition: opacity 0.18s;
+}
+.ward:hover:not(.ward-locked)::before { opacity: 1; }
+.ward:hover:not(.ward-locked) {
+  border-color: var(--er-accent-border);
+  background: var(--er-accent-bg);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 18px rgba(181,69,27,0.15);
+}
+.ward.ward-locked { opacity: 0.45; cursor: not-allowed; }
+.ward.ward-active {
+  border: 2px solid var(--er-accent-border);
+  background: var(--er-accent-bg);
+}
+.ward.ward-active::before { opacity: 1; }
+.ward.ward-done {
+  border: 2px solid var(--er-green-border);
+  background: var(--er-green-bg);
+}
+.ward.ward-done::before {
+  background: linear-gradient(90deg, var(--er-green), #2ecc71);
+  opacity: 1;
+}
+.ward-num { font-size: 11px; font-weight: 600; color: var(--er-text3); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.07em; }
+.ward-name { font-size: 16px; font-weight: 700; color: var(--er-text); }
+.ward-status { font-size: 13px; color: var(--er-text2); margin-top: 3px; }
+.ward-keys { display: flex; gap: 5px; margin-top: 9px; flex-wrap: wrap; }
+.key { width: 14px; height: 14px; border-radius: 50%; border: 1px solid var(--er-border); background: var(--er-surface2); }
+.key.found { background: var(--er-green); border-color: var(--er-green); }
+.key.lost { background: var(--er-red); border-color: var(--er-red); }
+.lock-icon { position: absolute; top: 12px; right: 14px; font-size: 18px; color: var(--er-text3); }
+
+/* SCREEN / CARD */
+.screen {
+  background: var(--er-surface);
+  border: 1.5px solid var(--er-border);
+  border-radius: var(--er-radius);
+  padding: 1.25rem;
+  margin: 0.75rem 0;
+  box-shadow: var(--er-shadow);
+}
+
+.puzzle-hdr { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.puzzle-icon {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--er-accent-bg), #fde0d4);
+  color: var(--er-accent);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+  border: 1.5px solid var(--er-accent-border);
+}
+.puzzle-title { font-size: 17px; font-weight: 700; color: var(--er-text); }
+.puzzle-sub { font-size: 13px; color: var(--er-text2); }
+
+.clue-box {
+  background: var(--er-amber-bg);
+  border-left: 4px solid var(--er-amber-border);
+  border-radius: var(--er-radius-sm);
+  padding: 12px 14px;
+  font-size: 15px;
+  color: var(--er-text2);
+  line-height: 1.75;
+  margin-bottom: 16px;
+}
+.clue-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--er-amber);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.q-text {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--er-text);
+  margin-bottom: 12px;
+  line-height: 1.65;
+}
+.q-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+.badge-e { background: var(--er-green-bg); color: var(--er-green); border: 1px solid var(--er-green-border); }
+.badge-m { background: var(--er-amber-bg); color: var(--er-amber); border: 1px solid var(--er-amber-border); }
+.badge-h { background: var(--er-red-bg); color: var(--er-red); border: 1px solid var(--er-red-border); }
+
+.opts { display: flex; flex-direction: column; gap: 8px; }
+.opt {
+  padding: 10px 14px;
+  border: 1.5px solid var(--er-border);
+  border-radius: var(--er-radius-sm);
+  font-size: 16px;
+  font-family: 'Nunito', sans-serif;
+  color: var(--er-text);
+  cursor: pointer;
+  background: var(--er-surface);
+  text-align: left;
+  transition: all 0.13s;
+  line-height: 1.5;
+}
+.opt:hover:not(:disabled) {
+  background: var(--er-accent-bg);
+  border-color: var(--er-accent-border);
+}
+.opt.correct {
+  border-color: var(--er-green-border);
+  background: var(--er-green-bg);
+  color: var(--er-green);
+  font-weight: 600;
+}
+.opt.wrong {
+  border-color: var(--er-red-border);
+  background: var(--er-red-bg);
+  color: var(--er-red);
+}
+.opt:disabled { cursor: default; }
+
+.fitb-inp {
+  width: 100%;
+  padding: 9px 13px;
+  border: 1.5px solid var(--er-border);
+  border-radius: var(--er-radius-sm);
+  font-size: 16px;
+  font-family: 'Nunito', sans-serif;
+  color: var(--er-text);
+  background: var(--er-surface2);
+  margin-bottom: 8px;
+}
+.fitb-inp:focus { outline: none; border-color: var(--er-accent-border); box-shadow: 0 0 0 3px rgba(181,69,27,0.08); }
+.saq-inp {
+  width: 100%;
+  padding: 9px 13px;
+  border: 1.5px solid var(--er-border);
+  border-radius: var(--er-radius-sm);
+  font-size: 16px;
+  font-family: 'Nunito', sans-serif;
+  color: var(--er-text);
+  background: var(--er-surface2);
+  margin-bottom: 8px;
+  min-height: 80px;
+  resize: vertical;
+}
+.saq-inp:focus { outline: none; border-color: var(--er-accent-border); box-shadow: 0 0 0 3px rgba(181,69,27,0.08); }
+
+.fb {
+  padding: 11px 14px;
+  border-radius: var(--er-radius-sm);
+  font-size: 15px;
+  line-height: 1.65;
+  margin-top: 10px;
+  border: 1.5px solid transparent;
+}
+.fb-ok { background: var(--er-green-bg); color: var(--er-green); border-color: var(--er-green-border); }
+.fb-no { background: var(--er-red-bg); color: var(--er-red); border-color: var(--er-red-border); }
+.fb-hint { background: var(--er-amber-bg); color: var(--er-amber); border-color: var(--er-amber-border); }
+
+.btn-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.btn-hint {
+  padding: 8px 14px; font-size: 14px;
+  border: 1.5px solid var(--er-amber-border);
+  color: var(--er-amber); background: var(--er-amber-bg);
+  border-radius: var(--er-radius-sm); cursor: pointer;
+  font-family: 'Nunito', sans-serif; font-weight: 600;
+}
+.btn-sub {
+  padding: 8px 16px; font-size: 15px;
+  border: 1.5px solid var(--er-border);
+  color: var(--er-text); background: var(--er-surface2);
+  border-radius: var(--er-radius-sm); cursor: pointer;
+  font-family: 'Nunito', sans-serif; font-weight: 600;
+}
+.btn-next {
+  padding: 8px 18px; font-size: 15px;
+  border: 2px solid var(--er-accent-border);
+  color: var(--er-accent); background: var(--er-accent-bg);
+  border-radius: var(--er-radius-sm); cursor: pointer;
+  font-family: 'Nunito', sans-serif; font-weight: 700;
+}
+.btn-escape {
+  padding: 10px 22px; font-size: 16px; font-weight: 700;
+  border: 2px solid var(--er-green-border);
+  color: var(--er-green); background: var(--er-green-bg);
+  border-radius: var(--er-radius-sm); cursor: pointer;
+  display: block; margin: 0 auto;
+  font-family: 'Nunito', sans-serif;
+}
+
+/* Timer */
+.timer-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.t-bg { flex: 1; height: 6px; background: var(--er-surface2); border-radius: 3px; overflow: hidden; border: 1px solid var(--er-border); }
+.t-bar { height: 6px; border-radius: 3px; background: var(--er-green); transition: width 1s linear, background 0.4s; }
+.t-txt { font-size: 13px; font-weight: 600; color: var(--er-text2); min-width: 28px; text-align: right; }
+
+/* Progress dots */
+.prog { display: flex; align-items: center; gap: 6px; margin-bottom: 13px; }
+.prog-lbl { font-size: 13px; font-weight: 600; color: var(--er-text2); }
+.prog-dots { display: flex; gap: 5px; }
+.pdot { width: 10px; height: 10px; border-radius: 50%; background: var(--er-surface2); border: 1px solid var(--er-border2); }
+.pdot.ok { background: var(--er-green); border-color: var(--er-green); }
+.pdot.bad { background: var(--er-red); border-color: var(--er-red); }
+.pdot.cur { background: var(--er-accent-bg); border-color: var(--er-accent); }
+
+/* Unlock */
+.unlock-anim { text-align: center; padding: 1.5rem; }
+.unlock-big { font-size: 44px; color: var(--er-green); }
+.unlock-msg { font-size: 20px; font-weight: 700; color: var(--er-text); margin-top: 8px; }
+.unlock-sub { font-size: 15px; color: var(--er-text2); margin-top: 5px; line-height: 1.6; }
+
+/* Escaped */
+.escaped { text-align: center; padding: 2rem 1rem; }
+.escaped-trophy { font-size: 48px; color: var(--er-amber); }
+.escaped-title { font-size: 24px; font-weight: 700; color: var(--er-text); margin-top: 8px; }
+.escaped-sub { font-size: 16px; color: var(--er-text2); margin-top: 5px; }
+.final-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin: 1rem 0; }
+.f-card {
+  background: var(--er-accent-bg);
+  border: 1.5px solid var(--er-accent-border);
+  border-radius: var(--er-radius-sm);
+  padding: 10px;
+  text-align: center;
+}
+.f-val { font-size: 20px; font-weight: 700; color: var(--er-accent); }
+.f-lbl { font-size: 12px; color: var(--er-text2); margin-top: 2px; font-weight: 600; }
+
+/* EMQ styles */
+.emq-stage {
+  margin-bottom: 16px;
+  background: var(--er-surface2);
+  border: 1.5px solid var(--er-border);
+  border-radius: var(--er-radius-sm);
+  padding: 12px 14px;
+}
+.emq-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--er-text);
+  margin-bottom: 10px;
+  line-height: 1.55;
+}
+.emq-opts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.emq-opt {
+  padding: 8px 12px;
+  border: 1.5px solid var(--er-border);
+  border-radius: var(--er-radius-sm);
+  font-size: 15px;
+  font-family: 'Nunito', sans-serif;
+  color: var(--er-text);
+  cursor: pointer;
+  background: var(--er-surface);
+  text-align: left;
+  transition: all 0.12s;
+}
+.emq-opt:hover:not(:disabled) {
+  background: var(--er-accent-bg);
+  border-color: var(--er-accent-border);
+}
+.emq-opt.emq-selected {
+  border-color: var(--er-blue-border);
+  background: var(--er-blue-bg);
+  color: var(--er-blue);
+  font-weight: 600;
+}
+.emq-opt.emq-correct {
+  border-color: var(--er-green-border);
+  background: var(--er-green-bg);
+  color: var(--er-green);
+  font-weight: 600;
+}
+.emq-opt.emq-wrong {
+  border-color: var(--er-red-border);
+  background: var(--er-red-bg);
+  color: var(--er-red);
+}
+.emq-opt:disabled { cursor: default; }
+</style>
+
+<div class="er">
+  <div class="er-hdr">
+    <div class="er-title"><i class="ti ti-door-exit" aria-hidden="true"></i> Arthritis Escape Room</div>
+    <div class="er-sub">Unlock all 4 wards to escape — answer questions to collect keys &nbsp;|&nbsp; MBBS Year 2</div>
+  </div>
+
+  <div style="padding:0 0.25rem">
+  <div class="hud">
+    <div class="hud-item"><div class="hud-val" id="h-xp">0</div><div class="hud-lbl">XP</div></div>
+    <div class="hud-item"><div class="hud-val" id="h-keys">0 / 23</div><div class="hud-lbl">Keys found</div></div>
+    <div class="hud-item"><div class="hud-val" id="h-hints">5</div><div class="hud-lbl">Hints left</div></div>
+    <div class="hud-item"><div class="hud-val" id="h-streak">—</div><div class="hud-lbl">Streak</div></div>
+  </div>
+
+  <div id="main"></div>
+  </div>
+</div>
+
+<script>
+const WARDS=[
+  {
+    id:'oa',name:'Ward 1',icon:'ti-bone',color:'info',
+    displayName:'Osteoarthritis',
+    case:'A 44-year-old man has had worsening back and right hip pain for a decade, worst at the end of the day. Bony enlargement is noted at his distal interphalangeal joints. X-ray shows osteophytes on vertebral bodies and joint space narrowing at the acetabulum with sclerosis.',
+    questions:[
+      {diff:'easy',type:'mcq',text:'What broad category does osteoarthritis belong to?',
+       pts:80,time:20,opts:['Autoimmune arthritis','Degenerative arthritis','Crystalline arthritis','Infectious arthritis'],
+       answer:1,hint:'OA involves wear-and-tear — not immune cells, not crystals.',
+       explain:'OA is a degenerative joint disease characterised by degeneration of articular cartilage. It is NOT autoimmune or inflammatory in origin.'},
+      {diff:'easy',type:'fitb',text:'Bony nodules at the distal interphalangeal (DIP) joints in OA are called ______ nodes.',
+       pts:80,time:25,answers:['heberden'],
+       hint:'Named after an 18th-century English physician — starts with H.',
+       explain:'Heberden nodes occur at DIP joints. Bouchard nodes occur at PIP joints. Both result from osteophyte formation in OA.'},
+      {diff:'medium',type:'mcq',text:'In OA pathogenesis, which process occurs when the subchondral bone is exposed to friction and develops a polished ivory-like surface?',
+       pts:120,time:25,opts:['Ankylosis','Pannus formation','Eburnation','Fibrillation'],
+       answer:2,hint:'From Latin "ebur" = ivory. The bone surface becomes hard and smooth from repeated friction.',
+       explain:'Eburnation — once articular cartilage is lost, the exposed subchondral bone is subjected to friction and becomes polished and sclerotic. Pannus = RA. Fibrillation is an earlier OA change.'},
+      {diff:'medium',type:'mcq',text:'Which cytokines drive low-grade synovial inflammation in OA, perpetuating cartilage degradation?',
+       pts:120,time:25,opts:['IL-4 and IL-10','IL-1β and TNF-α','IL-17 and IFN-γ','IL-6 and IL-23'],
+       answer:1,hint:'Think of the classic pro-inflammatory pair — one from the IL-1 family, one is a major macrophage product.',
+       explain:'IL-1β and TNF-α are released by synovium in OA, stimulating chondrocytes and synoviocytes to produce matrix metalloproteinases (MMPs) which degrade cartilage ECM.'},
+      {diff:'hard',type:'emq',
+       text:'OA Pathogenesis — Extended Matching. Match each stage of OA progression to the correct term. Select one answer per stage.',
+       pts:160,time:45,
+       stages:[
+         {label:'Stage 1 — Cartilage matrix breakdown: Enzymes released by stressed chondrocytes that degrade type II collagen and proteoglycans are called:',opts:['Caspases','Matrix metalloproteinases (MMPs)','Elastases','Hyaluronidases'],answer:1},
+         {label:'Stage 2 — Cartilage surface change: Early surface fraying and splitting of articular cartilage is called:',opts:['Eburnation','Sclerosis','Fibrillation','Pannus'],answer:2},
+         {label:'Stage 3 — End-stage bone change: The polished ivory-like appearance of exposed subchondral bone is called:',opts:['Ankylosis','Eburnation','Periostitis','Enthesitis'],answer:1},
+         {label:'Stage 4 — Reactive bony outgrowths at joint margins are called:',opts:['Tophi','Syndesmophytes','Osteophytes','Enthesophytes'],answer:2}
+       ],
+       hint:'Think of the sequence: enzymes → surface fraying → bone exposed → bony spurs form.',
+       explain:'OA sequence: (1) Chondrocyte stress → MMPs degrade collagen & proteoglycans → (2) Cartilage surface fibrillates (frays) → (3) Subchondral bone exposed → eburnation (polished ivory surface) → (4) Reactive osteophytes form at joint margins. Subchondral cysts also develop from synovial fluid forced into bone.'}
+    ]
+  },
+  {
+    id:'ra',name:'Ward 2',icon:'ti-activity',color:'warning',
+    displayName:'Rheumatoid Arthritis',
+    case:'A 49-year-old woman has had symmetric hand and foot pain in a remitting-relapsing pattern for 10 years. She has swan-neck deformities, ulnar deviation, and positive rheumatoid factor. Her condition responds to methotrexate. X-ray shows periarticular erosions and joint space loss. She now presents with new breathlessness and wrist drop.',
+    questions:[
+      {diff:'easy',type:'mcq',text:'RA is primarily classified as which type of arthritis?',
+       pts:80,time:20,opts:['Degenerative','Crystalline','Autoimmune','Infectious'],
+       answer:2,hint:'The immune system mistakenly attacks the synovium.',
+       explain:'RA is a chronic systemic autoimmune disorder causing non-suppurative proliferative inflammatory synovitis, eventually progressing to articular cartilage destruction and ankylosis.'},
+      {diff:'easy',type:'fitb',text:'The autoantibodies against citrulline-modified peptides in RA are called anti-______ antibodies (abbreviated anti-CCP). Enter "CCP" or the full name.',
+       pts:80,time:25,answers:['ccp','cyclic citrullinated peptide','citrullinated peptide'],
+       hint:'The abbreviation is three letters — C, C, P.',
+       explain:'Anti-cyclic citrullinated peptide (anti-CCP) antibodies are found in ~70% of RA patients and are highly specific. RF is positive in ~80% but is less specific.'},
+      {diff:'medium',type:'mcq',text:'What is the term for the mass of hyperplastic synovial tissue that invades and erodes articular cartilage in RA?',
+       pts:120,time:20,opts:['Tophus','Pannus','Enthesitis','Eburnation'],
+       answer:1,hint:'It grows OVER the cartilage like a cloak — from Latin for "cloth".',
+       explain:'Pannus — a destructive mass of synovium composed of inflammatory cells, granulation tissue, and synovial fibroblasts. It secretes MMPs and causes progressive cartilage and bone erosion, ultimately leading to fibrous then bony ankylosis.'},
+      {diff:'medium',type:'mcq',text:'Which T-cell subset and its cytokine recruits neutrophils and monocytes into the RA joint?',
+       pts:120,time:25,opts:['TH1 via IFN-γ','TH2 via IL-4','TH17 via IL-17','Treg via IL-10'],
+       answer:2,hint:'This T-cell subset is named for its key cytokine. It drives neutrophil recruitment specifically.',
+       explain:'TH17 cells produce IL-17, which recruits neutrophils and monocytes to the joint. TH1 cells (IFN-γ) activate macrophages/synoviocytes. RANKL on T-cells drives osteoclast-mediated bone resorption.'},
+      {diff:'hard',type:'emq',
+       text:'Rheumatoid Nodule — Extended Matching. Select the correct answer for each feature.',
+       pts:160,time:40,
+       stages:[
+         {label:'Central core: The centre of a rheumatoid nodule contains:',opts:['Urate crystals','Fibrinoid necrosis','Caseating granuloma','Purulent exudate'],answer:1},
+         {label:'Surrounding layer: The necrotic centre is encircled by a layer of:',opts:['Neutrophils','Reed-Sternberg cells','Palisading histiocytes (macrophages)','Plasma cells only'],answer:2},
+         {label:'Outer zone: The outermost zone contains:',opts:['Osteoclasts','Lymphocytes and fibroblasts','Eosinophils','Mast cells'],answer:1},
+         {label:'Clinical significance: Presence of rheumatoid nodules indicates:',opts:['Seronegative mild disease','Seropositive severe disease with extra-articular involvement','Crystal deposition','Early remission'],answer:1}
+       ],
+       hint:'Centre → surrounding palisade → outer layer → clinical meaning.',
+       explain:'Rheumatoid nodules: central fibrinoid necrosis → surrounded by palisading histiocytes/macrophages → outer zone of lymphocytes and fibroblasts. They appear at pressure points (ulnar forearm, elbows). Their presence signals seropositive RA with more severe, extra-articular disease.'},
+      /* RA COMPLICATIONS QUESTIONS */
+      {diff:'easy',type:'mcq',text:'[RA Complication] The patient develops new exertional dyspnoea and a dry cough. Chest X-ray shows bilateral reticular shadowing. Which pulmonary complication of RA is most likely?',
+       pts:80,time:25,opts:['Pulmonary embolism','Interstitial lung disease (ILD)','Community-acquired pneumonia','Pleural effusion only'],
+       answer:1,hint:'RA can cause fibrosing alveolitis — look for bilateral reticular (not consolidative) shadowing.',
+       explain:'Interstitial lung disease (ILD) is the most common pulmonary complication of RA. It presents with progressive dyspnoea, dry cough, and bilateral reticular or honeycombing on imaging. It is associated with seropositive, erosive RA and anti-CCP positivity.'},
+      {diff:'medium',type:'mcq',text:'[RA Complication] The patient\'s new wrist drop is due to entrapment of which nerve, compressed by synovial proliferation at the wrist?',
+       pts:120,time:25,opts:['Ulnar nerve','Radial nerve','Median nerve','Anterior interosseous nerve'],
+       answer:2,hint:'Wrist drop = weakness of wrist extension. Which nerve is responsible for wrist extension?',
+       explain:'Wrist drop indicates radial nerve palsy. In RA, posterior interosseous nerve (a branch of the radial nerve) can be entrapped by synovial hypertrophy at the elbow or wrist, causing wrist drop. Median nerve entrapment causes carpal tunnel syndrome (more common in RA).'},
+      {diff:'medium',type:'mcq',text:'[RA Complication] RA increases cardiovascular risk. Which mechanism BEST explains the accelerated atherosclerosis seen in RA?',
+       pts:120,time:25,opts:['Hypertension from corticosteroid use only','Chronic systemic inflammation elevating CRP and IL-6, promoting endothelial dysfunction','Hypercholesterolaemia from dietary changes','Anti-CCP antibodies directly damaging coronary vessels'],
+       answer:1,hint:'Think about what chronic elevation of inflammatory mediators does to blood vessel walls.',
+       explain:'Chronic systemic inflammation in RA — persistently elevated IL-6, TNF-α, and CRP — promotes endothelial dysfunction, oxidative stress, and foam cell formation, accelerating atherosclerosis. RA patients have a ~50% higher cardiovascular risk than age-matched controls. This is the principal mechanism, independent of traditional risk factors.'},
+      {diff:'hard',type:'emq',
+       text:'[RA Complications] Extended Matching — Match each complication to its mechanism or descriptor.',
+       pts:160,time:50,
+       stages:[
+         {label:'A patient with RA develops splenomegaly and persistent neutropenia. This triad is called:',opts:['Caplan syndrome','Felty syndrome','Reiter syndrome','Sjögren syndrome'],answer:1},
+         {label:'Chronic RA leads to protein deposits in the kidney causing nephrotic syndrome. The deposited protein is:',opts:['AL amyloid','AA amyloid','Light chain','IgG'],answer:1},
+         {label:'Erosion of the transverse ligament of C1 in RA causes instability at which joint?',opts:['Lumbar facet joint','Atlantoaxial joint','Temporomandibular joint','Sternoclavicular joint'],answer:1},
+         {label:'Anaemia of chronic disease in RA is driven by IL-6 upregulating which iron-regulatory hormone?',opts:['Erythropoietin','Transferrin','Hepcidin','Ferritin'],answer:2}
+       ],
+       hint:'Think: Felty = spleen+neutropenia; amyloid type = AA in chronic inflammation; C1-C2 = atlantoaxial; IL-6 drives hepcidin.',
+       explain:'RA extra-articular complications: (1) Felty syndrome = RA + splenomegaly + neutropenia; (2) Secondary AA amyloidosis from serum amyloid A deposition; (3) Atlantoaxial subluxation — C1 transverse ligament erosion risks cord compression; (4) Anaemia of chronic disease — IL-6 drives hepcidin, blocking iron release from macrophages.'}
+    ]
+  },
+  {
+    id:'gout',name:'Ward 3',icon:'ti-droplet',color:'danger',
+    displayName:'Gout',
+    case:'A 52-year-old obese man presents at 2 AM with sudden severe pain, erythema and swelling of his right first metatarsophalangeal joint. He drinks 4 beers nightly. Serum uric acid = 9.4 mg/dL. Joint aspirate shows needle-shaped, negatively birefringent crystals.',
+    questions:[
+      {diff:'easy',type:'mcq',text:'Gout is caused by deposition of which crystal in joints?',
+       pts:80,time:20,opts:['Calcium pyrophosphate','Calcium oxalate','Monosodium urate (MSU)','Hydroxyapatite'],
+       answer:2,hint:'The end product of purine metabolism — what is its sodium salt called?',
+       explain:'Gout = monosodium urate (MSU) crystal deposition. MSU crystals are needle-shaped and negatively birefringent. Calcium pyrophosphate = pseudogout (CPPD), which has rhomboid, positively birefringent crystals.'},
+      {diff:'easy',type:'fitb',text:'Hyperuricemia is defined as serum urate above ______ mg/dL.',
+       pts:80,time:20,answers:['6.8'],
+       hint:'Just below 7. At this level, urate supersaturates in plasma.',
+       explain:'Plasma urate above 6.8 mg/dL defines hyperuricemia. Above this concentration, MSU crystals can precipitate, especially in cooler peripheral joints like the first MTP joint.'},
+      {diff:'medium',type:'mcq',text:'In the pathogenesis of acute gout, MSU crystals activate which inflammasome in macrophages?',
+       pts:120,time:25,opts:['NLRP1','NLRP3','AIM2','NLRC4'],
+       answer:1,hint:'This is the most clinically important inflammasome — it detects "danger signals" like crystals, cholesterol, and urate.',
+       explain:'NLRP3 inflammasome is activated by MSU crystals → caspase-1 cleavage → IL-1β release → neutrophil recruitment → neutrophils phagocytose crystals → lysosomal enzyme release → tissue injury and further inflammation.'},
+      {diff:'medium',type:'mcq',text:'Chronic tophaceous gout can cause gouty nephropathy. Where in the kidney do urate crystals deposit?',
+       pts:120,time:25,opts:['Glomeruli','Interstitium and tubules','Renal capsule','Renal vessels only'],
+       answer:1,hint:'Think about where urine is concentrated — the inner medullary structures.',
+       explain:'In gouty nephropathy, MSU crystals deposit in the renal interstitium and tubules (especially collecting ducts). This causes tubular obstruction, interstitial fibrosis, and chronic renal impairment. It is a serious long-term complication.'},
+      {diff:'hard',type:'emq',
+       text:'Gout vs Pseudogout — Extended Matching. For each feature, select whether it describes Gout, Pseudogout (CPPD), or both.',
+       pts:160,time:40,
+       stages:[
+         {label:'Crystal type in pseudogout (CPPD):',opts:['Monosodium urate','Calcium pyrophosphate','Hydroxyapatite','Calcium oxalate'],answer:1},
+         {label:'Crystal shape in gout under polarised light:',opts:['Rhomboid','Rod-shaped','Needle-shaped','Spherical'],answer:2},
+         {label:'Birefringence of CPPD crystals under polarised light:',opts:['Negatively birefringent','Positively birefringent','Non-birefringent','Weakly negative'],answer:1},
+         {label:'Classic first joint affected in gout (podagra):',opts:['Knee','Wrist','1st metatarsophalangeal (MTP)','Sacroiliac'],answer:2}
+       ],
+       hint:'MSU = needle + negative; CPPD = rhomboid + positive; gout = MTP; pseudogout = knee.',
+       explain:'Gout: monosodium urate (MSU) crystals, needle-shaped, negatively birefringent, 1st MTP joint. Pseudogout (CPPD): calcium pyrophosphate crystals, rhomboid-shaped, positively birefringent, classically the knee (chondrocalcinosis on X-ray). Both cause acute inflammatory arthritis from crystal-induced NLRP3 activation.'}
+    ]
+  },
+  {
+    id:'bonus',name:'Ward 4',icon:'ti-star',color:'success',
+    displayName:'Spondyloarthropathies',
+    case:'Two patients arrive. Patient A: 28-year-old HLA-B27+ man, 2-year history of low back pain worst in the morning, bilateral sacroiliitis on MRI, and a bout of uveitis last year. Patient B: 35-year-old woman with wrist swelling — examination reveals a transilluminable, soft, fluctuant mass dorsal to the wrist.',
+    questions:[
+      {diff:'easy',type:'mcq',text:'Patient A\'s condition is best diagnosed as:',
+       pts:80,time:20,opts:['Rheumatoid arthritis','Reactive arthritis','Ankylosing spondylitis','Psoriatic arthropathy'],
+       answer:2,hint:'Classic triad: bilateral sacroiliitis + uveitis + HLA-B27 positivity.',
+       explain:'Ankylosing spondylitis: chronic seronegative spondyloarthropathy with bilateral sacroiliitis, uveitis, and HLA-B27 positivity (~90%). Causes bridging osteophyte formation and bony ankylosis of the sacroiliac joints and spine.'},
+      {diff:'easy',type:'fitb',text:'All seronegative spondyloarthropathies share an association with the HLA allele ______. (Enter "B27" or "HLA-B27")',
+       pts:80,time:20,answers:['b27'],
+       hint:'Class I MHC. B — then the number 27.',
+       explain:'HLA-B27 is associated with ankylosing spondylitis, reactive arthritis (Reiter syndrome), psoriatic arthropathy, and intestinal arthropathies. The group is called "seronegative" because rheumatoid factor is ABSENT.'},
+      {diff:'medium',type:'mcq',text:'Patient B\'s wrist swelling transilluminates. This finding is characteristic of:',
+       pts:100,time:20,opts:['Tophus','Ganglion cyst','Rheumatoid nodule','Pigmented villonodular synovitis'],
+       answer:1,hint:'Transillumination means the lesion is filled with clear fluid — light passes through it.',
+       explain:'Ganglion cysts are benign, fluid-filled cysts arising near joint capsules or tendon sheaths, most common at the wrist. They transilluminate (glow with a torch) due to their clear mucinous contents.'},
+      {diff:'medium',type:'mcq',text:'Reactive arthritis (Reiter syndrome) is triggered by infection and classically presents as a triad. Which combination is correct?',
+       pts:120,time:25,opts:[
+         'Arthritis + uveitis + skin rash',
+         'Arthritis + non-gonococcal urethritis + conjunctivitis',
+         'Arthritis + sacroiliitis + psoriasis',
+         'Arthritis + diarrhoea + mouth ulcers'
+       ],answer:1,hint:'Three body systems: joints, genitourinary tract, eyes.',
+       explain:'Reactive arthritis = arthritis + non-gonococcal urethritis/cervicitis + conjunctivitis. Triggered by Chlamydia (genitourinary) or GI organisms (Shigella, Salmonella, Campylobacter, Yersinia). Commonly affects men in their 20s–30s.'},
+      {diff:'hard',type:'emq',
+       text:'Teno-Synovial Giant Cell Tumour (TGCT) — Extended Matching. Select the correct answer for each feature.',
+       pts:160,time:40,
+       stages:[
+         {label:'Gross colour: TGCTs appear:',opts:['White and chalky','Red-brown to orange-yellow','Blue-grey','Jet black'],answer:1},
+         {label:'Microscopy: The pigment-laden cells found within TGCTs are:',opts:['Neutrophils','Hemosiderin-laden macrophages','Plasma cells','Mast cells'],answer:1},
+         {label:'Molecular change: TGCTs carry a translocation fusing COL6A3 promoter to which growth factor gene?',opts:['VEGF','PDGF','M-CSF (CSF1)','EGF'],answer:2},
+         {label:'The DIFFUSE form of TGCT is also known as:',opts:['Lipoma arborescens','Pigmented villonodular synovitis (PVNS)','Ganglion cyst','Chondromatosis'],answer:1}
+       ],
+       hint:'Colour = red-brown; cells = hemosiderin macrophages; gene = M-CSF/CSF1; diffuse = PVNS.',
+       explain:'TGCTs: gross = red-brown to orange-yellow. Microscopy = synoviocyte-like cells + hemosiderin-laden macrophages + osteoclast-like giant cells + hyalinised collagen. Molecular = t(1;2) fusing COL6A3 to M-CSF (CSF1), driving overexpression. Diffuse type = pigmented villonodular synovitis (PVNS).'}
+    ]
+  }
+];
+
+let G={
+  screen:'map',xp:0,hints:5,streak:0,totalCorrect:0,totalQ:0,
+  wardStatus:{},
+  cur:{wardIdx:0,qIdx:0,diff:'easy',answered:false,hintUsed:false,qResults:[]},
+  timerI:null
+};
+WARDS.forEach(w=>{ G.wardStatus[w.id]={unlocked:false,done:false,keysFound:[]}; });
+G.wardStatus['oa'].unlocked=true;
+
+function totalKeys(){return Object.values(G.wardStatus).reduce((s,w)=>s+w.keysFound.length,0)}
+function updateHUD(){
+  document.getElementById('h-xp').textContent=G.xp;
+  document.getElementById('h-keys').textContent=totalKeys()+' / '+WARDS.reduce((s,w)=>s+w.questions.length,0);
+  document.getElementById('h-hints').textContent=G.hints;
+  document.getElementById('h-streak').textContent=G.streak>0?G.streak+'🔥':'—';
+}
+
+function render(){
+  updateHUD();
+  const m=document.getElementById('main');
+  if(G.screen==='map') renderMap(m);
+  else if(G.screen==='ward') renderWard(m);
+  else if(G.screen==='unlock') renderUnlock(m);
+  else if(G.screen==='escaped') renderEscaped(m);
+}
+
+const WARD_COLORS=['#1a5f8a','#9a6200','#c0392b','#6a3d8f'];
+const WARD_ICONS=['🦴','🫀','💧','⭐'];
+
+function renderMap(m){
+  const allDone=WARDS.every(w=>G.wardStatus[w.id].done);
+  m.innerHTML=`
+  <div style="background:transparent;border:none;padding:0">
+    <div class="map">
+      ${WARDS.map((w,i)=>{
+        const ws=G.wardStatus[w.id];
+        const keys=w.questions.length;
+        const found=ws.keysFound.filter(k=>k===true||k===false).length;
+        let cls='ward ward-'+(i+1);
+        if(ws.done) cls+=' ward-done';
+        else if(ws.unlocked) cls+=' ward-active';
+        else cls+=' ward-locked';
+        const dots=Array.from({length:keys},(_,k)=>{
+          let dc='key';
+          if(ws.keysFound[k]===true) dc+=' found';
+          else if(ws.keysFound[k]===false) dc+=' lost';
+          return `<div class="${dc}"></div>`;
+        }).join('');
+        const statusTxt=ws.done?'✅ Unlocked!':ws.unlocked?`${found}/${keys} keys found`:'🔒 Locked';
+        return `<div class="${cls}" onclick="enterWard(${i})">
+          <i class="ti ${ws.done?'ti-lock-open':'ti-lock'} lock-icon" aria-hidden="true"></i>
+          <div class="ward-num">${ws.done?'Completed':w.name}</div>
+          <div class="ward-name">${WARD_ICONS[i]} ${w.displayName}</div>
+          <div class="ward-status">${statusTxt}</div>
+          <div class="ward-keys">${dots}</div>
+        </div>`;
+      }).join('')}
+    </div>
+    ${allDone?`<button class="btn-escape" onclick="G.screen='escaped';render()"><i class="ti ti-door-exit" aria-hidden="true"></i> You escaped! See final results</button>`:''}
+    <p style="text-align:center;font-size:14px;color:var(--er-text3);margin-top:0.75rem">Each correct answer = a key. Collect all keys in a ward to unlock the next.</p>
+  </div>`;
+}
+
+function enterWard(idx){
+  const w=WARDS[idx];
+  if(!G.wardStatus[w.id].unlocked && !G.wardStatus[w.id].done) return;
+  G.cur={wardIdx:idx,qIdx:0,diff:'easy',answered:false,hintUsed:false,qResults:[]};
+  G.wardStatus[w.id].keysFound=[];
+  emqSelections={};
+  G.screen='ward';
+  render();
+}
+
+function renderWard(m){
+  const ward=WARDS[G.cur.wardIdx];
+  const allQs=ward.questions;
+  const q=allQs[G.cur.qIdx];
+  if(!q){showUnlock();return;}
+
+  const diff=q.diff;
+  const diffLabel=diff==='easy'?'Easy (Level 1)':diff==='medium'?'Medium (Level 2)':'Hard (Level 3)';
+  const badgeCls=diff==='easy'?'badge-e':diff==='medium'?'badge-m':'badge-h';
+
+  const dots=allQs.map((_,i)=>{
+    let c='pdot';
+    const kr=G.wardStatus[ward.id].keysFound;
+    if(i<G.cur.qIdx) c+=kr[i]?' ok':' bad';
+    else if(i===G.cur.qIdx) c+=' cur';
+    return `<div class="${c}"></div>`;
+  }).join('');
+
+  let qHtml='';
+  if(q.type==='mcq'){
+    qHtml=`<div class="opts" id="opts">`+q.opts.map((o,i)=>`<button class="opt" id="opt${i}" onclick="answerMCQ(${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join('')+`</div>`;
+  } else if(q.type==='fitb'){
+    qHtml=`<input class="fitb-inp" id="fitb0" placeholder="Your answer…" />`+
+    `<div class="btn-row"><button class="btn-sub" onclick="answerFITB()">Submit</button><button class="btn-hint" onclick="useHint()"><i class="ti ti-bulb" aria-hidden="true"></i> Hint (−1)</button></div>`;
+  } else if(q.type==='emq'){
+    qHtml=q.stages.map((s,si)=>`
+      <div class="emq-stage" id="emq-stage-${si}">
+        <div class="emq-label">${String.fromCharCode(65+si)}. ${s.label}</div>
+        <div class="emq-opts">
+          ${s.opts.map((o,oi)=>`<button class="emq-opt" id="emq-${si}-${oi}" onclick="selectEMQ(${si},${oi})">${String.fromCharCode(49+oi)}. ${o}</button>`).join('')}
+        </div>
+      </div>`).join('')+
+    `<div class="btn-row" style="margin-top:14px"><button class="btn-sub" onclick="answerEMQ()">Submit all</button><button class="btn-hint" onclick="useHint()"><i class="ti ti-bulb" aria-hidden="true"></i> Hint (−1)</button></div>`;
+  }
+
+  m.innerHTML=`<div class="screen">
+    <div class="puzzle-hdr">
+      <div class="puzzle-icon"><i class="ti ${ward.icon}" aria-hidden="true"></i></div>
+      <div>
+        <div class="puzzle-title">${ward.name}: ${ward.displayName}</div>
+        <div class="puzzle-sub">Question ${G.cur.qIdx+1} of ${allQs.length} &nbsp;|&nbsp; ${diffLabel}</div>
+      </div>
+      <button onclick="G.screen='map';stopTimer();render()" style="margin-left:auto;padding:6px 12px;font-size:14px;border:1.5px solid var(--er-border);border-radius:8px;cursor:pointer;color:var(--er-text2);background:var(--er-surface2);font-family:'Nunito',sans-serif"><i class="ti ti-map" aria-hidden="true"></i> Map</button>
+    </div>
+    <div class="clue-box"><div class="clue-label"><i class="ti ti-file-description" aria-hidden="true"></i> Case file</div>${ward.case}</div>
+    <div class="prog"><span class="prog-lbl">Keys:</span><div class="prog-dots">${dots}</div></div>
+    <span class="q-badge ${badgeCls}">${diff.charAt(0).toUpperCase()+diff.slice(1)}</span>
+    ${q.type==='mcq'?`<div class="timer-row"><div class="t-bg"><div class="t-bar" id="t-bar" style="width:100%"></div></div><span class="t-txt" id="t-txt">${q.time}s</span></div>`:''}
+    <div class="q-text">${q.text}</div>
+    ${qHtml}
+    <div id="fb"></div>
+  </div>`;
+
+  if(q.type==='mcq') startTimer(q.time);
+}
+
+let timerI=null;
+function startTimer(s){
+  if(timerI) clearInterval(timerI);
+  let rem=s;
+  const bar=document.getElementById('t-bar'),txt=document.getElementById('t-txt');
+  if(!bar) return;
+  timerI=setInterval(()=>{
+    rem--;
+    const b=document.getElementById('t-bar'),t=document.getElementById('t-txt');
+    if(!b){clearInterval(timerI);return;}
+    const p=Math.round((rem/s)*100);
+    b.style.width=p+'%';
+    t.textContent=rem+'s';
+    b.style.background=p<35?'#c0392b':p<60?'#9a6200':'#1a7a50';
+    if(rem<=0){clearInterval(timerI);if(!G.cur.answered)timeOut();}
+  },1000);
+}
+function stopTimer(){if(timerI){clearInterval(timerI);timerI=null;}}
+
+function timeOut(){
+  G.cur.answered=true;G.streak=0;
+  const q=WARDS[G.cur.wardIdx].questions[G.cur.qIdx];
+  G.wardStatus[WARDS[G.cur.wardIdx].id].keysFound[G.cur.qIdx]=false;
+  showFB(false,q.explain,true);updateHUD();
+}
+
+function answerMCQ(i){
+  if(G.cur.answered) return;
+  stopTimer();G.cur.answered=true;
+  const q=WARDS[G.cur.wardIdx].questions[G.cur.qIdx];
+  const ok=i===q.answer;
+  document.querySelectorAll('.opt').forEach((b,j)=>{b.disabled=true;if(j===q.answer)b.classList.add('correct');else if(j===i&&!ok)b.classList.add('wrong');});
+  awardKey(ok,q.pts);showFB(ok,q.explain);
+}
+function answerFITB(){
+  if(G.cur.answered) return;
+  stopTimer();G.cur.answered=true;
+  const q=WARDS[G.cur.wardIdx].questions[G.cur.qIdx];
+  // Single input box — accept if it matches ANY of the accepted answers
+  const inp=(document.getElementById('fitb0')?document.getElementById('fitb0').value.trim().toLowerCase():'');
+  const ok=q.answers.some(a=>inp.includes(a.toLowerCase()));
+  document.querySelectorAll('.fitb-inp').forEach(el=>el.disabled=true);
+  document.querySelectorAll('.btn-sub,.btn-hint').forEach(el=>el.disabled=true);
+  awardKey(ok,q.pts);showFB(ok,q.explain);
+}
+let emqSelections={};
+function selectEMQ(si,oi){
+  if(G.cur.answered) return;
+  emqSelections[si]=oi;
+  // Update visual selection
+  const stage=document.getElementById('emq-stage-'+si);
+  if(!stage) return;
+  stage.querySelectorAll('.emq-opt').forEach((b,j)=>{
+    b.classList.toggle('emq-selected', j===oi);
+  });
+}
+function answerEMQ(){
+  if(G.cur.answered) return;
+  stopTimer();G.cur.answered=true;
+  const q=WARDS[G.cur.wardIdx].questions[G.cur.qIdx];
+  const total=q.stages.length;
+  let correct=0;
+  q.stages.forEach((s,si)=>{
+    const chosen=emqSelections[si];
+    const isRight=(chosen===s.answer);
+    if(isRight) correct++;
+    const stage=document.getElementById('emq-stage-'+si);
+    if(stage){
+      stage.querySelectorAll('.emq-opt').forEach((b,j)=>{
+        b.disabled=true;
+        if(j===s.answer) b.classList.add('emq-correct');
+        else if(j===chosen && !isRight) b.classList.add('emq-wrong');
+      });
+    }
+  });
+  emqSelections={};
+  const ok=(correct===total);
+  document.querySelectorAll('.btn-sub,.btn-hint').forEach(el=>el.disabled=true);
+  awardKey(ok,q.pts);
+  // Custom feedback showing score
+  const fb=document.getElementById('fb');
+  const ward=WARDS[G.cur.wardIdx];
+  const allDone=G.cur.qIdx>=ward.questions.length-1;
+  const nextLabel=allDone?(ok?'Try to unlock ward':'See results'):'Next question';
+  const streak=G.streak>=2?` <strong>${G.streak}🔥 streak bonus +25 XP</strong>`:'';
+  if(fb) fb.innerHTML=`<div class="fb ${ok?'fb-ok':'fb-no'}">
+    <i class="ti ${ok?'ti-key':'ti-lock'}" aria-hidden="true"></i>
+    <strong>${ok?'All correct — Key found!':correct+'/'+total+' correct — No key.'}</strong>${ok?' +'+q.pts+' XP':''}${streak}<br>
+    <span style="font-size:14px;margin-top:4px;display:block">${q.explain}</span>
+  </div>
+  <div class="btn-row">
+    <button class="btn-next" onclick="nextQ()">${nextLabel} <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+  </div>`;
+}
+
+function awardKey(ok,pts){
+  const ward=WARDS[G.cur.wardIdx];
+  G.wardStatus[ward.id].keysFound[G.cur.qIdx]=ok;
+  if(ok){
+    const bonus=G.streak>=2&&!G.cur.hintUsed?25:0;
+    G.xp+=pts+bonus;G.streak++;G.totalCorrect++;
+  } else {G.streak=0;}
+  G.totalQ++;updateHUD();
+}
+
+function useHint(){
+  if(G.cur.answered||G.cur.hintUsed||G.hints<=0) return;
+  G.cur.hintUsed=true;G.hints--;updateHUD();
+  const q=WARDS[G.cur.wardIdx].questions[G.cur.qIdx];
+  const fb=document.getElementById('fb');
+  if(fb) fb.innerHTML=`<div class="fb fb-hint"><i class="ti ti-bulb" aria-hidden="true"></i> <strong>Hint:</strong> ${q.hint}</div>`;
+}
+
+function showFB(ok,explain,timeout){
+  const fb=document.getElementById('fb');if(!fb) return;
+  const q=WARDS[G.cur.wardIdx].questions[G.cur.qIdx];
+  const ward=WARDS[G.cur.wardIdx];
+  const allDone=G.cur.qIdx>=ward.questions.length-1;
+  const keyWord=ok?'Key found!':'No key.';
+  const label=timeout?'Time\'s up!':ok?keyWord:'Incorrect — '+keyWord;
+  const pts=ok?` +${q.pts} XP`:'';
+  const streak=G.streak>=2?` <strong>${G.streak}🔥 streak bonus +25 XP</strong>`:'';
+  const nextLabel=allDone?(ok?'Try to unlock ward':'See results'):'Next question';
+  fb.innerHTML=`<div class="fb ${ok?'fb-ok':'fb-no'}">
+    <i class="ti ${ok?'ti-key':'ti-lock'}" aria-hidden="true"></i> <strong>${label}</strong>${pts}${streak}<br>
+    <span style="font-size:14px;margin-top:4px;display:block">${explain}</span>
+  </div>
+  <div class="btn-row">
+    <button class="btn-next" onclick="nextQ()">${nextLabel} <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+  </div>`;
+}
+
+function nextQ(){
+  stopTimer();
+  emqSelections={};
+  const ward=WARDS[G.cur.wardIdx];
+  if(G.cur.qIdx<ward.questions.length-1){
+    G.cur.qIdx++;G.cur.answered=false;G.cur.hintUsed=false;render();
+  } else {
+    showUnlock();
+  }
+}
+
+function showUnlock(){
+  stopTimer();
+  const ward=WARDS[G.cur.wardIdx];
+  const ws=G.wardStatus[ward.id];
+  const correct=ws.keysFound.filter(Boolean).length;
+  const total=ward.questions.length;
+  const unlocked=correct===total;
+  ws.done=unlocked;
+  if(unlocked && G.cur.wardIdx<WARDS.length-1){
+    G.wardStatus[WARDS[G.cur.wardIdx+1].id].unlocked=true;
+  }
+  G.screen='unlock';
+  G.cur.unlockResult={correct,total,unlocked,wardIdx:G.cur.wardIdx};
+  render();
+}
+
+function renderUnlock(m){
+  const r=G.cur.unlockResult;
+  const ward=WARDS[r.wardIdx];
+  const nextWard=r.wardIdx<WARDS.length-1?WARDS[r.wardIdx+1]:null;
+  const icon=r.unlocked?'ti-lock-open':'ti-lock';
+  const msg=r.unlocked?`Ward unlocked! ${nextWard?nextWard.name+' ('+nextWard.displayName+') is now open.':'You have escaped!'}`:`${r.correct}/${r.total} keys found — ward remains locked. Retry to collect all keys.`;
+  m.innerHTML=`<div class="screen">
+    <div class="unlock-anim">
+      <div class="unlock-big"><i class="ti ${icon}" aria-hidden="true"></i></div>
+      <div class="unlock-msg">${r.unlocked?'Ward Unlocked! 🎉':'Ward Still Locked'}</div>
+      <div class="unlock-sub">${msg}</div>
+      <div style="margin:1rem 0;font-size:16px;color:var(--er-text2)">${r.correct} / ${r.total} keys collected &nbsp;|&nbsp; ${G.xp} XP total</div>
+      <div class="btn-row" style="justify-content:center;gap:10px;flex-wrap:wrap">
+        <button class="btn-sub" onclick="enterWard(${r.wardIdx})"><i class="ti ti-refresh" aria-hidden="true"></i> Retry ward</button>
+        <button class="btn-sub" onclick="G.screen='map';render()"><i class="ti ti-map" aria-hidden="true"></i> Back to map</button>
+        ${r.unlocked&&nextWard?`<button class="btn-next" onclick="enterWard(${r.wardIdx+1})">Enter ${nextWard.name} <i class="ti ti-arrow-right" aria-hidden="true"></i></button>`:''}
+        ${r.unlocked&&!nextWard?`<button class="btn-escape" onclick="G.screen='escaped';render()"><i class="ti ti-door-exit" aria-hidden="true"></i> Escape!</button>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderEscaped(m){
+  const totalCorrect=Object.values(G.wardStatus).reduce((s,w)=>s+w.keysFound.filter(Boolean).length,0);
+  const totalQ=WARDS.reduce((s,w)=>s+w.questions.length,0);
+  const pct=Math.round((totalCorrect/totalQ)*100);
+  const ranks=[{n:'Medical Student',m:0},{n:'Intern',m:400},{n:'Resident',m:900},{n:'Consultant',m:1600},{n:'Professor',m:2400}];
+  let rank=ranks[0].n;for(const r of ranks)if(G.xp>=r.m)rank=r.n;
+  m.innerHTML=`<div class="escaped">
+    <div class="escaped-trophy"><i class="ti ti-door-exit" aria-hidden="true"></i></div>
+    <div class="escaped-title">You Escaped the Arthritis Ward! 🏆</div>
+    <div class="escaped-sub">Final rank: <strong>${rank}</strong> &nbsp;|&nbsp; ${G.xp} XP earned</div>
+    <div class="final-grid">
+      ${WARDS.map((w,i)=>{const ws=G.wardStatus[w.id];const c=ws.keysFound.filter(Boolean).length;return`<div class="f-card"><div class="f-val">${c}/${w.questions.length}</div><div class="f-lbl">${w.name}<br>${w.displayName}</div></div>`;}).join('')}
+    </div>
+    <div style="font-size:32px;font-weight:700;color:var(--er-accent);margin:0.5rem 0">${pct}%</div>
+    <div style="font-size:15px;color:var(--er-text2);margin-bottom:1rem">${totalCorrect} / ${totalQ} keys collected</div>
+    <button class="btn-next" onclick="resetGame()"><i class="ti ti-refresh" aria-hidden="true"></i> Play again</button>
+  </div>`;
+}
+
+function resetGame(){
+  stopTimer();
+  G={screen:'map',xp:0,hints:5,streak:0,totalCorrect:0,totalQ:0,wardStatus:{},cur:{wardIdx:0,qIdx:0,diff:'easy',answered:false,hintUsed:false,qResults:[]},timerI:null};
+  WARDS.forEach(w=>{G.wardStatus[w.id]={unlocked:false,done:false,keysFound:[]};});
+  G.wardStatus['oa'].unlocked=true;
+  render();
+}
+
+render();
+</script>
