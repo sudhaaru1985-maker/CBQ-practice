@@ -1,0 +1,308 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.app{padding:1rem 0}
+.header{margin-bottom:1.5rem}
+.header h2{font-size:22px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.header p{font-size:16px;color:var(--color-text-secondary)}
+.tabs{display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap}
+.tab{padding:9px 20px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);font-size:16px;cursor:pointer;color:var(--color-text-secondary);transition:all .15s}
+.tab.active{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-primary);font-weight:500}
+.topic-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.25rem}
+.pill{padding:6px 14px;border-radius:20px;border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);font-size:14px;cursor:pointer;color:var(--color-text-secondary)}
+.pill.sel{background:#1D9E75;color:#fff;border-color:#1D9E75;font-weight:500}
+.progress{height:5px;background:var(--color-background-secondary);border-radius:3px;margin-bottom:1.5rem;overflow:hidden}
+.progress-bar{height:5px;background:#1D9E75;border-radius:3px;transition:width .3s}
+.card-area{perspective:1000px;margin-bottom:1rem}
+.card-wrap{width:100%;min-height:260px;cursor:pointer;position:relative}
+.card-inner{position:relative;width:100%;min-height:260px;transition:transform .5s;transform-style:preserve-3d}
+.card-wrap.flipped .card-inner{transform:rotateY(180deg)}
+.card-face{position:absolute;width:100%;min-height:260px;backface-visibility:hidden;border-radius:var(--border-radius-lg);padding:1.75rem;display:flex;flex-direction:column;justify-content:center}
+.card-back{transform:rotateY(180deg)}
+.card-label{font-size:13px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;opacity:.75;margin-bottom:14px}
+.card-q{font-size:20px;line-height:1.6;font-weight:500}
+.card-a{font-size:18px;line-height:1.7}
+.card-hint{font-size:13px;opacity:.6;margin-top:auto;padding-top:14px;text-align:center}
+.nav{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:1.5rem}
+.nav button{padding:9px 22px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);font-size:16px;cursor:pointer;color:var(--color-text-primary)}
+.nav button:hover{background:var(--color-background-secondary)}
+.nav .ctr{font-size:16px;color:var(--color-text-secondary);min-width:70px;text-align:center}
+.score-row{display:flex;gap:12px;margin-bottom:1.25rem}
+.score-card{flex:1;padding:.875rem 1rem;border-radius:var(--border-radius-md);background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary)}
+.score-num{font-size:26px;font-weight:500;color:var(--color-text-primary)}
+.score-lbl{font-size:14px;color:var(--color-text-secondary);margin-top:2px}
+.quiz-q{font-size:18px;color:var(--color-text-primary);line-height:1.65;margin-bottom:1.25rem;padding:1.25rem 1.5rem;background:var(--color-background-secondary);border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary)}
+.quiz-opts{display:flex;flex-direction:column;gap:10px}
+.opt{padding:.875rem 1.125rem;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);font-size:17px;cursor:pointer;text-align:left;color:var(--color-text-primary);transition:all .15s}
+.opt:hover:not([disabled]){background:var(--color-background-secondary)}
+.opt.correct{background:#EAF3DE;border-color:#97C459;color:#3B6D11}
+.opt.wrong{background:#FCEBEB;border-color:#F09595;color:#A32D2D}
+.quiz-feedback{margin-top:1rem;padding:.875rem 1.125rem;border-radius:var(--border-radius-md);font-size:16px;line-height:1.65}
+.fb-correct{background:#EAF3DE;color:#3B6D11;border:0.5px solid #97C459}
+.fb-wrong{background:#FCEBEB;color:#A32D2D;border:0.5px solid #F09595}
+.next-btn{width:100%;padding:12px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary);font-size:16px;cursor:pointer;color:var(--color-text-primary);margin-top:.875rem}
+.next-btn:hover{background:var(--color-background-primary)}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1rem}
+.info-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.125rem 1.375rem}
+.info-card h3{font-size:16px;font-weight:500;margin-bottom:12px;color:var(--color-text-primary)}
+.info-row{display:flex;justify-content:space-between;align-items:flex-start;padding:6px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:15px;gap:8px}
+.info-row:last-child{border-bottom:none}
+.info-row .k{color:var(--color-text-secondary);white-space:nowrap}
+.info-row .v{color:var(--color-text-primary);text-align:right}
+
+/* Colourful card themes — front and back per topic */
+.cf-crystal .card-front{background:#FAEEDA;border:none}
+.cf-crystal .card-front .card-label,.cf-crystal .card-front .card-hint{color:#854F0B}
+.cf-crystal .card-front .card-q{color:#633806}
+.cf-crystal .card-back{background:#EF9F27;border:none}
+.cf-crystal .card-back .card-label{color:#412402}
+.cf-crystal .card-back .card-a{color:#412402}
+
+.cf-inflammatory .card-front{background:#E1F5EE;border:none}
+.cf-inflammatory .card-front .card-label,.cf-inflammatory .card-front .card-hint{color:#0F6E56}
+.cf-inflammatory .card-front .card-q{color:#04342C}
+.cf-inflammatory .card-back{background:#1D9E75;border:none}
+.cf-inflammatory .card-back .card-label{color:#E1F5EE}
+.cf-inflammatory .card-back .card-a{color:#E1F5EE}
+
+.cf-degenerative .card-front{background:#E6F1FB;border:none}
+.cf-degenerative .card-front .card-label,.cf-degenerative .card-front .card-hint{color:#185FA5}
+.cf-degenerative .card-front .card-q{color:#042C53}
+.cf-degenerative .card-back{background:#378ADD;border:none}
+.cf-degenerative .card-back .card-label{color:#E6F1FB}
+.cf-degenerative .card-back .card-a{color:#E6F1FB}
+
+.cf-connective .card-front{background:#FBEAF0;border:none}
+.cf-connective .card-front .card-label,.cf-connective .card-front .card-hint{color:#993556}
+.cf-connective .card-front .card-q{color:#4B1528}
+.cf-connective .card-back{background:#D4537E;border:none}
+.cf-connective .card-back .card-label{color:#FBEAF0}
+.cf-connective .card-back .card-a{color:#FBEAF0}
+
+.cf-bone .card-front{background:#EEEDFE;border:none}
+.cf-bone .card-front .card-label,.cf-bone .card-front .card-hint{color:#534AB7}
+.cf-bone .card-front .card-q{color:#26215C}
+.cf-bone .card-back{background:#7F77DD;border:none}
+.cf-bone .card-back .card-label{color:#EEEDFE}
+.cf-bone .card-back .card-a{color:#EEEDFE}
+
+.cf-soft .card-front{background:#FAECE7;border:none}
+.cf-soft .card-front .card-label,.cf-soft .card-front .card-hint{color:#993C1D}
+.cf-soft .card-front .card-q{color:#4A1B0C}
+.cf-soft .card-back{background:#D85A30;border:none}
+.cf-soft .card-back .card-label{color:#FAECE7}
+.cf-soft .card-back .card-a{color:#FAECE7}
+
+.cf-genetic .card-front{background:#EAF3DE;border:none}
+.cf-genetic .card-front .card-label,.cf-genetic .card-front .card-hint{color:#3B6D11}
+.cf-genetic .card-front .card-q{color:#173404}
+.cf-genetic .card-back{background:#639922;border:none}
+.cf-genetic .card-back .card-label{color:#EAF3DE}
+.cf-genetic .card-back .card-a{color:#EAF3DE}
+</style>
+
+<div class="app">
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden">MSK &amp; EBX 2026 — interactive revision flashcards and quiz</h2>
+<div class="header">
+  <h2>MSK &amp; EBX — revision hub</h2>
+  <p>Flashcards · MCQ quiz · Key facts reference</p>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('flash')"><i class="ti ti-cards" aria-hidden="true"></i> Flashcards</button>
+  <button class="tab" onclick="switchTab('quiz')"><i class="ti ti-check" aria-hidden="true"></i> MCQ quiz</button>
+  <button class="tab" onclick="switchTab('ref')"><i class="ti ti-book" aria-hidden="true"></i> Key facts</button>
+</div>
+
+<div id="flash-view">
+  <div class="topic-filter" id="filter"></div>
+  <div class="progress"><div class="progress-bar" id="pbar"></div></div>
+  <div class="card-area">
+    <div class="card-wrap" id="cardwrap" onclick="flipCard()">
+      <div class="card-inner" id="cardinner">
+        <div class="card-face card-front" id="cfront">
+          <span class="card-label">question — tap to reveal</span>
+          <p class="card-q" id="cq"></p>
+          <p class="card-hint">Tap anywhere to flip</p>
+        </div>
+        <div class="card-face card-back" id="cback">
+          <span class="card-label">answer</span>
+          <p class="card-a" id="ca"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="nav">
+    <button onclick="prevCard()"><i class="ti ti-arrow-left" aria-hidden="true"></i> Prev</button>
+    <span class="ctr" id="ctr">1 / 1</span>
+    <button onclick="nextCard()">Next <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+  </div>
+</div>
+
+<div id="quiz-view" style="display:none">
+  <div class="score-row">
+    <div class="score-card"><div class="score-num" id="qscore">0</div><div class="score-lbl">correct</div></div>
+    <div class="score-card"><div class="score-num" id="qwrong">0</div><div class="score-lbl">incorrect</div></div>
+    <div class="score-card"><div class="score-num" id="qleft">—</div><div class="score-lbl">remaining</div></div>
+  </div>
+  <div id="quiz-content"></div>
+</div>
+
+<div id="ref-view" style="display:none">
+  <div class="info-grid" id="refgrid"></div>
+</div>
+</div>
+
+<script>
+const topicClass = {
+  "Crystal arthropathy":"cf-crystal",
+  "Inflammatory arthritis":"cf-inflammatory",
+  "Degenerative & metabolic":"cf-degenerative",
+  "Connective tissue disease":"cf-connective",
+  "Bone tumours":"cf-bone",
+  "Soft tissue tumours":"cf-soft",
+  "Bone disease (genetic/metabolic)":"cf-genetic"
+};
+
+const cards = [
+  {topic:"Crystal arthropathy",q:"What type of crystals are seen in pseudogout and what is their appearance under polarised light?",a:"Calcium pyrophosphate dihydrate (CPPD) crystals — positively birefringent, rhomboid-shaped under polarised light microscopy."},
+  {topic:"Crystal arthropathy",q:"What type of crystals cause acute gout, and how do they appear under polarised light?",a:"Monosodium urate monohydrate — negatively birefringent, needle-shaped crystals. Associated with elevated serum uric acid."},
+  {topic:"Crystal arthropathy",q:"Which joint is the classic site of the first gout attack?",a:"The first metatarsophalangeal (MTP) joint — acute, severe pain, erythema, and swelling. Common triggers: alcohol, purine-rich food."},
+  {topic:"Crystal arthropathy",q:"What serum investigation confirms a diagnosis of gout?",a:"Elevated serum uric acid (hyperuricaemia). Polarised microscopy of joint aspirate shows needle-shaped negatively birefringent crystals."},
+  {topic:"Inflammatory arthritis",q:"What HLA allele is strongly associated with ankylosing spondylitis, and what are the classic X-ray findings?",a:"HLA-B27. X-ray shows bilateral sacroiliitis and 'bamboo spine' — fusion of vertebral bodies with ossification of intervertebral discs."},
+  {topic:"Inflammatory arthritis",q:"What are the typical clinical and serological features of rheumatoid arthritis?",a:"Symmetric MCP & PIP joint involvement, morning stiffness >30 min, positive RF and anti-CCP antibodies. Histology: synoviocyte proliferation with pannus formation and lymphoplasmacytic infiltrates."},
+  {topic:"Inflammatory arthritis",q:"What is pannus and which disease is it associated with?",a:"Pannus is abnormal proliferating synovial tissue in RA that invades and destroys articular cartilage and bone. Driven by CD4+ T cells."},
+  {topic:"Inflammatory arthritis",q:"Patient with dry eyes, dry mouth, parotid enlargement, anti-SSA antibodies. What does minor salivary gland biopsy show?",a:"Sjögren syndrome — focal lymphocytic infiltration destroying salivary acini (predominantly CD4+ T cells)."},
+  {topic:"Degenerative & metabolic",q:"What is the primary initiating event in osteoarthritis pathogenesis?",a:"Chondrocyte injury and mechanical degradation of the ECM → MMP release, type II collagen and proteoglycan breakdown, subchondral sclerosis, osteophytes, and low-grade synovial inflammation (IL-1β, TNF-α)."},
+  {topic:"Degenerative & metabolic",q:"What are four key radiological features of osteoarthritis?",a:"Joint space narrowing · Osteophyte (spur) formation · Subchondral sclerosis · Subchondral cysts. Morning stiffness <30 min, no significant warmth."},
+  {topic:"Degenerative & metabolic",q:"List four risk factors for osteoarthritis.",a:"Ageing · Obesity · Previous joint trauma · Joint malalignment · Repetitive mechanical stress · Sedentary lifestyle · Family history (any 4)."},
+  {topic:"Degenerative & metabolic",q:"What is the gold-standard test for osteoporosis and what T-score confirms diagnosis?",a:"DEXA scan. T-score ≤ −2.5 at lumbar spine, femoral neck, or total hip confirms osteoporosis."},
+  {topic:"Degenerative & metabolic",q:"Describe the pathogenesis of postmenopausal osteoporosis.",a:"Oestrogen deficiency → ↑RANKL, ↓OPG → enhanced osteoclast activity → bone resorption exceeds formation → trabecular thinning. IL-1, TNF-α accelerate osteoclastogenesis."},
+  {topic:"Degenerative & metabolic",q:"What bone disease results from chronic renal failure and what is the mechanism?",a:"Secondary hyperparathyroidism. Chronic hypocalcaemia → ↑PTH → subperiosteal bone resorption. Labs: ↑phosphate, ↓calcium, ↑PTH, ↑ALP."},
+  {topic:"Degenerative & metabolic",q:"A dialysis patient has excess unmineralised osteoid on biopsy. What is the mechanism?",a:"Osteomalacia — defective mineralisation caused by decreased active vitamin D (calcitriol), impaired 1α-hydroxylation in diseased kidneys."},
+  {topic:"Connective tissue disease",q:"What are the autoantibodies in diffuse systemic sclerosis and what does skin biopsy show?",a:"Anti-topoisomerase I (Scl-70). Biopsy: extensive dermal collagen deposition (fibrosis). Clinically: skin tightening, dysphagia, Raynaud phenomenon."},
+  {topic:"Connective tissue disease",q:"What is CREST syndrome and what antibody is associated with it?",a:"Limited systemic sclerosis: Calcinosis, Raynaud, oEsophageal dysmotility, Sclerodactyly, Telangiectasia. Associated with anti-centromere antibodies."},
+  {topic:"Connective tissue disease",q:"What is the mechanism of renal injury in SLE?",a:"Type III hypersensitivity — immune complex deposition (DNA / anti-dsDNA) in glomeruli activates complement → glomerulonephritis: proteinuria, haematuria, RBC casts."},
+  {topic:"Connective tissue disease",q:"What antibodies are positive in SLE?",a:"ANA (screening) and anti-double-stranded DNA (specific) — with decreased serum complement (C3, C4) due to consumption."},
+  {topic:"Bone tumours",q:"What are the characteristic X-ray and histological features of osteosarcoma?",a:"X-ray: Codman triangle + sunburst appearance at metaphysis. Histology: lace-like osteoid by pleomorphic tumour cells. Peak age: adolescents, distal femur/proximal tibia."},
+  {topic:"Bone tumours",q:"What genetic translocation is diagnostic of Ewing sarcoma and what does histology show?",a:"EWSR1-FLI1 [t(11;22)]. Histology: sheets of small round blue cells with rosette formation. X-ray: onion-skin periosteal reaction in the diaphysis."},
+  {topic:"Bone tumours",q:"Describe the features of giant cell tumour (osteoclastoma).",a:"Adults 20–40 yrs, epiphysis. X-ray: expansile lytic 'soap bubble' lesion. Histology: mononuclear stromal cells with scattered osteoclast-like giant cells. Locally aggressive."},
+  {topic:"Bone tumours",q:"What is osteochondroma and what are its features?",a:"Most common benign bone tumour — cartilage-capped bony projection continuous with medullary cavity, arising from metaphysis. Painless, small malignant transformation risk."},
+  {topic:"Bone tumours",q:"What are the features of osteoid osteoma?",a:"Young patients. Nocturnal pain relieved by aspirin. X-ray: small lytic nidus surrounded by reactive sclerosis. Histology: woven bone trabeculae lined by osteoblasts in fibrovascular stroma."},
+  {topic:"Bone tumours",q:"What tumour can complicate Paget disease, and what is the biopsy finding?",a:"Osteosarcoma — new lytic lesion in Paget bone, markedly ↑ALP, biopsy: pleomorphic spindle cells with osteoid production (no cartilaginous matrix)."},
+  {topic:"Bone tumours",q:"What are the features of chondrosarcoma?",a:"Adults >40 yrs. X-ray: lytic lesion with calcifications, soft tissue extension. Gross: bluish-white glistening tumour. Histology: pleomorphic chondrocytes with atypical mitoses."},
+  {topic:"Soft tissue tumours",q:"What is the characteristic histological pattern of synovial sarcoma and its diagnostic translocation?",a:"Biphasic: epithelial-like cuboidal cells forming glands + uniform spindle cells. EMA positive. Translocation t(X;18)(p11;q11). Arises near (not in) joints."},
+  {topic:"Soft tissue tumours",q:"What are the features of nodular fasciitis?",a:"Reactive, rapidly growing mass in young adults after minor trauma. Histology: immature fibroblasts in loose myxoid stroma, abundant normal (not atypical) mitotic figures. Self-limiting."},
+  {topic:"Soft tissue tumours",q:"What is the hallmark histological feature of embryonal rhabdomyosarcoma?",a:"Cambium layer — dense zone of primitive cells immediately beneath the surface epithelium. IHC: desmin and myogenin positive (skeletal muscle lineage)."},
+  {topic:"Soft tissue tumours",q:"What are the gross and histological features of fibrosarcoma?",a:"Gross: unencapsulated, infiltrative, fish-flesh appearance with haemorrhage/necrosis. Histology: highly cellular atypical spindle cells in herringbone pattern, numerous mitoses."},
+  {topic:"Soft tissue tumours",q:"What is a liposarcoma and what is the hallmark cell on histology?",a:"Malignant adipocytic tumour — hallmark is the lipoblast: large cell with cytoplasmic vacuolation scalloping the nucleus. Gross: yellow solid mass with central necrosis."},
+  {topic:"Soft tissue tumours",q:"How does a ganglion cyst differ from synovial sarcoma clinically?",a:"Ganglion cyst: benign, soft, fluctuant, transilluminates, no systemic signs. Synovial sarcoma: deep, painful, heterogeneous on MRI, near but not inside the joint."},
+  {topic:"Bone disease (genetic/metabolic)",q:"What are the features of osteogenesis imperfecta?",a:"Defect in type I collagen (COL1A1/COL1A2). Features: recurrent fractures, blue sclerae, hearing impairment, dentinogenesis imperfecta. Most forms autosomal dominant."},
+  {topic:"Bone disease (genetic/metabolic)",q:"What is osteopetrosis and why does it cause anaemia and hepatosplenomegaly?",a:"Osteoclast dysfunction → failure of bone resorption → obliterated medullary cavity → no space for haematopoiesis → anaemia and extramedullary haematopoiesis (hepatosplenomegaly)."},
+];
+
+const topics = [...new Set(cards.map(c=>c.topic))];
+let activeTopic = null, idx = 0, flipped = false;
+
+function filteredCards(){return activeTopic?cards.filter(c=>c.topic===activeTopic):cards}
+function applyTheme(c){
+  const cls=topicClass[c.topic]||'cf-inflammatory';
+  const w=document.getElementById('cardwrap');
+  Object.values(topicClass).forEach(v=>w.classList.remove(v));
+  w.classList.add(cls);
+}
+function renderFilter(){
+  const f=document.getElementById('filter');
+  let h=`<span class="pill ${activeTopic===null?'sel':''}" onclick="setTopic(null)">All (${cards.length})</span>`;
+  topics.forEach(t=>{h+=`<span class="pill ${activeTopic===t?'sel':''}" onclick="setTopic('${t}')">${t} (${cards.filter(c=>c.topic===t).length})</span>`});
+  f.innerHTML=h;
+}
+function setTopic(t){activeTopic=t;idx=0;flipped=false;renderFilter();renderCard()}
+function renderCard(){
+  const fc=filteredCards();const c=fc[idx];
+  document.getElementById('cq').textContent=c.q;
+  document.getElementById('ca').textContent=c.a;
+  document.getElementById('ctr').textContent=`${idx+1} / ${fc.length}`;
+  document.getElementById('pbar').style.width=`${((idx+1)/fc.length)*100}%`;
+  document.getElementById('cardwrap').classList.remove('flipped');
+  flipped=false;applyTheme(c);
+}
+function flipCard(){flipped=!flipped;document.getElementById('cardwrap').classList.toggle('flipped',flipped)}
+function nextCard(){const fc=filteredCards();idx=(idx+1)%fc.length;renderCard()}
+function prevCard(){const fc=filteredCards();idx=(idx-1+fc.length)%fc.length;renderCard()}
+
+const quizData = [
+  {q:"Which crystal type is positively birefringent and rhomboid-shaped under polarised light?",opts:["Monosodium urate","Calcium pyrophosphate dihydrate","Calcium hydroxyapatite","Cholesterol monohydrate"],ans:1,exp:"CPPD crystals cause pseudogout — positively birefringent and rhomboid. Urate crystals (gout) are negatively birefringent and needle-shaped."},
+  {q:"Postmenopausal osteoporosis is primarily driven by:",opts:["↑calcitonin secretion","↑RANKL and ↓osteoprotegerin due to oestrogen deficiency","Primary hyperparathyroidism","Vitamin D deficiency alone"],ans:1,exp:"Oestrogen deficiency upregulates RANKL and reduces OPG, tipping the balance toward osteoclast activity and net bone loss."},
+  {q:"A 15-year-old with a destructive distal femur lesion showing Codman triangle. Most likely diagnosis:",opts:["Ewing sarcoma","Osteosarcoma","Giant cell tumour","Chondrosarcoma"],ans:1,exp:"Osteosarcoma typically affects adolescents at the metaphysis of long bones. Codman triangle (periosteal elevation) and sunburst pattern are classic X-ray signs."},
+  {q:"Ewing sarcoma is associated with which genetic alteration?",opts:["IDH1/IDH2 mutation","Loss of RB gene","EWSR1-FLI1 translocation","EXT gene mutation"],ans:2,exp:"t(11;22) results in EWSR1-FLI1 fusion. Histology shows small round blue cells with rosette formation; X-ray shows onion-skin periosteal reaction."},
+  {q:"T-score ≤ −2.5 on DEXA scan is diagnostic of:",opts:["Osteopenia","Osteoporosis","Osteomalacia","Osteopetrosis"],ans:1,exp:"WHO criteria: T-score −1 to −2.5 = osteopenia; ≤ −2.5 = osteoporosis. DEXA is the gold standard."},
+  {q:"Which HLA allele is most strongly associated with ankylosing spondylitis?",opts:["HLA-DR4","HLA-B27","HLA-B51","HLA-DR1"],ans:1,exp:"HLA-B27 is present in >90% of ankylosing spondylitis patients. RF and ANA are negative."},
+  {q:"What is the hallmark histological finding in giant cell tumour of bone?",opts:["Lace-like osteoid by pleomorphic cells","Mononuclear stromal cells with scattered osteoclast-like giant cells","Small round blue cells in rosettes","Biphasic spindle and epithelial cell pattern"],ans:1,exp:"GCT (osteoclastoma): epiphyseal soap-bubble lytic lesion. Mononuclear stromal cells with osteoclast-like giant cells. Locally aggressive."},
+  {q:"Renal injury in SLE occurs via which mechanism?",opts:["Type II antibody-mediated GBM destruction","Type IV delayed hypersensitivity","Type III immune complex deposition with complement activation","Direct bacterial invasion"],ans:2,exp:"DNA-anti-dsDNA immune complexes deposit in glomeruli → complement activation → glomerulonephritis. Decreased C3/C4 confirms active disease."},
+  {q:"Which autoantibody is associated with limited systemic sclerosis (CREST)?",opts:["Anti-topoisomerase I","Anti-dsDNA","Anti-centromere","Anti-SSA (Ro)"],ans:2,exp:"Anti-centromere = CREST/limited SSc. Anti-topoisomerase I (Scl-70) = diffuse SSc. Anti-SSA = Sjögren. Anti-dsDNA = SLE."},
+  {q:"Osteomalacia in renal failure is caused by:",opts:["Excessive calcitonin","Decreased active vitamin D (calcitriol)","Autoimmune destruction of osteoblasts","Metastatic calcification"],ans:1,exp:"Renal disease → impaired 1α-hydroxylation → ↓calcitriol → defective mineralisation → excess unmineralised osteoid."},
+  {q:"The cambium layer beneath surface epithelium is characteristic of which tumour?",opts:["Liposarcoma","Fibrosarcoma","Embryonal rhabdomyosarcoma","Synovial sarcoma"],ans:2,exp:"Botryoid embryonal RMS has a dense cambium layer of primitive cells just beneath the epithelium. IHC: desmin and myogenin positive."},
+  {q:"Nodular fasciitis differs from sarcoma because:",opts:["It lacks mitotic figures","It has atypical mitoses only","It is reactive and self-limiting with normal mitotic figures in a myxoid stroma","It shows herringbone pattern"],ans:2,exp:"Nodular fasciitis is reactive — it can look alarming histologically but mitoses are normal (not atypical), and the lesion is self-limiting."},
+  {q:"Osteogenesis imperfecta results from a defect in which protein?",opts:["Fibrillin-1","Elastin","Type I collagen","Osteocalcin"],ans:2,exp:"COL1A1/COL1A2 mutations → defective type I collagen → brittle bones, blue sclerae, hearing loss, dentinogenesis imperfecta."},
+  {q:"A 'soap bubble' lytic lesion at the epiphysis of the proximal tibia in a 28-year-old is most likely:",opts:["Osteosarcoma","Enchondroma","Giant cell tumour","Osteochondroma"],ans:2,exp:"GCT (osteoclastoma) typically occurs in skeletally mature young adults at the epiphysis. Soap-bubble appearance on X-ray is characteristic."},
+  {q:"Anti-CCP antibodies are most specific for which condition?",opts:["Osteoarthritis","Ankylosing spondylitis","Rheumatoid arthritis","Systemic lupus erythematosus"],ans:2,exp:"Anti-cyclic citrullinated peptide (anti-CCP) antibodies have high specificity (~95%) for RA and can predict erosive disease."},
+];
+
+let qi=0,qcorrect=0,qwrong=0,qAnswered=false;
+function renderQuiz(){
+  const d=document.getElementById('quiz-content');
+  if(qi>=quizData.length){
+    const pct=Math.round((qcorrect/quizData.length)*100);
+    d.innerHTML=`<div style="text-align:center;padding:2rem 0">
+      <div style="font-size:40px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px">${pct}%</div>
+      <div style="font-size:17px;color:var(--color-text-secondary);margin-bottom:1.5rem">${qcorrect} / ${quizData.length} correct</div>
+      <button class="next-btn" style="max-width:220px;margin:0 auto" onclick="resetQuiz()">Restart quiz</button>
+    </div>`;return;
+  }
+  document.getElementById('qscore').textContent=qcorrect;
+  document.getElementById('qwrong').textContent=qwrong;
+  document.getElementById('qleft').textContent=quizData.length-qi;
+  const q=quizData[qi];
+  let optsH=q.opts.map((o,i)=>`<button class="opt" id="opt${i}" onclick="selectOpt(${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join('');
+  d.innerHTML=`<div class="quiz-q"><strong>Q${qi+1}.</strong> ${q.q}</div><div class="quiz-opts">${optsH}</div><div id="qfb"></div><button class="next-btn" id="qnext" style="display:none" onclick="nextQ()">Next question →</button>`;
+  qAnswered=false;
+}
+function selectOpt(i){
+  if(qAnswered)return;qAnswered=true;
+  const q=quizData[qi];const correct=i===q.ans;
+  if(correct)qcorrect++;else qwrong++;
+  q.opts.forEach((_,j)=>{const b=document.getElementById('opt'+j);if(j===q.ans)b.classList.add('correct');else if(j===i&&!correct)b.classList.add('wrong');b.disabled=true;});
+  document.getElementById('qfb').innerHTML=`<div class="quiz-feedback ${correct?'fb-correct':'fb-wrong'}"><strong>${correct?'Correct!':'Incorrect.'}</strong> ${q.exp}</div>`;
+  document.getElementById('qnext').style.display='block';
+  document.getElementById('qscore').textContent=qcorrect;document.getElementById('qwrong').textContent=qwrong;
+}
+function nextQ(){qi++;renderQuiz()}
+function resetQuiz(){qi=0;qcorrect=0;qwrong=0;renderQuiz()}
+
+const refData = [
+  {title:"Crystal arthropathy — quick compare",rows:[["Gout crystal","Monosodium urate (MSU)"],["Gout birefringence","Negative (yellow ∥ to axis)"],["Gout crystal shape","Needle-shaped"],["Pseudogout crystal","Calcium pyrophosphate (CPPD)"],["Pseudogout birefringence","Positive (blue ∥ to axis)"],["Pseudogout crystal shape","Rhomboid-shaped"],["Gout confirmation","Elevated serum uric acid"]]},
+  {title:"Arthritis — diagnostic markers",rows:[["RA serology","RF + anti-CCP antibodies"],["RA histology","Pannus + lymphoplasmacytic infiltrate"],["AS HLA","HLA-B27 (>90%)"],["AS X-ray","Bamboo spine, bilateral sacroiliitis"],["Sjögren antibodies","Anti-SSA (Ro), anti-SSB (La)"],["Sjögren biopsy","Lymphocytic infiltration of acini"]]},
+  {title:"Bone tumours — age & location",rows:[["Osteosarcoma","Adolescents · distal femur/prox tibia metaphysis"],["Ewing sarcoma","Children · femur diaphysis"],["GCT (osteoclastoma)","20–40 yrs · epiphysis"],["Osteochondroma","Adolescents · metaphysis (benign)"],["Osteoid osteoma","<25 yrs · metaphysis, aspirin-responsive pain"],["Chondrosarcoma",">40 yrs · pelvis/shoulder girdle"]]},
+  {title:"Bone tumours — key X-ray signs",rows:[["Osteosarcoma","Codman triangle + sunburst"],["Ewing sarcoma","Onion-skin periosteal reaction"],["GCT","Soap-bubble epiphyseal lesion"],["Osteoid osteoma","Lytic nidus with surrounding sclerosis"],["Osteochondroma","Cartilage-capped projection, continuous cortex"],["Chondrosarcoma","Lytic + calcifications, soft tissue extension"]]},
+  {title:"Soft tissue tumours — histology",rows:[["Synovial sarcoma","Biphasic: glands + spindle cells; EMA+; t(X;18)"],["Fibrosarcoma","Herringbone pattern; fish-flesh gross appearance"],["Rhabdomyosarcoma","Cambium layer; desmin & myogenin+"],["Liposarcoma","Lipoblasts (vacuolated, scalloped nucleus)"],["Nodular fasciitis","Myxoid stroma; normal mitoses; self-limiting"]]},
+  {title:"Connective tissue diseases",rows:[["SLE antibodies","ANA, anti-dsDNA; ↓C3/C4"],["SLE renal mechanism","Type III immune complex deposition"],["Diffuse SSc antibody","Anti-topoisomerase I (Scl-70)"],["Limited SSc / CREST","Anti-centromere antibody"],["Sjögren","Anti-SSA/Ro; lymphocytic infiltration"],["SSc skin biopsy","Dermal fibrosis (collagen deposition)"]]},
+  {title:"Bone metabolism",rows:[["Osteoporosis test","DEXA; T-score ≤ −2.5"],["OPorosis mechanism","↑RANKL, ↓OPG → osteoclast activation"],["Osteomalacia cause","↓calcitriol → unmineralised osteoid"],["Renal osteodystrophy","↑PTH, ↑phosphate, ↓calcium, subperiosteal resorption"],["OI defect","Type I collagen (COL1A1/COL1A2)"],["Osteopetrosis","Osteoclast dysfunction → marble bones"]]},
+];
+
+function renderRef(){
+  const g=document.getElementById('refgrid');
+  g.innerHTML=refData.map(sec=>`<div class="info-card"><h3>${sec.title}</h3>${sec.rows.map(r=>`<div class="info-row"><span class="k">${r[0]}</span><span class="v">${r[1]}</span></div>`).join('')}</div>`).join('');
+}
+
+function switchTab(t){
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',['flash','quiz','ref'][i]===t));
+  document.getElementById('flash-view').style.display=t==='flash'?'':'none';
+  document.getElementById('quiz-view').style.display=t==='quiz'?'':'none';
+  document.getElementById('ref-view').style.display=t==='ref'?'':'none';
+  if(t==='ref')renderRef();
+  if(t==='quiz')renderQuiz();
+}
+
+renderFilter();renderCard();
+</script>
