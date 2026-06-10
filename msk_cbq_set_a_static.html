@@ -1,0 +1,320 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f0f4ff;font-family:system-ui,sans-serif;font-size:16px;color:#1a1a2e}
+.app{padding:8px;max-width:900px;margin:0 auto}
+@media(min-width:480px){.app{padding:16px}}
+@media(min-width:768px){.app{padding:24px}}
+.outer{border:2px solid #4361ee;border-radius:12px;box-shadow:0 8px 32px rgba(67,97,238,.18);overflow:hidden;background:#fff}
+.hdr{background:linear-gradient(135deg,#1a1a2e,#16213e);padding:18px 20px}
+.hdr h1{color:#fff;font-size:20px;font-weight:700;margin-bottom:4px}
+.hdr p{color:#a0aec0;font-size:14px}
+.tab-bar{background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;flex-wrap:wrap;gap:2px;padding:0 12px}
+.tab-btn{background:none;border:none;border-bottom:3px solid transparent;color:#8898aa;font-size:13px;font-weight:600;padding:10px 13px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.tab-btn.active{color:#f72585;border-bottom-color:#f72585;background:rgba(247,37,133,.08)}
+.tab-btn:hover:not(.active){color:#e0e0e0}
+.score-bar{background:linear-gradient(90deg,#4361ee,#7209b7);color:#fff;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600}
+.content{padding:16px}
+@media(min-width:600px){.content{padding:24px}}
+.case-hdr{background:#eef2ff;border-left:4px solid #4361ee;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:20px;color:#2d3a6b;font-size:15px;line-height:1.6}
+.case-hdr-label{display:block;font-size:12px;color:#4361ee;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.q-card{background:#fff;border:2px solid #c0caf5;border-top:4px solid #4361ee;border-radius:8px;padding:16px;margin-bottom:18px;box-shadow:0 2px 8px rgba(67,97,238,.08)}
+.q-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.badge{display:inline-block;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.b-qn{background:#4361ee;color:#fff}
+.b-topic{background:#7209b7;color:#fff}
+.b-marks{background:#f72585;color:#fff}
+.q-text{font-size:15px;line-height:1.6;color:#1a1a2e;margin-bottom:12px}
+textarea{width:100%;border:1.5px solid #c0caf5;border-radius:8px;padding:10px 12px;font-size:15px;font-family:inherit;color:#1a1a2e;resize:vertical;min-height:80px;outline:none;transition:border-color .2s}
+textarea:focus{border-color:#4361ee}
+.btn-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.btn-check{background:linear-gradient(135deg,#4361ee,#7209b7);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-check:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(67,97,238,.4)}
+.btn-revise{background:#fff;color:#4361ee;border:2px solid #4361ee;border-radius:8px;padding:9px 18px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-revise:hover{background:#eef2ff}
+.self-rate{margin-top:12px;background:#f8f0ff;border:1.5px solid #c0caf5;border-radius:8px;padding:12px 16px}
+.self-rate-label{font-size:13px;font-weight:700;color:#7209b7;margin-bottom:10px}
+.rate-btns{display:flex;flex-wrap:wrap;gap:8px}
+.rate-btn{border:none;border-radius:20px;padding:7px 18px;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
+.rate-correct{background:#d4f7e0;color:#15603a;border:2px solid #22c55e}
+.rate-partial{background:#fff8e6;color:#7c4a00;border:2px solid #f59e0b}
+.rate-wrong{background:#fde8ea;color:#7a1a22;border:2px solid #ef4444}
+.rate-btn:hover{transform:translateY(-1px)}
+.model-ans{margin-top:10px;background:#f0f4ff;border-top:3px solid #7209b7;border-radius:8px;padding:12px 16px}
+.model-lbl{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#7209b7;margin-bottom:6px}
+.model-txt{font-size:14px;color:#2d3a6b;line-height:1.6}
+.result-banner{margin-top:10px;padding:10px 14px;border-radius:8px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
+.rb-correct{background:#d4f7e0;border-left:5px solid #22c55e;color:#15603a}
+.rb-partial{background:#fff8e6;border-left:5px solid #f59e0b;color:#7c4a00}
+.rb-wrong{background:#fde8ea;border-left:5px solid #ef4444;color:#7a1a22}
+.results-wrap{text-align:center;padding:30px 20px}
+.results-pct{font-size:52px;font-weight:900;background:linear-gradient(135deg,#4361ee,#f72585);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2}
+.results-sub{font-size:16px;color:#555;margin-top:6px}
+.results-grid{margin-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.r-cell{background:#eef2ff;border-radius:8px;padding:12px;text-align:center}
+.r-num{font-size:22px;font-weight:800;color:#4361ee}
+.r-lbl{font-size:11px;color:#7209b7;font-weight:600;margin-top:2px}
+.btn-restart{background:linear-gradient(135deg,#4361ee,#7209b7);color:#fff;border:none;border-radius:8px;padding:12px 32px;font-size:15px;font-weight:700;cursor:pointer;margin-top:20px}
+.progress-row{display:flex;align-items:center;gap:10px;margin-bottom:16px;font-size:13px;color:#7209b7;font-weight:600}
+.progress-bar{flex:1;height:6px;background:#e0e7ff;border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#4361ee,#7209b7);border-radius:3px;transition:width .4s}
+</style>
+
+<div class="app">
+<div class="outer">
+  <div class="hdr">
+    <h1>MSK Case-Based Questions — Set A</h1>
+    <p>MBBS Year 2 · Musculoskeletal Module · 5 Cases</p>
+  </div>
+  <div class="tab-bar" id="tabBar"></div>
+  <div class="score-bar">
+    <span>Total Score</span>
+    <span id="scoreDisplay">0 / 90 marks</span>
+  </div>
+  <div class="content" id="mainContent"></div>
+</div>
+</div>
+
+<script>
+var CASES = [
+  {id:"c1",label:"Case 1",title:"Case 1 — Femoral Neck Fracture",
+   ctx:"A 62-year-old postmenopausal woman presents to the emergency department after slipping while walking in her garden. She reports sudden onset of severe pain in her left hip and inability to bear weight. On examination, her left leg appears shortened and externally rotated. Radiographs reveal a displaced fracture of the femoral neck.",
+   qs:[
+    {id:"c1q1",qn:"Q1",topic:"Pathology",marks:4,text:"Describe the pathogenesis of post-menopausal osteoporosis.",
+     ma:"After menopause, oestrogen levels fall sharply. Oestrogen normally inhibits osteoclast activity by suppressing RANK-L and promoting OPG. Without oestrogen: (1) RANK-L expression increases → increased osteoclastogenesis; (2) osteoclast apoptosis is delayed → prolonged resorption; (3) net result is uncoupled remodelling with resorption exceeding formation; (4) trabecular bone is lost preferentially → reduced BMD → increased fracture risk."},
+    {id:"c1q2",qn:"Q2",topic:"Pathology",marks:4,text:"List FOUR conditions that can cause osteoporosis in young individuals.",
+     ma:"(1) Hyperparathyroidism — PTH promotes osteoclast activity; (2) Hyperthyroidism — accelerates bone turnover; (3) Cushing's syndrome / prolonged corticosteroid use — inhibits osteoblasts and calcium absorption; (4) Hypogonadism (e.g., Turner's/Klinefelter's) — lack of sex hormones. Also accept: malabsorption syndromes, anorexia nervosa, osteogenesis imperfecta."},
+    {id:"c1q3",qn:"Q3",topic:"Investigation",marks:2,text:"State the laboratory investigation that will confirm the diagnosis and mention the finding likely to be seen in this patient.",
+     ma:"DEXA (Dual-energy X-ray Absorptiometry) scan confirms osteoporosis. Finding: T-score ≤ −2.5 SD below young adult mean at the lumbar spine or femoral neck."},
+    {id:"c1q4",qn:"Q4",topic:"Physiology",marks:4,text:"List the cells involved in maintaining bone homeostasis and state their function.",
+     ma:"(1) Osteoblasts — synthesise and mineralise new bone matrix (osteoid); regulate osteoclastogenesis via OPG/RANK-L. (2) Osteoclasts — resorb mineralised bone via proton pumps (HCl) and cathepsin K. (3) Osteocytes — mechanosensors in lacunae; regulate remodelling via sclerostin. (4) Bone lining cells — quiescent osteoblasts covering resting surfaces; regulate ion flux."},
+    {id:"c1q5",qn:"Q5",topic:"Anatomy",marks:2,text:"List other common sites of fracture in osteoporosis.",
+     ma:"(1) Distal radius (Colles fracture); (2) Vertebral bodies (compression/wedge fractures); (3) Proximal humerus. These are the classic fragility fracture sites alongside the femoral neck."},
+    {id:"c1q6",qn:"Q6",topic:"Pathology",marks:4,text:"Describe the stages in the fracture healing of this patient.",
+     ma:"(1) Haematoma formation (0–48 h): bleeding forms haematoma; IL-1, IL-6, TNF-α released. (2) Fibrocartilaginous callus (days 3–14): granulation tissue replaces haematoma; periosteal cells differentiate into chondroblasts/osteoblasts; soft callus bridges the gap. (3) Bony callus (weeks 2–6): endochondral ossification converts cartilage to woven bone. (4) Bone remodelling (months): osteoclasts resorb woven bone; osteoblasts replace with lamellar bone; medullary canal restored."}
+  ]},
+  {id:"c2",label:"Case 2",title:"Case 2 — Osteoarthritis Knee",
+   ctx:"A 58-year-old woman presents with 6-month history of progressive pain in her right knee. Morning stiffness lasts less than 30 minutes; difficulty getting up from seated. Inspection reveals varus deformity; palpation reveals tenderness and crepitus. X-ray confirms osteoarthritis of the knee joint.",
+   qs:[
+    {id:"c2q1",qn:"Q1",topic:"Anatomy",marks:2,text:"Name TWO articulating bones of the knee joint.",
+     ma:"(1) Femur (distal end); (2) Tibia (proximal end). The patella also articulates with the femur at the patellofemoral joint — accept as a third bone."},
+    {id:"c2q2",qn:"Q2",topic:"Anatomy",marks:3,text:"Name THREE movements of the knee joint likely to be compromised in this patient.",
+     ma:"(1) Flexion — limited by pain and joint narrowing; (2) Extension — impaired by quadriceps inhibition and joint effusion; (3) Medial rotation (terminal screw-home mechanism) — compromised by deformity."},
+    {id:"c2q3",qn:"Q3",topic:"Anatomy",marks:2,text:"Name the muscles responsible for locking and unlocking of the knee joint.",
+     ma:"Locking: terminal extension via lateral rotation of femur driven by quadriceps. Unlocking: popliteus muscle medially rotates the femur (or laterally rotates the tibia) to unlock the fully extended knee."},
+    {id:"c2q4",qn:"Q4",topic:"Pathology",marks:2,text:"List four risk factors for the development of osteoarthritis.",
+     ma:"(1) Age (>45 years); (2) Obesity (increased joint loading); (3) Previous joint injury/trauma; (4) Female sex (especially post-menopause); (5) Genetic predisposition; (6) Occupational repetitive loading."},
+    {id:"c2q5",qn:"Q5",topic:"Pathology",marks:3,text:"Describe the pathogenesis of osteoarthritis in this patient.",
+     ma:"Mechanical stress activates chondrocytes → increased MMP-3, MMP-13, ADAMTS → proteoglycan and collagen II degradation. Loss of proteoglycans reduces water-holding → cartilage softens and fibrillates. IL-1β and TNF-α amplify degradation and suppress anabolic factors. Subchondral bone exposed → microfractures → sclerosis. Marginal osteophytes form as attempted repair. Secondary synovitis from cartilage debris."},
+    {id:"c2q6",qn:"Q6",topic:"Pathology",marks:3,text:"Describe the gross morphological changes expected in the patient's knee joint.",
+     ma:"(1) Articular cartilage: fibrillation → full-thickness loss → eburnated subchondral bone. (2) Subchondral bone: sclerosis and cyst formation (geodes). (3) Marginal osteophytes at joint edges. (4) Synovial membrane: mild hypertrophy/synovitis. (5) Asymmetric joint space narrowing (medial in varus)."},
+    {id:"c2q7",qn:"Q7",topic:"Radiology",marks:3,text:"Describe the radiographic features of osteoarthritis and correlate them with the underlying pathology.",
+     ma:"(1) Joint space narrowing → cartilage loss; (2) Subchondral sclerosis → reactive bone thickening; (3) Subchondral cysts → synovial fluid forced into bone via microcracks; (4) Osteophytes → attempted repair; (5) Varus/valgus deformity → asymmetric loss. Mnemonic: LOSS — Loss of joint space, Osteophytes, Sclerosis, Subchondral cysts."},
+    {id:"c2q8",qn:"Q8",topic:"Pharmacology",marks:3,text:"Describe the mechanism of action of NSAIDs and the rationale for prescribing in this patient.",
+     ma:"NSAIDs inhibit COX-1 and/or COX-2 → reduced prostaglandin (PGE2) synthesis → decreased pain sensitisation and synovial inflammation. In OA, secondary synovitis elevates prostaglandins — NSAIDs address both pain and inflammation. COX-2 selective agents (e.g., celecoxib) preferred in older patients to reduce GI risk."},
+    {id:"c2q9",qn:"Q9",topic:"Pharmacology",marks:3,text:"List the adverse effects of NSAIDs.",
+     ma:"GI: peptic ulceration, GI bleed, dyspepsia (COX-1 inhibition). Renal: AKI, fluid retention, hypertension. CVS: increased MI/stroke risk (especially COX-2 selective). Haematological: antiplatelet effect → increased bleeding time. Respiratory: AERD (aspirin-exacerbated). Hepatic: elevated liver enzymes (rare)."}
+  ]},
+  {id:"c3",label:"Case 3",title:"Case 3 — Acute Gouty Arthritis",
+   ctx:"A 58-year-old man has sudden onset of severe pain in his left big toe. No history of trauma. Examination: oedema, redness, pain on movement of the left first MTP joint; minimal loss of mobility. Joint aspirate: numerous neutrophils and needle-shaped crystals. Diagnosed with acute gouty arthritis; treated with indomethacin and probenecid.",
+   qs:[
+    {id:"c3q1",qn:"Q1",topic:"Pathology",marks:2,text:"State FOUR causes of gouty arthritis.",
+     ma:"(1) Under-excretion of uric acid — renal tubular defect (90% of primary cases); (2) Overproduction of uric acid — e.g., Lesch-Nyhan syndrome, HGPRT deficiency; (3) High purine diet — red meat, seafood, alcohol; (4) Myeloproliferative/lymphoproliferative disorders — rapid cell turnover; (5) Diuretic use — thiazides/loop diuretics reduce urate excretion; (6) Chronic renal disease."},
+    {id:"c3q2",qn:"Q2",topic:"Pathology",marks:4,text:"Describe the pathogenesis of acute gouty arthritis.",
+     ma:"(1) Supersaturation: serum urate rises above ~6.8 mg/dL → MSU crystals form in cooler peripheral joints (podagra). (2) Crystal deposition in synovium/cartilage. (3) Macrophages phagocytose crystals → NLRP3 inflammasome → IL-1β release → massive neutrophil recruitment. (4) Frustrated phagocytosis → lysosomal enzyme release → tissue damage and acute inflammation. (5) Resolution via IL-10 and TGF-β."},
+    {id:"c3q3",qn:"Q3",topic:"Investigation",marks:2,text:"State the finding likely to be observed on aspiration of joint fluid in this patient.",
+     ma:"Negatively birefringent needle-shaped (acicular) monosodium urate (MSU) crystals under polarised light microscopy — appear yellow when parallel to the slow vibration axis. Background: turbid yellow-white fluid with numerous neutrophils (WBC >50,000/μL)."},
+    {id:"c3q4",qn:"Q4",topic:"Pharmacology",marks:3,text:"Explain the rationale for the use of indomethacin in this case.",
+     ma:"Indomethacin is a potent non-selective NSAID. Inhibits COX-1 and COX-2 → reduces prostaglandin synthesis → decreases vasodilation, oedema and pain at the inflamed MTP joint. Also reduces neutrophil migration and superoxide production. First-line for acute gout due to rapid onset and potent anti-inflammatory effect. Does NOT lower uric acid — treats the acute inflammation only."},
+    {id:"c3q5",qn:"Q5",topic:"Pharmacology",marks:2,text:"Explain why colchicine is not preferred in this case.",
+     ma:"Colchicine binds tubulin → blocks microtubule polymerisation → inhibits neutrophil migration and NLRP3 inflammasome. Effective for acute gout but not preferred here because: (1) Narrow therapeutic window — GI toxicity (nausea, vomiting, diarrhoea) common even at therapeutic doses; (2) Overdose risk: bone marrow suppression, myopathy, multi-organ failure; (3) Higher risk in renal/hepatic impairment. Indomethacin has a more predictable acute safety profile."},
+    {id:"c3q6",qn:"Q6",topic:"Pharmacology",marks:2,text:"Explain why probenecid is beneficial in this patient.",
+     ma:"Probenecid is a uricosuric agent. Inhibits URAT1 in the proximal renal tubule → blocks reabsorption of filtered urate → increases urinary uric acid excretion → lowers serum urate. Addresses underlying hyperuricaemia, preventing future crystal deposition and recurrent attacks. Should NOT be started during an acute attack as it can mobilise crystals and worsen inflammation. Used for long-term prophylaxis."}
+  ]},
+  {id:"c4",label:"Case 4",title:"Case 4 — Rheumatoid Arthritis",
+   ctx:"A 54-year-old female presents with pain and morning stiffness over the fingers for 3 months. Distal joints: tender, warm, swollen. Deformity: hyperextension of PIP with flexion of DIP (swan-neck). Rheumatoid factor positive. Diagnosed with rheumatoid arthritis. Prescribed low-dose corticosteroid, oral methotrexate and folic acid. Normal activities resumed by month 3.",
+   qs:[
+    {id:"c4q1",qn:"Q1",topic:"Anatomy",marks:2,text:"Describe the type and movements of distal interphalangeal joints.",
+     ma:"Type: Synovial hinge (ginglymoid) joint. Movements: (1) Flexion (~90°) — by flexor digitorum profundus; (2) Extension — by extensor digitorum and extensor indicis/digiti minimi. Limited adduction/abduction. Stabilised by fibrous capsule, collateral ligaments, and the volar plate."},
+    {id:"c4q2",qn:"Q2",topic:"Anatomy",marks:2,text:"Name the muscles responsible for adduction and abduction of fingers.",
+     ma:"Adduction (towards middle finger): Palmar interossei — mnemonic PAD (Palmar ADduct). Abduction (away from middle finger): Dorsal interossei — mnemonic DAB (Dorsal ABduct); also abductor digiti minimi for little finger."},
+    {id:"c4q3",qn:"Q3",topic:"Anatomy",marks:4,text:"Describe the movements with muscles acting on the proximal interphalangeal joint.",
+     ma:"PIP joint is a synovial hinge joint. (1) Flexion (~100°): flexor digitorum superficialis (FDS) — primary mover; FDP assists. (2) Extension: central slip of extensor digitorum inserts into base of middle phalanx; lateral bands contribute. FDS is key — it flexes PIP while DIP remains extended (used to test FDS in isolation)."},
+    {id:"c4q4",qn:"Q4",topic:"Pathology",marks:4,text:"Explain the pathogenesis of rheumatoid arthritis.",
+     ma:"RA is autoimmune, triggered in genetically susceptible individuals (HLA-DR4/DR1). (1) Citrullinated proteins recognised by APCs → CD4+ Th1/Th17 activation. (2) B-cells produce RF (anti-IgG Fc) and anti-CCP → immune complex formation → complement activation. (3) Cytokines (TNF-α, IL-1, IL-6, IL-17) → synovial hyperplasia → pannus formation. (4) FLS and macrophages produce MMPs → cartilage/bone erosion. (5) RANK-L from FLS → osteoclast activation → juxta-articular erosions."},
+    {id:"c4q5",qn:"Q5",topic:"Pathology",marks:2,text:"Describe the histopathological features most likely to be seen in this patient's synovial biopsy.",
+     ma:"(1) Synovial lining hyperplasia (1–2 layers → 6–10 layers) — type A and type B synoviocytes. (2) Dense perivascular lymphocytic infiltrate — CD4+ T cells and B cells, forming lymphoid follicles. (3) Neovascularisation (VEGF-driven). (4) Fibrin deposition on synovial surface. (5) Pannus — invasive proliferating synovial tissue eroding cartilage and bone."},
+    {id:"c4q6",qn:"Q6",topic:"Pathology",marks:2,text:"List FOUR extra-articular manifestations that can occur in this patient.",
+     ma:"(1) Rheumatoid nodules — subcutaneous, at pressure points; (2) Pulmonary: pleural effusion, interstitial lung disease, pulmonary nodules; (3) Cardiovascular: pericarditis, accelerated atherosclerosis; (4) Ocular: keratoconjunctivitis sicca, scleritis; (5) Felty's syndrome — RA + splenomegaly + neutropenia; (6) Renal: secondary AA amyloidosis."},
+    {id:"c4q7",qn:"Q7",topic:"Pharmacology",marks:2,text:"Explain the rationale for the use of methotrexate in this patient.",
+     ma:"MTX is a DMARD — first-line for RA. It is a folic acid analogue that competitively inhibits dihydrofolate reductase (DHFR) → reduced tetrahydrofolate → impaired DNA synthesis and purine synthesis → antiproliferative effect on T lymphocytes. Additional: adenosine accumulation → anti-inflammatory via A2A receptor. Reduces synovitis and slows radiographic progression."},
+    {id:"c4q8",qn:"Q8",topic:"Pharmacology",marks:1,text:"Name TWO common adverse effects of methotrexate.",
+     ma:"(1) Hepatotoxicity — hepatic fibrosis/cirrhosis with long-term use; monitor LFTs. (2) Bone marrow suppression — leucopenia, thrombocytopenia, anaemia. Also: mucositis/oral ulcers, methotrexate pneumonitis (rare), teratogenicity."},
+    {id:"c4q9",qn:"Q9",topic:"Pharmacology",marks:2,text:"Explain the pharmacological basis for prescribing folic acid in this patient.",
+     ma:"MTX inhibits DHFR → folate deficiency. Co-administration of folic acid (weekly on non-MTX day) replenishes folate stores → reduces MTX-related toxicity (mucositis, bone marrow suppression, hepatotoxicity) WITHOUT reducing anti-inflammatory efficacy (anti-inflammatory action via adenosine pathway is folate-independent). Improves tolerability and adherence."}
+  ]},
+  {id:"c5",label:"Case 5",title:"Case 5 — Vertebral Osteomyelitis",
+   ctx:"A 65-year-old man presents with severe lower back pain, fever, and difficulty walking with no history of trauma. MRI reveals vertebral osteomyelitis. Blood cultures grow Staphylococcus aureus. Started on empirical IV ceftriaxone and vancomycin for 6 weeks.",
+   qs:[
+    {id:"c5q1",qn:"Q1",topic:"Microbiology",marks:1,text:"State the morphological characteristics of the causal organism observed under Gram-stained smear.",
+     ma:"Staphylococcus aureus: Gram-positive cocci (spherical, 0.5–1.5 μm) arranged in grape-like clusters. Gram stain: purple/violet. Non-motile, non-spore-forming."},
+    {id:"c5q2",qn:"Q2",topic:"Microbiology",marks:1,text:"State the colony characteristics of the causal organism on blood agar.",
+     ma:"S. aureus on blood agar: (1) Golden/yellow pigmented colonies (staphyloxanthin carotenoid); (2) Complete beta-haemolysis — clear zone around colonies; (3) Smooth, round, convex, opaque ~1–4 mm; (4) Catalase-positive and coagulase-positive (key differentiators)."},
+    {id:"c5q3",qn:"Q3",topic:"Microbiology",marks:2,text:"Briefly explain TWO possible routes of bacterial invasion into the vertebrae in this patient.",
+     ma:"(1) Haematogenous spread (most common): bacteraemia from a primary focus (skin infection, IV line, dental procedure) → seeds richly vascularised vertebral end-plates. (2) Direct extension: from adjacent infected tissue (psoas abscess, discitis, retroperitoneal infection spreading to vertebrae)."},
+    {id:"c5q4",qn:"Q4",topic:"Microbiology",marks:1,text:"State TWO virulence factors of the causal organism.",
+     ma:"(1) Protein A — binds IgG Fc, preventing opsonisation; (2) Coagulase — converts fibrinogen to fibrin, creating a protective barrier; (3) TSST-1 — superantigen causing massive cytokine release; (4) PVL (Panton-Valentine Leucocidin) — destroys neutrophils/macrophages; (5) Biofilm formation."},
+    {id:"c5q5",qn:"Q5",topic:"Microbiology",marks:2,text:"State TWO possible complications of this infection if not treated properly.",
+     ma:"(1) Epidural abscess → spinal cord compression → paralysis; (2) Vertebral collapse → kyphotic deformity, neurological deficit; (3) Psoas abscess; (4) Septicaemia/infective endocarditis; (5) Chronic osteomyelitis with sequestrum formation."},
+    {id:"c5q6",qn:"Q6",topic:"Pharmacology",marks:1,text:"To which generation of cephalosporins does ceftriaxone belong?",
+     ma:"Ceftriaxone is a third-generation (3rd generation) cephalosporin."},
+    {id:"c5q7",qn:"Q7",topic:"Pharmacology",marks:3,text:"Explain the rationale for using ceftriaxone in the treatment of this patient.",
+     ma:"(1) Broad-spectrum: 3rd gen cephalosporins cover Gram-negative organisms and MSSA — useful empirically before sensitivities known. (2) Good bone penetration — achieves therapeutic levels in vertebral tissue. (3) Long half-life (~8 h) → once-daily IV dosing — convenient for 6-week course. (4) Covers MSSA and Gram-negatives; vancomycin used concurrently to cover MRSA."},
+    {id:"c5q8",qn:"Q8",topic:"Pharmacology",marks:3,text:"Explain the mechanism of action of vancomycin in the treatment of this patient.",
+     ma:"Vancomycin is a glycopeptide antibiotic. Mechanism: (1) Binds D-Ala–D-Ala terminus of peptidoglycan precursors (lipid II); (2) Blocks transglycosylation and transpeptidation → prevents peptidoglycan cross-linking → weakened cell wall; (3) Osmotic lysis and bactericidal cell death. Effective against MRSA (MRSA resistance is via altered PBPs — not glycopeptide targets)."},
+    {id:"c5q9",qn:"Q9",topic:"Pharmacology",marks:1,text:"List TWO adverse effects of vancomycin.",
+     ma:"(1) Nephrotoxicity — dose-dependent; monitor trough levels and renal function. (2) Red Man Syndrome — flushing, erythema, pruritus from histamine release with rapid IV infusion (not a true allergy). (3) Ototoxicity — vestibular and cochlear (especially with aminoglycosides). (4) Thrombophlebitis at infusion site."}
+  ]}
+];
+
+var qState = {};
+CASES.forEach(function(c){
+  c.qs.forEach(function(q){
+    qState[q.id] = {stage:'write', rating:'', marks:0, draftText:''};
+  });
+});
+var activeTab = 'c1';
+
+function totalAvail(){var t=0;CASES.forEach(function(c){c.qs.forEach(function(q){t+=q.marks;});});return t;}
+function totalEarned(){var t=0;Object.keys(qState).forEach(function(k){t+=qState[k].marks;});return t;}
+function answeredCount(){var t=0;Object.keys(qState).forEach(function(k){if(qState[k].stage==='done')t++;});return t;}
+
+function updateScore(){
+  document.getElementById('scoreDisplay').textContent = totalEarned()+' / '+totalAvail()+' marks';
+}
+
+function buildTabs(){
+  var bar = document.getElementById('tabBar');
+  bar.innerHTML='';
+  CASES.forEach(function(c){
+    var b=document.createElement('button');
+    b.className='tab-btn'+(c.id===activeTab?' active':'');
+    b.textContent=c.label;
+    b.onclick=(function(id){return function(){activeTab=id;buildTabs();renderContent();};})(c.id);
+    bar.appendChild(b);
+  });
+  var rb=document.createElement('button');
+  rb.className='tab-btn'+(activeTab==='results'?' active':'');
+  rb.textContent='Results';
+  rb.onclick=function(){activeTab='results';buildTabs();renderContent();};
+  bar.appendChild(rb);
+}
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function caseProgress(c){
+  var done=0;
+  c.qs.forEach(function(q){if(qState[q.id].stage==='done')done++;});
+  return done;
+}
+
+function renderContent(){
+  var el=document.getElementById('mainContent');
+  if(activeTab==='results'){renderResults(el);return;}
+  var caseObj=null;
+  for(var i=0;i<CASES.length;i++){if(CASES[i].id===activeTab){caseObj=CASES[i];break;}}
+  if(!caseObj){el.innerHTML='';return;}
+
+  var done=caseProgress(caseObj), total=caseObj.qs.length;
+  var pct=Math.round(done/total*100);
+  var html='<div class="progress-row"><span>'+done+' / '+total+' answered</span><div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div><span>'+pct+'%</span></div>';
+  html+='<div class="case-hdr"><span class="case-hdr-label">Clinical Scenario</span>'+esc(caseObj.ctx)+'</div>';
+
+  caseObj.qs.forEach(function(q){
+    var s=qState[q.id];
+    html+='<div class="q-card" id="card-'+q.id+'">';
+    html+='<div class="q-meta"><span class="badge b-qn">'+q.qn+'</span><span class="badge b-topic">'+esc(q.topic)+'</span><span class="badge b-marks">'+q.marks+' mark'+(q.marks>1?'s':'')+'</span></div>';
+    html+='<div class="q-text">'+esc(q.text)+'</div>';
+
+    if(s.stage==='write'){
+      html+='<textarea id="ta-'+q.id+'" placeholder="Write your answer here, then click Show Model Answer..." rows="4">'+esc(s.draftText)+'</textarea>';
+      html+='<div class="btn-row"><button class="btn-check" onclick="showModel(\''+q.id+'\')">Show Model Answer</button></div>';
+    }
+
+    if(s.stage==='rate'||s.stage==='done'){
+      html+='<div class="model-ans"><div class="model-lbl">Model Answer</div><div class="model-txt">'+esc(q.ma)+'</div></div>';
+    }
+
+    if(s.stage==='rate'){
+      html+='<div class="self-rate"><div class="self-rate-label">How did you do?</div>';
+      html+='<div class="rate-btns">';
+      html+='<button class="rate-btn rate-correct" onclick="rateAnswer(\''+q.id+'\',\'correct\','+q.marks+')">✓ Got it fully ('+q.marks+' mark'+(q.marks>1?'s':'')+')</button>';
+      if(q.marks>1){
+        var partial=Math.ceil(q.marks/2);
+        html+='<button class="rate-btn rate-partial" onclick="rateAnswer(\''+q.id+'\',\'partial\','+partial+')">~ Partially correct ('+partial+' mark'+(partial>1?'s':'')+')</button>';
+      }
+      html+='<button class="rate-btn rate-wrong" onclick="rateAnswer(\''+q.id+'\',\'wrong\',0)">✗ Missed it (0 marks)</button>';
+      html+='</div></div>';
+    }
+
+    if(s.stage==='done'){
+      var rbClass=s.rating==='correct'?'rb-correct':s.rating==='partial'?'rb-partial':'rb-wrong';
+      var rbIcon=s.rating==='correct'?'✓ Correct':s.rating==='partial'?'~ Partial Credit':'✗ Incorrect';
+      html+='<div class="result-banner '+rbClass+'"><span>'+rbIcon+' — '+s.marks+' / '+q.marks+' mark'+(q.marks>1?'s':'')+'</span></div>';
+      html+='<div class="btn-row"><button class="btn-revise" onclick="revise(\''+q.id+'\')">Revise Answer</button></div>';
+    }
+
+    html+='</div>';
+  });
+  el.innerHTML=html;
+}
+
+function showModel(qid){
+  var ta=document.getElementById('ta-'+qid);
+  qState[qid].draftText = ta ? ta.value : '';
+  qState[qid].stage='rate';
+  renderContent();
+  var card=document.getElementById('card-'+qid);
+  if(card) card.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function rateAnswer(qid, rating, marks){
+  qState[qid].stage='done';
+  qState[qid].rating=rating;
+  qState[qid].marks=marks;
+  updateScore();
+  renderContent();
+}
+
+function revise(qid){
+  var draft=qState[qid].draftText;
+  qState[qid]={stage:'write',rating:'',marks:0,draftText:draft};
+  renderContent();
+}
+
+function renderResults(el){
+  var earned=totalEarned(), total=totalAvail();
+  var pct=total>0?Math.round(earned/total*100):0;
+  var grade=pct>=80?'Distinction':pct>=60?'Pass':'Needs Revision';
+  var cells='';
+  CASES.forEach(function(c){
+    var ce=0,ct=0;
+    c.qs.forEach(function(q){ct+=q.marks;ce+=qState[q.id].marks;});
+    var cp=ct>0?Math.round(ce/ct*100):0;
+    cells+='<div class="r-cell"><div class="r-num">'+cp+'%</div><div class="r-lbl">'+c.label+'</div></div>';
+  });
+  el.innerHTML='<div class="results-wrap"><div class="results-pct">'+pct+'%</div><div class="results-sub">'+earned+' / '+total+' marks &nbsp;·&nbsp; '+grade+'</div><div class="results-grid">'+cells+'</div><button class="btn-restart" onclick="restartAll()">Restart All Cases</button></div>';
+}
+
+function restartAll(){
+  CASES.forEach(function(c){c.qs.forEach(function(q){qState[q.id]={stage:'write',rating:'',marks:0,draftText:''};});});
+  activeTab='c1';
+  updateScore();
+  buildTabs();
+  renderContent();
+}
+
+buildTabs();
+renderContent();
+updateScore();
+</script>
