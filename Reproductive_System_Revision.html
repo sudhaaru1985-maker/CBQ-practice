@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>Reproductive System — Pathology Revision</title>
+<style>
+  :root{
+    --bg:#0f1220;
+    --panel:#171b2e;
+    --panel2:#1e2338;
+    --text:#f1f2fb;
+    --muted:#9ba3c4;
+    --male:#3b82f6;
+    --male-soft:#1c2a4d;
+    --uterus:#ec4899;
+    --uterus-soft:#3a1c33;
+    --ovarian:#a855f7;
+    --ovarian-soft:#2c1c40;
+    --breast:#fb7185;
+    --breast-soft:#3a1c26;
+    --good:#22c55e;
+    --bad:#ef4444;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:60px;
+  }
+  header.top{
+    padding:22px 16px 14px;
+    text-align:center;
+    background:linear-gradient(135deg,#171b2e,#11142100);
+    border-bottom:3px solid #2a2f4a;
+  }
+  header.top h1{
+    margin:0 0 4px;
+    font-size:clamp(20px,5vw,30px);
+    letter-spacing:.3px;
+  }
+  header.top p{
+    margin:0;
+    color:var(--muted);
+    font-size:clamp(13px,3.2vw,16px);
+  }
+  nav.tabs{
+    position:sticky;
+    top:0;
+    z-index:50;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    justify-content:center;
+    padding:12px 10px;
+    background:#0f1220ee;
+    backdrop-filter:blur(6px);
+    border-bottom:2px solid #262b46;
+  }
+  .tab-btn{
+    border:2px solid #2a2f4a;
+    background:var(--panel);
+    color:var(--text);
+    padding:11px 14px;
+    border-radius:14px;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .tab-btn .dot{width:10px;height:10px;border-radius:50%;display:inline-block;}
+  .tab-btn:active{transform:scale(.97);}
+  .tab-btn.active{
+    color:#0f1220;
+    font-weight:800;
+    box-shadow:0 4px 18px rgba(0,0,0,.35);
+  }
+  main{max-width:900px;margin:0 auto;padding:18px 14px 10px;}
+  section.topic{display:none;animation:fade .25s ease;}
+  section.topic.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+  .topic-head{
+    display:flex;align-items:center;gap:12px;margin:6px 0 16px;
+  }
+  .topic-head h2{margin:0;font-size:clamp(19px,5vw,25px);}
+  .topic-head .badge-count{
+    font-size:12px;font-weight:700;color:var(--bg);
+    padding:4px 10px;border-radius:999px;
+  }
+
+  .keybox{
+    background:var(--panel);
+    border-radius:18px;
+    border:3px solid;
+    padding:16px 18px;
+    margin-bottom:22px;
+  }
+  .keybox h3{margin:0 0 10px;font-size:17px;display:flex;align-items:center;gap:8px;}
+  .keybox ul{margin:0;padding-left:20px;}
+  .keybox li{margin-bottom:9px;font-size:15px;line-height:1.5;}
+  .keybox li:last-child{margin-bottom:0;}
+  .keybox b{color:#fff;}
+
+  h3.section-label{
+    font-size:16px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--muted);
+    margin:26px 0 12px;
+    display:flex;align-items:center;gap:8px;
+  }
+
+  .flash-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:14px;
+    margin-bottom:10px;
+  }
+  .flash{
+    perspective:1200px;
+    height:150px;
+    cursor:pointer;
+  }
+  .flash-inner{
+    position:relative;width:100%;height:100%;
+    transition:transform .5s;
+    transform-style:preserve-3d;
+  }
+  .flash.flipped .flash-inner{transform:rotateY(180deg);}
+  .flash-face{
+    position:absolute;inset:0;
+    border-radius:16px;
+    border:3px solid;
+    padding:14px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    backface-visibility:hidden;
+    background:var(--panel2);
+  }
+  .flash-face.front{font-size:16px;font-weight:800;text-align:center;justify-content:center;align-items:center;}
+  .flash-face.back{transform:rotateY(180deg);font-size:13.5px;line-height:1.45;overflow-y:auto;color:#eef;}
+  .flash-hint{font-size:11px;color:var(--muted);margin-top:8px;font-weight:500;}
+
+  .mcq{
+    background:var(--panel);
+    border-radius:18px;
+    border:3px solid;
+    padding:16px 16px 14px;
+    margin-bottom:16px;
+  }
+  .mcq .q-num{
+    display:inline-block;
+    font-size:12px;font-weight:800;
+    color:var(--bg);
+    padding:3px 10px;border-radius:999px;
+    margin-bottom:8px;
+  }
+  .mcq p.stem{margin:0 0 12px;font-size:15.5px;line-height:1.5;}
+  .opts{display:flex;flex-direction:column;gap:8px;}
+  .opt{
+    text-align:left;
+    background:var(--panel2);
+    border:2px solid #2e3350;
+    color:var(--text);
+    padding:11px 13px;
+    border-radius:12px;
+    font-size:14.5px;
+    cursor:pointer;
+    line-height:1.4;
+  }
+  .opt:active{transform:scale(.99);}
+  .opt.correct{background:#123a24;border-color:var(--good);color:#c8ffdd;font-weight:700;}
+  .opt.incorrect{background:#3a1414;border-color:var(--bad);color:#ffd0d0;}
+  .opt.disabled{cursor:default;opacity:.85;}
+  .explain{
+    margin-top:12px;
+    background:#11142199;
+    border-left:4px solid #444a6e;
+    padding:10px 12px;
+    border-radius:10px;
+    font-size:13.5px;
+    line-height:1.5;
+    color:#dfe1f5;
+    display:none;
+  }
+  .explain.show{display:block;}
+  .explain b{color:#fff;}
+
+  .score-bar{
+    position:sticky;
+    bottom:0;
+    margin-top:20px;
+    background:var(--panel);
+    border:2px solid #2a2f4a;
+    border-radius:16px;
+    padding:12px 16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size:14px;
+    font-weight:700;
+  }
+  .score-bar button{
+    background:#2a2f4a;color:var(--text);border:none;
+    padding:8px 14px;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;
+  }
+
+  footer{
+    text-align:center;
+    color:var(--muted);
+    font-size:12px;
+    padding:24px 10px 6px;
+  }
+
+  @media (max-width:420px){
+    .flash-grid{grid-template-columns:1fr;}
+    .tab-btn{font-size:13.5px;padding:9px 11px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>🩺 Reproductive System — Pathology Revision</h1>
+  <p>MBBS Year 2 · Male &amp; Female Genital Tract, Breast · MCQs · Flashcards · Key Points</p>
+</header>
+
+<nav class="tabs" id="tabs"></nav>
+
+<main id="main"></main>
+
+<footer>Dr. Sudha Arumugam · Compiled for exam revision · Tap any card to flip, tap an option to answer</footer>
+
+<script>
+const TOPICS = [
+  {id:"male", label:"Male Reproductive Tract", icon:"♂️", color:"#3b82f6", soft:"#1c2a4d"},
+  {id:"uterus", label:"Uterus &amp; Cervix", icon:"🌸", color:"#ec4899", soft:"#3a1c33"},
+  {id:"ovarian", label:"Ovarian &amp; GTD", icon:"🔮", color:"#a855f7", soft:"#2c1c40"},
+  {id:"breast", label:"Breast", icon:"🎗️", color:"#fb7185", soft:"#3a1c26"}
+];
+
+const KEYPOINTS = {
+male:[
+"<b>Seminoma</b> = most common testicular germ cell tumor; large clear cells + lymphocytic stroma; highly radiosensitive.",
+"Tumor markers: <b>AFP</b> → yolk sac tumor · <b>β-hCG</b> → choriocarcinoma · <b>PLAP/LDH</b> → seminoma.",
+"Prostate <b>adenocarcinoma</b> arises in the <b>peripheral zone</b> (palpable on DRE); BPH arises in the transition (periurethral) zone.",
+"Diagnostic hallmark of prostate cancer: small crowded glands, prominent nucleoli, and <b>absent basal cell layer</b>.",
+"Prostate cancer classically metastasises to bone as <b>osteoblastic (sclerotic)</b> lesions.",
+"<b>Klinefelter syndrome (47,XXY)</b>: infertility + gynaecomastia + small firm testes + ↑FSH/LH, ↓testosterone."
+],
+uterus:[
+"<b>Adenomyosis</b> vs <b>Leiomyoma</b>: both enlarge the uterus, but adenomyosis is diffusely boggy (no discrete mass) while leiomyoma forms discrete whorled white nodules.",
+"<b>Leiomyosarcoma</b> arises <i>de novo</i> (not from a pre-existing leiomyoma); hallmark = necrosis + high mitotic count + atypia.",
+"HPV oncoproteins: <b>E6</b> degrades p53, <b>E7</b> inactivates Rb — together driving cervical dysplasia/carcinoma.",
+"CIN/SIL grading depends on how much epithelial thickness is replaced by dysplastic cells: LSIL = lower ⅓, HSIL = &gt;⅔.",
+"Cervical cancer prognosis is determined mainly by <b>clinical (FIGO) stage</b>, not histologic subtype.",
+"Endometrial carcinoma: <b>Type I</b> (endometrioid, oestrogen-driven, PTEN mutation, younger/obese) vs <b>Type II</b> (serous, p53 mutation, older, aggressive).",
+"In-utero <b>DES exposure</b> → clear cell adenocarcinoma of the vagina/cervix in daughters.",
+"The most common complication of endometriosis is pelvic <b>adhesions</b>."
+],
+ovarian:[
+"<b>Complete mole</b> = diploid, entirely paternal, <b>no fetal tissue</b>, higher risk of gestational trophoblastic neoplasia.",
+"<b>Partial mole</b> = triploid, fetal parts <b>present</b>, lower malignant potential.",
+"<b>Invasive mole</b> retains villi and invades the myometrium; <b>choriocarcinoma</b> has no villi and spreads early via the bloodstream (lung 'cannonball' mets).",
+"Serous ovarian tumours: benign ↔ borderline ↔ malignant is distinguished mainly by <b>stromal invasion</b> (psammoma bodies can occur in all three).",
+"<b>Granulosa cell tumour</b> = oestrogen-secreting (Call-Exner bodies, inhibin+); <b>Dysgerminoma</b> = ovarian counterpart of seminoma (PLAP+/LDH+).",
+"<b>Mature cystic teratoma (dermoid)</b> is the most common ovarian germ cell tumour overall.",
+"<b>PCOS</b> ovaries show multiple subcapsular follicular cysts from chronic anovulation and hyperandrogenism."
+],
+breast:[
+"<b>Fibroadenoma</b> (young women, mobile, benign) vs <b>Phyllodes tumour</b> (leaf-like architecture, stromal overgrowth, can be malignant).",
+"<b>DCIS</b> = malignant cells confined by an intact basement membrane; invasive carcinoma breaches it.",
+"<b>Invasive lobular carcinoma</b> is defined by loss of <b>E-cadherin</b>, producing its single-file ('Indian-file') growth pattern.",
+"<b>Paget disease</b> of the nipple always warrants a search for an underlying DCIS or invasive carcinoma.",
+"<b>LCIS</b> is a marker of increased risk for invasive carcinoma in <i>either</i> breast — not a localized precursor.",
+"<b>Fat necrosis</b> mimics carcinoma clinically/radiologically but is a benign, trauma-related process.",
+"Male breast cancer is rare, almost always <b>invasive ductal carcinoma</b>; linked to <b>BRCA2</b> mutation and Klinefelter syndrome."
+]
+};
+
+const FLASHCARDS = {
+male:[
+  {f:"Seminoma", b:"Most common testicular germ cell tumor. Large clear cells, prominent nucleoli, lymphocytic stroma. Radiosensitive. AFP normal, hCG may be mildly ↑."},
+  {f:"Yolk sac tumor", b:"Most common testicular tumor in infants/children. Schiller-Duval bodies. Markedly ↑AFP."},
+  {f:"Choriocarcinoma (testis)", b:"Aggressive, early haematogenous spread. Syncytio- + cytotrophoblasts. Very high β-hCG."},
+  {f:"BPH — location", b:"Arises in the transition (periurethral) zone → urinary hesitancy/nocturia. NOT premalignant."},
+  {f:"Prostate adenocarcinoma — histology", b:"Small, crowded glands; prominent nucleoli; LOSS of the basal cell layer (p63 / HMWCK negative)."},
+  {f:"Klinefelter syndrome", b:"47,XXY. Small firm testes, infertility, gynaecomastia, tall stature, ↑FSH/LH, ↓testosterone."}
+],
+uterus:[
+  {f:"Adenomyosis", b:"Endometrial glands + stroma within the myometrium → diffusely enlarged, boggy uterus, menorrhagia/dysmenorrhoea."},
+  {f:"Leiomyoma", b:"Benign smooth-muscle tumour; whorled, well-circumscribed white nodules. Most common uterine tumour; oestrogen-sensitive."},
+  {f:"Leiomyosarcoma", b:"Malignant, arises de novo. Necrosis + high mitotic count + cytologic atypia."},
+  {f:"LSIL vs HSIL", b:"LSIL (CIN1): koilocytosis confined to lower ⅓, low progression risk. HSIL (CIN2/3): dysplasia >⅔ thickness, precancerous."},
+  {f:"HPV oncoproteins", b:"E6 → degrades p53. E7 → inactivates Rb. Together they abolish normal cell-cycle checkpoints."},
+  {f:"Type I vs Type II endometrial Ca", b:"Type I = endometrioid, oestrogen-driven, PTEN mutation, younger/obese. Type II = serous/clear cell, p53 mutation, older, aggressive."},
+  {f:"DES exposure", b:"In-utero exposure → clear cell adenocarcinoma of the vagina/cervix in daughters."},
+  {f:"Sarcoma botryoides", b:"Embryonal rhabdomyosarcoma of vagina/cervix in children <5y; grapelike mass; desmin+ / myogenin+."}
+],
+ovarian:[
+  {f:"Complete vs partial mole", b:"Complete = diploid (46,XX), paternal only, NO fetus, ↑risk of choriocarcinoma. Partial = triploid (69,XXY), fetal parts present, lower malignant potential."},
+  {f:"Invasive mole", b:"Villi invade the myometrium; locally destructive, rarely metastasises; may follow a complete mole."},
+  {f:"Choriocarcinoma", b:"Malignant trophoblast, NO villi, early haematogenous spread (lung 'cannonball' mets), markedly ↑β-hCG, very chemosensitive."},
+  {f:"Serous tumour spectrum", b:"Benign cystadenoma → borderline (no stromal invasion) → cystadenocarcinoma (stromal invasion). Psammoma bodies can occur in all three."},
+  {f:"Mucinous cystadenoma", b:"Multilocular, mucin-filled, tall columnar epithelium, no atypia. Most common very large benign ovarian tumour."},
+  {f:"Granulosa cell tumour", b:"Oestrogen-secreting; Call-Exner bodies, coffee-bean nuclei, inhibin+. Precocious puberty (children) or abnormal bleeding (adults)."},
+  {f:"Dysgerminoma", b:"Ovarian counterpart of seminoma; PLAP+ / LDH+; radiosensitive."},
+  {f:"Mature cystic teratoma (dermoid)", b:"Most common ovarian germ cell tumour; tissue from all 3 germ layers; young women."},
+  {f:"PCOS", b:"Anovulation + hyperandrogenism → bilaterally enlarged ovaries with multiple subcapsular follicular cysts."}
+],
+breast:[
+  {f:"Fibrocystic change", b:"Non-proliferative (cysts, fibrosis — no ↑risk) vs Proliferative (hyperplasia, papillomatosis — mildly ↑risk)."},
+  {f:"Fibroadenoma", b:"Most common benign breast tumour in young women; well-circumscribed, mobile ('breast mouse'), biphasic, hormone-responsive."},
+  {f:"Phyllodes tumour", b:"Leaf-like stromal-epithelial tumour; malignant potential driven by stromal overgrowth, mitoses & atypia — not the epithelium."},
+  {f:"DCIS — comedo pattern", b:"Malignant cells fill ducts with central necrosis; basement membrane intact (non-invasive)."},
+  {f:"Invasive lobular carcinoma", b:"Single-file ('Indian-file') pattern; loss of E-cadherin; often bilateral/multicentric; subtle on mammography."},
+  {f:"Paget disease of the breast", b:"Eczematous nipple change; PAS/mucin+ Paget cells in the epidermis; underlying DCIS/invasive carcinoma almost always present."},
+  {f:"LCIS", b:"Marker of increased risk for invasive carcinoma in EITHER breast — not a direct anatomic precursor lesion."},
+  {f:"Male breast cancer", b:"Rare; usually invasive ductal carcinoma (NST); risk factors = BRCA2 mutation, Klinefelter syndrome, gynaecomastia."}
+]
+};
+
+const MCQ = {
+male:[
+{q:"A 26-year-old male presents with a painless, firm mass in his right testicle noticed 3 weeks ago. No history of trauma or infection. Radical inguinal orchiectomy performed. Histopathology shows large cells with clear cytoplasm, central nuclei, and prominent nucleoli arranged in nests with a background of lymphocytic infiltrate. Most likely diagnosis?",
+ opts:["Yolk sac tumor","Embryonal carcinoma","Seminoma","Choriocarcinoma"], ans:2,
+ ex:"Classic <b>seminoma</b>: nests of large uniform cells with clear cytoplasm, central nuclei, prominent nucleoli, and a lymphocytic stromal infiltrate. It is the most common testicular germ cell tumor and is highly radiosensitive."},
+{q:"A 70-year-old man presents with urinary hesitancy, weak stream, and nocturia. DRE: prostate feels hard and irregular. PSA elevated at 22 ng/mL. Biopsy reveals small, crowded glands with prominent nucleoli and loss of the normal basal cell layer. What characterises these findings?",
+ opts:["Benign prostatic hyperplasia","Acute prostatitis","Prostatic adenocarcinoma","Chronic prostatitis"], ans:2,
+ ex:"Small crowded glands, prominent nucleoli, and an <b>absent basal cell layer</b> (confirmed by negative p63/high-molecular-weight cytokeratin) are diagnostic of prostatic adenocarcinoma, typically arising in the peripheral zone."},
+{q:"A 72-year-old man complains of lower back pain. Bone scan shows multiple sclerotic vertebral lesions. Investigations reveal elevated PSA and an abnormal DRE. Most likely diagnosis?",
+ opts:["Benign prostatic hyperplasia","Acute prostatitis","Prostatic adenocarcinoma","Chronic prostatitis"], ans:2,
+ ex:"Prostatic adenocarcinoma classically metastasises to bone, producing <b>osteoblastic (sclerotic)</b> lesions — distinguishing it from most other cancers, which cause lytic lesions."},
+{q:"A 51-year-old healthy man has had bilaterally enlarged breasts for 35 years, with infertility and hypospermia. Breasts are 3× normal size, no masses, no tenderness, no axillary lymphadenopathy. Which condition is most likely associated with his breast enlargement?",
+ opts:["Antidepressant drug therapy","47,XXY karyotype","Family history","Seminoma of the testis","Increased testosterone levels"], ans:1,
+ ex:"Long-standing gynaecomastia with infertility and low sperm count points to <b>Klinefelter syndrome (47,XXY)</b> — the extra X causes seminiferous tubule dysgenesis, low testosterone, and a relatively raised oestrogen:androgen ratio."}
+],
+uterus:[
+{q:"A 45-year-old female presented with menorrhagia. Hysterectomy done, uterus enlarged, no solid masses grossly. Microscopy: proliferative-phase endometrium with nests of benign endometrial glands and stroma seen deep in the myometrium. Most likely diagnosis?",
+ opts:["Leiomyoma","Endometriosis","Adenomyosis","Endometrial hyperplasia","Endometrial stromal nodule"], ans:2,
+ ex:"<b>Adenomyosis</b> = ectopic endometrial glands and stroma within the myometrium, producing a diffusely enlarged, boggy uterus without a discrete mass — distinguishing it from leiomyoma."},
+{q:"A 50-year-old female is diagnosed with keratinizing squamous cell carcinoma of the cervix. Most important prognostic indicator?",
+ opts:["Degree of keratinization","Clinical staging of tumor","Exfoliative cytology findings","Size of the tumor cells","Presence of CEA"], ans:1,
+ ex:"For cervical carcinoma, <b>clinical (FIGO) stage</b> at diagnosis is the single most important prognostic factor, outweighing histologic subtype or keratinisation."},
+{q:"A 43-year-old woman has heavy menstrual periods (6–8 days) for 4 months plus minor intermenstrual bleeding. Cervix and Pap smear normal. Uterus is enlarged to twice normal size and nodular; no adnexal masses. Most likely diagnosis?",
+ opts:["Endometrial carcinoma","Leiomyomata","Ectopic pregnancy","Endometriosis"], ans:1,
+ ex:"Multiple well-circumscribed, whorled white nodules enlarging and distorting the uterus are classic for <b>leiomyomata</b> (fibroids) — the most common uterine tumour."},
+{q:"A 58-year-old woman with a history of in-utero diethylstilbestrol (DES) exposure presents with a 3 cm firm mass in the anterior wall of the upper vagina. Biopsy will most likely show?",
+ opts:["Clear cell adenocarcinoma","Endodermal sinus tumor","Granular cell tumor","Mucinous adenocarcinoma"], ans:0,
+ ex:"In-utero <b>DES exposure</b> is classically linked to <b>clear cell adenocarcinoma</b> of the vagina/cervix, arising from vaginal adenosis."},
+{q:"A 52-year-old woman has a 10-cm well-circumscribed uterine mass on CT. Gross: soft, necrotic, irregular borders into myometrium. Histology: large zones of necrosis surrounded by disorganised spindle cells with numerous mitoses; smooth muscle actin positive. Most likely diagnosis?",
+ opts:["Adenomyosis","Carcinosarcoma","Endometrial stromal sarcoma","Leiomyoma","Leiomyosarcoma"], ans:4,
+ ex:"Necrosis, infiltrative borders, and numerous mitoses in an SMA-positive spindle cell tumour indicate malignant transformation — <b>leiomyosarcoma</b> — which typically arises de novo rather than from a pre-existing leiomyoma."},
+{q:"A 40-year-old female has post-coital bleeding, foul-smelling discharge, and back pain, with a cauliflower-like cervical growth. Biopsy shows tumor cells with moderate atypia, intercellular bridges, and keratin pearls. Which viral genes are important in causing this diagnosis?",
+ opts:["HBV – E6 &amp; E7","HBV – E4 &amp; E5","HPV – E6 &amp; E7","HPV – E4 &amp; E5"], ans:2,
+ ex:"High-risk <b>HPV</b> (16/18) oncoproteins <b>E6</b> and <b>E7</b> inactivate p53 and Rb respectively, driving cervical squamous cell carcinoma — here showing keratin pearls, typical of a keratinizing SCC."},
+{q:"A 45-year-old female has pelvic pain and severe dysmenorrhoea for 2 months. Ultrasound: bilaterally enlarged ovaries with multiple cysts. Oophorectomy reveals dark chocolate-brown cysts filled with brown fluid. Most likely diagnosis?",
+ opts:["Leiomyoma","Endometriosis","Adenomyosis","Endometrial polyp"], ans:1,
+ ex:"'Chocolate cysts' are <b>endometriomas</b> — ovarian cysts filled with old, degraded blood from cyclical bleeding of ectopic endometrial tissue (endometriosis)."},
+{q:"A 55-year-old female has post-menopausal bleeding. A solid mass fills the uterine cavity; biopsy shows glandular cells in a back-to-back, confluent pattern with scanty desmoplastic stroma. Which of the following is a risk factor for this condition?",
+ opts:["Hypo-estrogenism","Early menopause","Endometrial hyperplasia","Unopposed progesterone"], ans:2,
+ ex:"This is endometrioid (Type I) endometrial carcinoma. Its pathway is unopposed <b>oestrogen</b> exposure → atypical <b>endometrial hyperplasia</b> → carcinoma (not hypo-oestrogenism, early menopause, or progesterone, which are protective/unrelated)."},
+{q:"A 60-year-old female has an itchy vulval rash. Biopsy of a 1×1 cm erythematous plaque reveals large rounded cells in the epithelium with pale, granular, PAS-positive cytoplasm. Likely diagnosis?",
+ opts:["HPV infection","Herpes viral infection","Condyloma acuminatum","Extra-mammary Paget disease"], ans:3,
+ ex:"Large PAS-positive Paget cells within the vulval epidermis, presenting as an eczematous plaque, define <b>extramammary Paget disease</b> — usually an in-situ adenocarcinoma of apocrine gland origin."},
+{q:"A 45-year-old female's Pap smear shows atypical cells; biopsy reveals koilocytic atypia and hyperchromatic nuclei confined to the lower ⅓ of the cervical epithelium. Likely diagnosis?",
+ opts:["Cervical carcinoma","Low-grade Squamous Intraepithelial Lesion (LSIL)","High-grade Squamous Intraepithelial Lesion (HSIL)","Adenocarcinoma"], ans:1,
+ ex:"Koilocytic atypia confined to the lower third of the epithelium = CIN1/<b>LSIL</b> — a productive HPV infection with a low risk of progression compared to HSIL (CIN2–3), where dysplasia extends beyond the lower third."},
+{q:"A 4-year-old girl has blood-stained underwear and polypoid, grapelike masses protruding from the vagina. Histology shows small round tumor cells, some with eosinophilic straplike cytoplasm. Most likely diagnosis?",
+ opts:["Neuroblastoma","Embryonal rhabdomyosarcoma","Squamous cell carcinoma","Condyloma acuminatum"], ans:1,
+ ex:"Grapelike vaginal masses (sarcoma botryoides) in a young child with strap-cell (rhabdomyoblast) morphology indicate <b>embryonal rhabdomyosarcoma</b> — desmin and myogenin positive."},
+{q:"Postmenopausal bleeding, peak age 55–65, associated with obesity/HTN/DM, PTEN mutations, arising from prior atypical hyperplasia, remains localized for years before spreading to local lymphatics. Which neoplasm fits?",
+ opts:["Clear cell carcinoma","Serous carcinoma","Mixed mullerian tumor","Endometrioid carcinoma"], ans:3,
+ ex:"This is the Type I, oestrogen-driven pathway: obesity/HTN/DM → atypical hyperplasia → PTEN-mutated <b>endometrioid carcinoma</b>, which is generally low-grade and slow to spread, unlike the aggressive p53-driven Type II serous carcinoma."},
+{q:"A 36-year-old female with endometriosis and severe periodic abdominal pain. Most frequent complication of her condition?",
+ opts:["Adenocarcinoma","Ovarian torsion","Adhesions","Pyometra"], ans:2,
+ ex:"Repeated cyclical bleeding from ectopic endometrial implants triggers a fibrotic response — dense pelvic <b>adhesions</b> are the most common complication of endometriosis, and a major cause of chronic pelvic pain and infertility."}
+],
+ovarian:[
+{q:"A 20-year-old woman has 3 days of vaginal bleeding. Ultrasound shows a dilated endometrial cavity. Suction curettage reveals grapelike clusters AND fetal parts. Cytogenetics will most likely show?",
+ opts:["Haploidy","Euploidy","Diploidy","Triploidy","Aneuploidy"], ans:3,
+ ex:"Fetal parts alongside molar (grapelike) villi indicate a <b>partial hydatidiform mole</b>, which is typically <b>triploid</b> (69,XXY/XXX) from fertilisation of one egg by two sperm — unlike the diploid, fetus-free complete mole."},
+{q:"An 8-year-old girl has precocious puberty and an ovarian mass. Microscopy shows tumor cells arranged in cords, some with nuclear grooves. Most likely diagnosis?",
+ opts:["Mature cystic teratoma","Granulosa cell tumor","Sertoli cell tumor","Dysgerminoma","Serous cystadenoma"], ans:1,
+ ex:"<b>Granulosa cell tumours</b> secrete oestrogen, causing precocious puberty in children or abnormal bleeding in adults. Nuclear grooves ('coffee-bean' nuclei) and Call-Exner bodies are diagnostic clues."},
+{q:"A 38-year-old female has a cystic ovarian tumour of serous origin. Which feature is necessary for a diagnosis of serous cystadenocarcinoma (versus a borderline tumour)?",
+ opts:["Papillary structures","Immature neuroepithelium","Psammoma bodies","Invasion of stroma","Presence of ascites"], ans:3,
+ ex:"Papillary architecture and psammoma bodies can be seen in both borderline and malignant serous tumours. <b>Stromal invasion</b> is what separates frank serous cystadenocarcinoma from a borderline serous tumour."},
+{q:"A 43-year-old woman's ovarian mass is unilocular, filled with watery fluid, and lined with papillary excrescences, with NO infiltration of the underlying stroma. Most likely diagnosis?",
+ opts:["Granulosa-theca cell tumors","Mature cystic teratomas","Fibrosarcoma with metastases","Borderline serous tumor"], ans:3,
+ ex:"Papillary architecture <b>without</b> stromal invasion defines a <b>borderline (low malignant potential) serous tumour</b> — intermediate between benign cystadenoma and frankly invasive cystadenocarcinoma."},
+{q:"A 30-year-old woman has a multilocular ovarian tumor with thick viscous fluid, lined by mucinous columnar cells with no atypia, no papillae, and no stromal invasion. Appropriate diagnosis?",
+ opts:["Endometrioid adenoma of ovary","Granulosa cell tumor","Mucinous cystadenocarcinoma","Mucinous cystadenoma","Serous cystadenocarcinoma"], ans:3,
+ ex:"Bland, non-atypical mucin-secreting columnar epithelium without papillae or stromal invasion in a multilocular cystic mass = benign <b>mucinous cystadenoma</b>, which can grow very large."},
+{q:"A 25-year-old woman with infertility, obesity (BMI 32), hirsutism, and always-irregular periods has symmetrically enlarged ovaries. Expected ovarian pathology?",
+ opts:["Bilateral endometriomas","Cystic teratoma","Mucinous cystadenoma","Serous cystadenoma","Subcapsular cysts"], ans:4,
+ ex:"Obesity, hirsutism, oligomenorrhoea, and infertility describe <b>PCOS</b>. Ovaries show multiple small <b>subcapsular</b> follicular cysts with a thickened capsule, driven by chronic anovulation and hyperandrogenism."},
+{q:"A 14-year-old girl has abdominal pain and a pelvic mass. Biopsy shows sheets of large cells with clear cytoplasm and central nuclei, positive for PLAP and LDH. Most likely diagnosis?",
+ opts:["Endodermal sinus tumor","Choriocarcinoma","Dysgerminoma","Teratoma"], ans:2,
+ ex:"<b>Dysgerminoma</b> is the ovarian counterpart of testicular seminoma — sheets of uniform clear cells positive for PLAP and LDH, and highly radiosensitive."},
+{q:"A 60-year-old postmenopausal woman has bilateral solid-cystic ovarian masses. Histopathology shows papillary structures with psammoma bodies. Most likely diagnosis?",
+ opts:["Granulosa cell tumor","Serous cystadenocarcinoma","Dysgerminoma","Mucinous cystadenoma"], ans:1,
+ ex:"Bilateral solid-cystic ovarian masses with papillary architecture and psammoma bodies in a postmenopausal woman are classic for <b>serous cystadenocarcinoma</b>, the most common malignant ovarian tumour."},
+{q:"A 22-year-old woman has nausea and vaginal bleeding at 10 weeks' gestation. Uterus large-for-dates. Ultrasound shows a 'snowstorm' pattern with no fetus. β-hCG markedly elevated. Most likely diagnosis?",
+ opts:["Incomplete abortion","Ectopic pregnancy","Partial hydatidiform mole","Complete hydatidiform mole"], ans:3,
+ ex:"Absence of a fetus, a 'snowstorm' ultrasound pattern, uterus large-for-dates, and markedly elevated β-hCG are classic for a <b>complete hydatidiform mole</b> (diploid, entirely paternal in origin)."},
+{q:"A 28-year-old woman with a history of molar pregnancy has haemoptysis and dyspnoea. CXR shows multiple cannonball metastases. β-hCG elevated; curettage shows no intrauterine pregnancy. Most likely diagnosis?",
+ opts:["Invasive mole","Ectopic pregnancy","Endometrial carcinoma","Choriocarcinoma"], ans:3,
+ ex:"<b>Choriocarcinoma</b> spreads early and widely via the bloodstream, classically producing 'cannonball' lung metastases. It is highly β-hCG-secreting yet very chemosensitive."},
+{q:"A 32-year-old woman has irregular bleeding and breast tenderness. A solid ovarian mass shows Call-Exner bodies and inhibin positivity. Most likely diagnosis?",
+ opts:["Sertoli-Leydig cell tumor","Dysgerminoma","Granulosa cell tumor","Fibroma"], ans:2,
+ ex:"Call-Exner bodies (small follicle-like rosettes) and inhibin positivity are the hallmarks of <b>granulosa cell tumour</b>, an oestrogen-secreting sex cord-stromal tumour."},
+{q:"A 24-year-old woman has a cystic ovarian mass with calcification and fat on ultrasound. Histology shows mature tissue from all three germ layers — skin, neural tissue, cartilage. Most likely diagnosis?",
+ opts:["Serous cystadenoma","Mucinous cystadenoma","Mature cystic teratoma","Endometrioma"], ans:2,
+ ex:"Mature tissue from all three germ layers in a cystic ovarian mass is a <b>mature cystic teratoma (dermoid cyst)</b> — the most common ovarian germ cell tumour, typically in young women."},
+{q:"A 25-year-old woman after a spontaneous abortion has focal trophoblastic proliferation with some normal villi and fetal parts; β-hCG only mildly elevated. Most likely diagnosis?",
+ opts:["Complete mole","Partial mole","Invasive mole","Choriocarcinoma"], ans:1,
+ ex:"A mix of normal and hydropic villi plus identifiable fetal parts, with only mild β-hCG elevation, indicates a <b>partial (triploid) mole</b> — unlike the complete mole, which lacks fetal tissue and has much higher β-hCG."},
+{q:"A 30-year-old woman, 6 months after a molar pregnancy, has persistent vaginal bleeding and rising β-hCG despite evacuation. Histology shows villi invading the myometrium. Most likely diagnosis?",
+ opts:["Complete mole","Partial mole","Invasive mole","Choriocarcinoma"], ans:2,
+ ex:"Persistent disease after mole evacuation with villi (still present, unlike choriocarcinoma) invading the myometrium defines an <b>invasive mole</b> — locally destructive but rarely metastasising widely."}
+],
+breast:[
+{q:"A 47-year-old woman on routine mammographic screening has an excisional biopsy showing lobular carcinoma in situ (LCIS). Which finding is most likely associated?",
+ opts:["No residual carcinoma","Opposite breast involvement","Absent family history of breast cancer","Concomitant Paget disease of the nipple","Negative estrogen receptor assay"], ans:1,
+ ex:"<b>LCIS</b> is often multicentric and bilateral — best thought of as a marker of increased risk of invasive carcinoma in <b>either</b> breast, rather than a localized precursor."},
+{q:"A 35-year-old woman has a firm, irregular breast mass with microcalcifications on mammography. Biopsy shows extensive fat necrosis. Most likely cause?",
+ opts:["Pregnancy","Prolactinoma","Trauma","Fibrocystic changes","Mastitis"], ans:2,
+ ex:"<b>Fat necrosis</b> is a benign inflammatory response to breast trauma (often unrecalled) — it clinically and mammographically mimics carcinoma, so biopsy is essential."},
+{q:"A 39-year-old woman has a red, scaling area on her breast. Biopsy shows large cells at the dermal-epidermal junction staining positive for mucin. Most likely diagnosis?",
+ opts:["Nipple discharge","Paget disease of breast","Intraductal carcinoma","Dermatophyte infection","Inflammatory carcinoma"], ans:1,
+ ex:"Large, mucin-positive Paget cells within the nipple-areola epidermis define <b>Paget disease of the breast</b> — almost always associated with an underlying DCIS or invasive ductal carcinoma."},
+{q:"A 55-year-old man has a solitary breast mass; biopsy shows malignant cells positive for HER2/neu and cytokeratins 4/11, negative for estrogen receptors. Most likely diagnosis?",
+ opts:["Basal cell carcinoma","Invasive ductal carcinoma","Invasive lobular carcinoma","Medullary carcinoma","Tubular adenoma"], ans:1,
+ ex:"Male breast cancer is overwhelmingly <b>invasive ductal carcinoma (NST)</b> — lobular carcinoma is rare in men, who lack normal lobular development."},
+{q:"For the same patient above — which of the following is thought to play a role in the development of his cancer?",
+ opts:["BRCA2 mutation","Chronic alcoholism","Gynecomastia","Hyperestrinism","PTEN mutation"], ans:0,
+ ex:"<b>BRCA2</b> mutations carry a markedly increased lifetime risk of male breast cancer (more so than BRCA1) and should prompt genetic counselling and family screening."},
+{q:"A 39-year-old woman has bloody nipple discharge for 5 weeks, no palpable mass, no skin lesions. Most likely diagnosis?",
+ opts:["Mastitis","Intraductal papilloma","Trauma","Invasive breast carcinoma, NST","Tuberculosis"], ans:1,
+ ex:"Unilateral bloody nipple discharge without a palpable mass is the classic presentation of <b>intraductal papilloma</b>, a benign papillary growth within a large duct."},
+{q:"A 45-year-old woman has cyclical breast discomfort and lumpiness. Core biopsy shows epithelial hyperplasia with papillary projections and cystic change, no necrosis or calcifications. Diagnosis?",
+ opts:["Non-proliferative fibrocystic change","Proliferative fibrocystic change","Atypical ductal hyperplasia","Ductal carcinoma in situ"], ans:1,
+ ex:"Epithelial hyperplasia with papillary projections plus cystic change, without atypia or necrosis, is <b>proliferative fibrocystic change</b> — carrying a mild (1.5–2×) increase in future carcinoma risk."},
+{q:"A 63-year-old woman has subtle mammographic architectural distortion. Core biopsy shows small uniform cells infiltrating in single-file patterns, with loss of cohesion and no tubule formation; E-cadherin is lost. Diagnosis?",
+ opts:["Invasive ductal carcinoma","Invasive lobular carcinoma","Ductal carcinoma in situ","Tubular carcinoma"], ans:1,
+ ex:"Single-file ('Indian-file') infiltration with loss of E-cadherin is the signature of <b>invasive lobular carcinoma</b> — notoriously subtle on mammography and often multicentric/bilateral."},
+{q:"A 55-year-old woman's core biopsy for microcalcifications shows ducts filled with monotonous cells, central (comedo) necrosis, and a preserved basement membrane. This characterises?",
+ opts:["Usual ductal hyperplasia","Atypical ductal hyperplasia","Ductal carcinoma in situ (DCIS)","Invasive ductal carcinoma"], ans:2,
+ ex:"Malignant cells filling ducts with central necrosis but an <b>intact basement membrane</b> is comedo-type <b>DCIS</b> — a non-invasive precursor lesion that often produces microcalcifications on mammography."},
+{q:"Which histological feature most reliably distinguishes a Phyllodes tumour from a fibroadenoma?",
+ opts:["Presence of both epithelial and stromal components","Well-circumscribed margins","Leaf-like architecture and increased stromal cellularity","Absence of mitotic activity and atypia"], ans:2,
+ ex:"Both are biphasic tumours, but <b>phyllodes tumour</b> is distinguished by its leaf-like papillary stromal projections and increased stromal cellularity — malignant potential depends on stromal mitoses/atypia."},
+{q:"A 25-year-old woman has a well-defined, mobile breast mass. Microscopy shows bland stromal proliferation and compressed, regular ducts with no atypia or mitoses. Most likely diagnosis?",
+ opts:["Benign phyllodes tumor","Fibroadenoma","Atypical ductal hyperplasia","Ductal carcinoma in-situ"], ans:1,
+ ex:"A well-circumscribed, mobile ('breast mouse') mass in a young woman with bland biphasic proliferation is the classic <b>fibroadenoma</b> — the most common benign breast tumour in this age group."},
+{q:"A 42-year-old woman has a rapidly growing, leaf-like breast lesion with increased stromal cellularity, mitoses >5/10 HPF, and infiltrative borders, with benign ductal epithelium. Most likely diagnosis?",
+ opts:["Fibroadenoma","Invasive lobular carcinoma","Phyllodes tumor","Invasive ductal carcinoma"], ans:2,
+ ex:"Rapid growth, leaf-like architecture, high stromal cellularity/mitoses, and infiltrative margins indicate a <b>malignant phyllodes tumour</b> — malignancy driven entirely by the stromal component."},
+{q:"A 28-year-old breastfeeding woman, 2 weeks postpartum, has fever, pain, redness, and swelling in one breast. FNA shows neutrophils, bacterial colonies, and fat necrosis. Underlying process?",
+ opts:["Chronic granulomatous inflammation","Ductal hyperplasia with calcification","Acute suppurative inflammation of the breast lobules","Infiltration of malignant ductal epithelial cells"], ans:2,
+ ex:"Fever, redness, and a neutrophilic/bacterial FNA in a breastfeeding woman describe acute (puerperal) <b>mastitis</b> — most often due to <i>S. aureus</i> entering through cracked nipples."}
+]
+};
+
+/* ---------- render ---------- */
+const tabsEl = document.getElementById("tabs");
+const mainEl = document.getElementById("main");
+
+TOPICS.forEach((t,i)=>{
+  const btn = document.createElement("button");
+  btn.className = "tab-btn" + (i===0?" active":"");
+  btn.style.borderColor = t.color;
+  btn.dataset.target = t.id;
+  btn.innerHTML = `<span class="dot" style="background:${t.color}"></span>${t.icon} ${t.label}`;
+  btn.addEventListener("click", ()=>showTopic(t.id));
+  tabsEl.appendChild(btn);
+
+  const sec = document.createElement("section");
+  sec.className = "topic" + (i===0?" active":"");
+  sec.id = "sec-"+t.id;
+
+  const mcqCount = MCQ[t.id].length;
+  sec.innerHTML = `
+    <div class="topic-head">
+      <h2>${t.icon} ${t.label}</h2>
+      <span class="badge-count" style="background:${t.color}">${mcqCount} MCQs</span>
+    </div>
+    <div class="keybox" style="border-color:${t.color};">
+      <h3 style="color:${t.color}">⭐ Key Takeaways</h3>
+      <ul>${KEYPOINTS[t.id].map(k=>`<li>${k}</li>`).join("")}</ul>
+    </div>
+    <h3 class="section-label">🗂️ Flashcards — tap to flip</h3>
+    <div class="flash-grid">
+      ${FLASHCARDS[t.id].map(c=>`
+        <div class="flash">
+          <div class="flash-inner">
+            <div class="flash-face front" style="border-color:${t.color};color:${t.color}">${c.f}<div class="flash-hint">tap to reveal</div></div>
+            <div class="flash-face back" style="border-color:${t.color}">${c.b}</div>
+          </div>
+        </div>`).join("")}
+    </div>
+    <h3 class="section-label">✅ MCQ Quiz</h3>
+    <div class="mcq-list" id="mcq-${t.id}"></div>
+    <div class="score-bar" style="border-color:${t.color}">
+      <span id="score-${t.id}">Score: 0 / ${mcqCount}</span>
+      <button id="reset-${t.id}">Reset quiz</button>
+    </div>
+  `;
+  mainEl.appendChild(sec);
+
+  // flashcard flip
+  sec.querySelectorAll(".flash").forEach(f=>{
+    f.addEventListener("click", ()=>f.classList.toggle("flipped"));
+  });
+
+  // mcq render
+  const list = sec.querySelector(`#mcq-${t.id}`);
+  let score = 0;
+  const answered = new Array(mcqCount).fill(false);
+
+  MCQ[t.id].forEach((item, qi)=>{
+    const card = document.createElement("div");
+    card.className = "mcq";
+    card.style.borderColor = t.color;
+    card.innerHTML = `
+      <span class="q-num" style="background:${t.color}">Q${qi+1}</span>
+      <p class="stem">${item.q}</p>
+      <div class="opts">
+        ${item.opts.map((o,oi)=>`<button class="opt" data-oi="${oi}">${o}</button>`).join("")}
+      </div>
+      <div class="explain"><b>Explanation:</b> ${item.ex}</div>
+    `;
+    list.appendChild(card);
+
+    const optBtns = card.querySelectorAll(".opt");
+    const explainEl = card.querySelector(".explain");
+    optBtns.forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        if(answered[qi]) return;
+        answered[qi] = true;
+        const chosen = parseInt(btn.dataset.oi);
+        optBtns.forEach(b=>b.classList.add("disabled"));
+        if(chosen === item.ans){
+          btn.classList.add("correct");
+          score++;
+        } else {
+          btn.classList.add("incorrect");
+          optBtns[item.ans].classList.add("correct");
+        }
+        explainEl.classList.add("show");
+        document.getElementById(`score-${t.id}`).textContent = `Score: ${score} / ${mcqCount}`;
+      });
+    });
+  });
+
+  sec.querySelector(`#reset-${t.id}`).addEventListener("click", ()=>{
+    score = 0;
+    answered.fill(false);
+    list.querySelectorAll(".mcq").forEach(card=>{
+      card.querySelectorAll(".opt").forEach(b=>{
+        b.classList.remove("correct","incorrect","disabled");
+      });
+      card.querySelector(".explain").classList.remove("show");
+    });
+    document.getElementById(`score-${t.id}`).textContent = `Score: 0 / ${mcqCount}`;
+  });
+});
+
+function showTopic(id){
+  document.querySelectorAll("section.topic").forEach(s=>s.classList.toggle("active", s.id === "sec-"+id));
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.toggle("active", b.dataset.target===id));
+  const topic = TOPICS.find(t=>t.id===id);
+  document.querySelectorAll(".tab-btn").forEach(b=>{
+    if(b.dataset.target===id){ b.style.background = topic.color; }
+    else { const tt = TOPICS.find(x=>x.id===b.dataset.target); b.style.background = "var(--panel)"; }
+  });
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+// init active tab color
+showTopic("male");
+</script>
+</body>
+</html>
