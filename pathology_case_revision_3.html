@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>Pathology Revision — Case-Based MCQs</title>
+<style>
+  :root{
+    --bg: #0d1117;
+    --bg-elev: #151b23;
+    --bg-elev2: #1c232e;
+    --border: #2a3341;
+    --text: #e6edf3;
+    --text-dim: #8b98a8;
+    --text-dimmer: #5d6b7d;
+    --correct: #22c55e;
+    --wrong: #ef4444;
+    --accent: #60a5fa;
+    --radius: 14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    padding-bottom: 40px;
+  }
+  .wrap{ max-width: 720px; margin: 0 auto; padding: 0 14px; }
+
+  /* Header */
+  header{
+    padding: 20px 14px 14px;
+    max-width: 720px;
+    margin: 0 auto;
+    text-align:center;
+  }
+  header h1{
+    font-size: 1.35rem;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  header p{
+    margin:0;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+  }
+
+  /* Tabs */
+  .tabs{
+    display:flex;
+    gap:6px;
+    max-width:720px;
+    margin: 14px auto 0;
+    padding: 0 14px;
+  }
+  .tab{
+    flex:1;
+    text-align:center;
+    padding: 10px 6px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    cursor:pointer;
+    user-select:none;
+    transition: all .15s;
+  }
+  .tab.active{
+    background: var(--accent);
+    color: #08131f;
+    border-color: var(--accent);
+  }
+
+  .panel{ display:none; }
+  .panel.active{ display:block; }
+
+  /* Progress bar */
+  .progress-wrap{
+    max-width:720px;
+    margin: 16px auto 0;
+    padding: 0 14px;
+  }
+  .progress-bar{
+    height: 8px;
+    background: var(--bg-elev);
+    border-radius: 999px;
+    overflow:hidden;
+    border: 1px solid var(--border);
+  }
+  .progress-fill{
+    height:100%;
+    background: linear-gradient(90deg, var(--accent), #34d399);
+    width:0%;
+    transition: width .3s;
+  }
+  .progress-stats{
+    display:flex;
+    justify-content:space-between;
+    font-size:0.75rem;
+    color: var(--text-dim);
+    margin-top:6px;
+  }
+
+  /* Filters */
+  .filters{
+    max-width:720px;
+    margin: 14px auto 0;
+    padding: 0 14px;
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width:none;
+  }
+  .filters::-webkit-scrollbar{display:none;}
+  .filter-chip{
+    flex-shrink:0;
+    padding: 7px 13px;
+    border-radius: 999px;
+    background: var(--bg-elev);
+    border:1px solid var(--border);
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    cursor:pointer;
+    user-select:none;
+    white-space:nowrap;
+    font-weight:600;
+  }
+  .filter-chip.active{
+    color:#08131f;
+  }
+  .filter-group-label{
+    font-size:0.68rem;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color: var(--text-dimmer);
+    margin: 12px auto 4px;
+    max-width:720px;
+    padding:0 14px 0 14px;
+  }
+
+  /* Navigator dots */
+  .navigator{
+    max-width:720px;
+    margin: 14px auto 0;
+    padding: 0 14px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+  }
+  .dot{
+    width: 30px; height:30px;
+    border-radius:8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:0.68rem;
+    font-weight:700;
+    background: var(--bg-elev);
+    border: 1.5px solid var(--border);
+    color: var(--text-dim);
+    cursor:pointer;
+    user-select:none;
+  }
+  .dot.answered{ border-color: var(--text-dimmer); color: var(--text); }
+  .dot.correct{ background: rgba(34,197,94,0.15); border-color: var(--correct); color: var(--correct); }
+  .dot.wrong{ background: rgba(239,68,68,0.15); border-color: var(--wrong); color: var(--wrong); }
+  .dot.current{ outline: 2px solid var(--accent); outline-offset:2px; }
+
+  /* Question card */
+  .qcard{
+    max-width:720px;
+    margin: 16px auto 0;
+    padding: 0 14px;
+  }
+  .qcard-inner{
+    background: var(--bg-elev);
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border);
+    padding: 18px;
+    border-left-width: 5px;
+  }
+  .qmeta{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-bottom:10px;
+  }
+  .badge{
+    font-size:0.68rem;
+    font-weight:700;
+    padding:3px 9px;
+    border-radius:999px;
+    background: var(--bg-elev2);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+  .qnum{
+    font-size:0.75rem;
+    color: var(--text-dimmer);
+    font-weight:700;
+  }
+  .stem{
+    font-size:0.98rem;
+    line-height:1.5;
+    margin: 8px 0 16px;
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+  }
+  .option{
+    border: 2px solid var(--border);
+    border-radius:12px;
+    padding: 12px 14px;
+    cursor:pointer;
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    background: var(--bg-elev2);
+    transition: border-color .15s, background .15s;
+  }
+  .option:active{ transform: scale(0.99); }
+  .option .opt-label{
+    flex-shrink:0;
+    width:24px; height:24px;
+    border-radius:7px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    font-size:0.75rem;
+    font-weight:700;
+    color: var(--text-dim);
+  }
+  .option .opt-text{ font-size:0.9rem; line-height:1.45; padding-top:2px; }
+
+  .option.selected-correct{ border-color: var(--correct); background: rgba(34,197,94,0.08); }
+  .option.selected-correct .opt-label{ background: var(--correct); border-color: var(--correct); color:#06210f; }
+  .option.selected-wrong{ border-color: var(--wrong); background: rgba(239,68,68,0.08); }
+  .option.selected-wrong .opt-label{ background: var(--wrong); border-color: var(--wrong); color:#2b0705; }
+  .option.reveal-correct{ border-color: var(--correct); }
+  .option.reveal-correct .opt-label{ background: var(--correct); border-color: var(--correct); color:#06210f; }
+  .option.disabled{ cursor:default; }
+
+  .explain{
+    margin-top:6px;
+    padding: 10px 12px;
+    border-radius:9px;
+    font-size:0.83rem;
+    line-height:1.45;
+  }
+  .explain.exp-correct{ background: rgba(34,197,94,0.08); color:#a7f3d0; border-left:3px solid var(--correct); }
+  .explain.exp-wrong{ background: rgba(239,68,68,0.06); color:#fca5a5; border-left:3px solid var(--wrong); }
+
+  .feedback-banner{
+    margin-top:14px;
+    padding:12px 14px;
+    border-radius:10px;
+    font-weight:700;
+    font-size:0.9rem;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .feedback-banner.correct{ background: rgba(34,197,94,0.12); color: var(--correct); }
+  .feedback-banner.wrong{ background: rgba(239,68,68,0.12); color: var(--wrong); }
+
+  .autoflag{
+    font-size:0.68rem;
+    color: var(--text-dimmer);
+    margin-top:10px;
+    font-style:italic;
+  }
+
+  .nav-buttons{
+    display:flex;
+    gap:10px;
+    margin-top:16px;
+  }
+  .navbtn{
+    flex:1;
+    padding: 12px;
+    border-radius:10px;
+    border:1.5px solid var(--border);
+    background: var(--bg-elev);
+    color: var(--text);
+    font-weight:700;
+    font-size:0.85rem;
+    cursor:pointer;
+  }
+  .navbtn:disabled{ opacity:0.35; cursor:default; }
+  .navbtn.primary{ background: var(--accent); color:#08131f; border-color:var(--accent); }
+
+  /* Flashcards */
+  .fc-topic-select{
+    max-width:720px;
+    margin: 14px auto 0;
+    padding: 0 14px;
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .fc-topic-select::-webkit-scrollbar{display:none;}
+  .flashcard-area{
+    max-width:720px;
+    margin: 20px auto 0;
+    padding: 0 14px;
+  }
+  .flashcard{
+    background: var(--bg-elev);
+    border: 1.5px solid var(--border);
+    border-left-width:5px;
+    border-radius: var(--radius);
+    min-height: 190px;
+    padding: 24px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    cursor:pointer;
+    font-size: 1rem;
+    line-height:1.5;
+    user-select:none;
+    position:relative;
+  }
+  .flashcard .fc-hint{
+    position:absolute;
+    bottom:10px; left:0; right:0;
+    text-align:center;
+    font-size:0.68rem;
+    color: var(--text-dimmer);
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+  }
+  .flashcard .fc-side-label{
+    position:absolute;
+    top:12px; left:14px;
+    font-size:0.65rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color: var(--text-dimmer);
+  }
+  .fc-controls{
+    display:flex;
+    gap:10px;
+    margin-top:14px;
+  }
+  .fc-counter{
+    text-align:center;
+    color: var(--text-dim);
+    font-size:0.8rem;
+    margin-top:10px;
+  }
+
+  /* Key facts */
+  .kf-area{
+    max-width:720px;
+    margin: 14px auto 0;
+    padding: 0 14px 20px;
+  }
+  .kf-topic{
+    background: var(--bg-elev);
+    border:1.5px solid var(--border);
+    border-left-width:5px;
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .kf-topic h3{
+    margin:0 0 8px;
+    font-size:0.95rem;
+  }
+  .kf-topic ul{
+    margin:0;
+    padding-left:18px;
+  }
+  .kf-topic li{
+    font-size:0.85rem;
+    line-height:1.5;
+    color: var(--text-dim);
+    margin-bottom:6px;
+  }
+
+  /* Results screen */
+  .results{
+    max-width:720px;
+    margin: 20px auto 0;
+    padding: 0 14px;
+    text-align:center;
+  }
+  .results .big-score{
+    font-size: 2.6rem;
+    font-weight:800;
+  }
+  .results .score-label{
+    color: var(--text-dim);
+    font-size:0.9rem;
+    margin-bottom: 18px;
+  }
+  .topic-breakdown{
+    text-align:left;
+    margin-top: 16px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .tb-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background: var(--bg-elev);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding: 9px 12px;
+  }
+  .tb-name{ flex:1; font-size:0.82rem; }
+  .tb-bar-bg{ width:80px; height:6px; background:var(--bg-elev2); border-radius:99px; overflow:hidden;}
+  .tb-bar-fill{ height:100%; }
+  .tb-frac{ font-size:0.75rem; color:var(--text-dim); width:38px; text-align:right; }
+
+  .reset-btn{
+    margin-top:20px;
+    padding: 10px 18px;
+    border-radius:10px;
+    border:1.5px solid var(--border);
+    background:none;
+    color: var(--text-dim);
+    font-size:0.8rem;
+    cursor:pointer;
+  }
+
+  @media (max-width:400px){
+    .stem{font-size:0.92rem;}
+    .flashcard{font-size:0.92rem; padding:20px 16px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Pathology Case Revision</h1>
+  <p>35 clinical-vignette MCQs · feedback on every option · flashcards · key facts</p>
+</header>
+
+<div class="tabs">
+  <div class="tab active" data-panel="quiz">Quiz</div>
+  <div class="tab" data-panel="flashcards">Flashcards</div>
+  <div class="tab" data-panel="keyfacts">Key Facts</div>
+</div>
+
+<!-- QUIZ PANEL -->
+<div class="panel active" id="panel-quiz">
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-stats">
+      <span id="progressText">0 / 35 answered</span>
+      <span id="scoreText">Score: 0 / 0</span>
+    </div>
+  </div>
+
+  <div class="filter-group-label">Topic</div>
+  <div class="filters" id="topicFilters"></div>
+
+  <div class="navigator" id="navigator"></div>
+
+  <div id="quizBody"></div>
+
+</div>
+
+<!-- FLASHCARDS PANEL -->
+<div class="panel" id="panel-flashcards">
+  <div class="fc-topic-select" id="fcTopicSelect"></div>
+  <div class="flashcard-area">
+    <div class="flashcard" id="flashcardEl">
+      <span class="fc-side-label" id="fcSideLabel">QUESTION</span>
+      <div id="fcContent"></div>
+      <span class="fc-hint">Tap to flip</span>
+    </div>
+    <div class="fc-controls">
+      <button class="navbtn" id="fcPrev">◀ Prev</button>
+      <button class="navbtn primary" id="fcFlip">Flip</button>
+      <button class="navbtn" id="fcNext">Next ▶</button>
+    </div>
+    <div class="fc-counter" id="fcCounter"></div>
+  </div>
+</div>
+
+<!-- KEY FACTS PANEL -->
+<div class="panel" id="panel-keyfacts">
+  <div class="kf-area" id="kfArea"></div>
+</div>
+
+<script>
+const TOPICS = {
+  necrosis:   { name: "Necrosis & Cell Injury",                 color: "#ef4444" },
+  neoplasia:  { name: "Neoplasia: Benign vs Malignant",         color: "#a855f7" },
+  rheumatic:  { name: "Rheumatic Heart Disease",                color: "#ec4899" },
+  endocard:   { name: "Infective Endocarditis",                 color: "#06b6d4" },
+  leukemia:   { name: "Leukemias & Myeloproliferative Disorders", color: "#14b8a6" },
+  pulmvasc:   { name: "Pulmonary HTN & Cor Pulmonale",          color: "#3b82f6" },
+  diabetes:   { name: "Diabetes Mellitus",                       color: "#f59e0b" },
+  lungca:     { name: "Lung Cancer",                             color: "#22c55e" },
+  liver:      { name: "Liver Disease",                           color: "#b45309" },
+  arthritis:  { name: "Arthritis: RA vs OA",                     color: "#6366f1" },
+  thrombo:    { name: "Thrombosis & Embolism",                   color: "#f97316" },
+  anemia:     { name: "Anemia",                                  color: "#f43f5e" },
+};
+
+// Bloom/difficulty note: several questions (mostly the case-vignette "explains" style,
+// plus all newly-added questions) did not carry explicit BLOOM/DIFFICULTY tags in the
+// source document. Levels for these were assigned by Claude based on question complexity —
+// flagged with autoTag:true.
+const QUESTIONS = [
+{
+  id:1, topic:"necrosis", bloom:"Apply", difficulty:"Moderate",
+  stem:"A 32-year-old woman develops severe toothache and facial swelling due to a dental abscess. She has fever and leukocytosis. A biopsy from the affected tissue shows necrotic debris, dense neutrophilic infiltration and microbial organisms. Which of the following patterns of tissue change is most likely present?",
+  options:[
+    {label:"A", text:"Caseous necrosis", correct:false, explain:"Caseous necrosis is characteristic of granulomatous infections such as TB, producing cheese-like debris with a granulomatous rim — not an acute pyogenic abscess."},
+    {label:"B", text:"Liquefactive necrosis", correct:true, explain:"Correct. Pyogenic bacterial infection triggers massive neutrophil recruitment; neutrophil enzymes digest the necrotic tissue into a soft, liquefied mass — the classic mechanism behind abscess formation."},
+    {label:"C", text:"Fat necrosis", correct:false, explain:"Fat necrosis occurs in adipose tissue — classically from pancreatic lipase release in acute pancreatitis or direct trauma to fat — not infected soft tissue."},
+    {label:"D", text:"Fibrinoid necrosis", correct:false, explain:"Fibrinoid necrosis affects blood vessel walls in immune-mediated vasculitis or malignant hypertension, marked by fibrin deposition — not an abscess."},
+  ]
+},
+{
+  id:2, topic:"neoplasia", bloom:"Understand", difficulty:"Easy",
+  stem:"A 60-year-old woman undergoes biopsy of a firm breast mass. Microscopy shows irregular glands invading surrounding stroma, marked nuclear atypia, and frequent abnormal mitoses. Which of the following features best supports malignant behavior?",
+  options:[
+    {label:"A", text:"Encapsulation by fibrous tissue", correct:false, explain:"Encapsulation is a benign feature — a fibrous capsule pushes aside, rather than invades, surrounding tissue."},
+    {label:"B", text:"Invasion of adjacent tissue", correct:true, explain:"Correct. Invasion into surrounding stroma is the defining behavioral hallmark of malignancy, distinguishing it from benign, non-invasive growth."},
+    {label:"C", text:"Uniform cellular maturation", correct:false, explain:"Uniform maturation reflects benign, well-differentiated tissue; malignant tumors typically show pleomorphism and loss of normal maturation."},
+    {label:"D", text:"Compression of nearby tissue", correct:false, explain:"Compression without invasion is typical of slow-growing benign masses expanding within a capsule."},
+  ]
+},
+{
+  id:3, topic:"rheumatic", bloom:"Apply", difficulty:"Moderate",
+  stem:"A 28-year-old woman with previous childhood fever and joint pain presents with exertional dyspnea. Echocardiography shows thickened mitral valve leaflets and narrowed valve opening. Which of the following long-term complications is most likely?",
+  options:[
+    {label:"A", text:"Left atrial enlargement", correct:true, explain:"Correct. Chronic mitral stenosis from rheumatic scarring raises left atrial pressure, causing progressive left atrial enlargement (and predisposing to atrial fibrillation)."},
+    {label:"B", text:"Right atrial myxoma", correct:false, explain:"Myxoma is a primary cardiac tumor, unrelated to rheumatic valve scarring."},
+    {label:"C", text:"Aortic root dilation", correct:false, explain:"Aortic root dilation is linked to conditions like Marfan syndrome or aortic dissection, not mitral stenosis."},
+    {label:"D", text:"Ventricular septal rupture", correct:false, explain:"Septal rupture is a mechanical complication of acute MI, not chronic rheumatic mitral disease."},
+  ]
+},
+{
+  id:4, topic:"endocard", bloom:"Apply", difficulty:"Easy",
+  stem:"A 45-year-old man with poor dental hygiene develops fever, malaise, and a new heart murmur. Blood cultures grow viridans streptococci. Echocardiography shows irregular masses on a previously damaged mitral valve. Which of the following diagnoses is most likely?",
+  options:[
+    {label:"A", text:"Infective endocarditis", correct:true, explain:"Correct. Fever, new murmur, viridans streptococci bacteremia (from poor dental hygiene), and valve vegetations are classic for infective endocarditis on a previously damaged valve."},
+    {label:"B", text:"Rheumatic myocarditis", correct:false, explain:"Rheumatic myocarditis follows streptococcal pharyngitis, not dental bacteremia, and doesn't typically show discrete valve vegetations on echo."},
+    {label:"C", text:"Dilated cardiomyopathy", correct:false, explain:"This is a structural/functional heart muscle disease, not an infectious valvular process."},
+    {label:"D", text:"Hypertrophic cardiomyopathy", correct:false, explain:"This is a genetic disease of myocardial hypertrophy, unrelated to bacteremia or valve vegetations."},
+  ]
+},
+{
+  id:5, topic:"endocard", bloom:"Analyze", difficulty:"Hard",
+  stem:"A 35-year-old intravenous drug user presents with fever, hematuria, and painful fingertip lesions. Blood cultures are positive for Staphylococcus aureus. Which of the following complications is most likely to occur?",
+  options:[
+    {label:"A", text:"Septic arterial occlusion", correct:true, explain:"Correct. Septic emboli from endocarditis (common in IV drug users, often S. aureus) can lodge in peripheral arteries, causing painful fingertip lesions and septic occlusion, plus renal emboli explaining hematuria."},
+    {label:"B", text:"Systemic amyloid deposition", correct:false, explain:"Amyloidosis is a chronic, slowly progressive process — not an acute complication of active bacteremia."},
+    {label:"C", text:"Viral myocardial inflammation", correct:false, explain:"This is a bacterial, not viral, infection based on positive S. aureus blood cultures."},
+    {label:"D", text:"Autoimmune valve scarring", correct:false, explain:"This describes a chronic immune process (like rheumatic disease), not the acute septic complications described here."},
+  ]
+},
+{
+  id:6, topic:"leukemia", bloom:"Apply", difficulty:"Easy",
+  stem:"A 7-year-old boy presents with fever, pallor, gum bleeding, and bone pain. Complete blood count shows anemia, thrombocytopenia, and many immature cells in peripheral blood. Which of the following diagnoses is most likely?",
+  options:[
+    {label:"A", text:"Acute lymphoblastic leukemia", correct:true, explain:"Correct. ALL is the most common childhood leukemia, presenting with marrow-failure symptoms (anemia, thrombocytopenia, infection risk) and circulating lymphoblasts."},
+    {label:"B", text:"Chronic lymphocytic leukemia", correct:false, explain:"CLL is a disease of older adults with mature lymphocytosis, not blasts in a child."},
+    {label:"C", text:"Multiple myeloma", correct:false, explain:"Myeloma is a plasma cell neoplasm typically affecting older adults, with bone lesions and monoclonal protein — not blasts in a child."},
+    {label:"D", text:"Aplastic anemia", correct:false, explain:"Aplastic anemia shows marrow hypoplasia without circulating immature blasts."},
+  ]
+},
+{
+  id:7, topic:"leukemia", bloom:"Apply", difficulty:"Moderate",
+  stem:"A 62-year-old man is found to have persistent leukocytosis during routine testing. He has splenomegaly but no acute illness. Blood smear shows many mature lymphocytes with fragile disrupted cells. Which of the following diagnoses is most likely?",
+  options:[
+    {label:"A", text:"Chronic lymphocytic leukemia", correct:true, explain:"Correct. CLL typically presents in older adults with painless lymphocytosis, splenomegaly, and characteristic smudge (fragile) cells on smear."},
+    {label:"B", text:"Acute lymphoblastic leukemia", correct:false, explain:"ALL presents acutely with blasts, mainly in children — not indolent mature lymphocytosis in an older adult."},
+    {label:"C", text:"Hodgkin lymphoma", correct:false, explain:"Hodgkin lymphoma is primarily a lymph node disease with Reed-Sternberg cells, not a leukemic blood picture."},
+    {label:"D", text:"Burkitt lymphoma", correct:false, explain:"Burkitt lymphoma is a highly aggressive lymphoma, not an indolent leukemia of mature lymphocytes."},
+  ]
+},
+{
+  id:8, topic:"pulmvasc", bloom:"Apply", difficulty:"Moderate",
+  stem:"A 50-year-old woman has progressive shortness of breath and loud pulmonary component of the second heart sound. Echocardiography shows right ventricular hypertrophy and elevated pressure in the lung circulation. Which of the following vascular changes is most likely present?",
+  options:[
+    {label:"A", text:"Medial hypertrophy of arteries", correct:true, explain:"Correct. Chronic pulmonary hypertension causes medial hypertrophy and intimal thickening of pulmonary arteries in response to sustained increased pressure/resistance."},
+    {label:"B", text:"Fat deposition in arteries", correct:false, explain:"This describes atherosclerosis, a systemic arterial process — not the vascular remodeling of pulmonary hypertension."},
+    {label:"C", text:"Calcification of veins", correct:false, explain:"Venous calcification is not the mechanism behind pulmonary arterial hypertension."},
+    {label:"D", text:"Amyloid deposition in veins", correct:false, explain:"Amyloid deposition is a distinct, separate pathological process from hypertensive vascular remodeling."},
+  ]
+},
+{
+  id:9, topic:"pulmvasc", bloom:"Analyze", difficulty:"Hard",
+  stem:"A 66-year-old man with chronic bronchitis develops ankle swelling, hepatomegaly, and raised jugular venous pressure. Echocardiography shows right ventricular dilation. Which of the following mechanisms most likely caused the cardiac change?",
+  options:[
+    {label:"A", text:"Increased resistance in lung vessels", correct:true, explain:"Correct. Chronic bronchitis causes hypoxic pulmonary vasoconstriction and vascular remodeling, raising pulmonary vascular resistance, which overloads and dilates the right ventricle — cor pulmonale."},
+    {label:"B", text:"Increased systemic arterial pressure", correct:false, explain:"Systemic hypertension affects the left, not right, heart."},
+    {label:"C", text:"Increased left ventricular outflow block", correct:false, explain:"Outflow obstruction (e.g., aortic stenosis) affects the left ventricle, not the mechanism here."},
+    {label:"D", text:"Increased coronary arterial narrowing", correct:false, explain:"Coronary disease causes ischemia, not the pulmonary-pressure-driven right heart changes described."},
+  ]
+},
+{
+  id:10, topic:"diabetes", bloom:"Apply", difficulty:"Moderate",
+  stem:"A 52-year-old obese man presents with fatigue and increased thirst. Fasting plasma glucose is elevated, and HbA1c is 8.2%. His fasting insulin level is increased. Which of the following mechanisms best explains his disease?",
+  options:[
+    {label:"A", text:"Reduced tissue response to insulin", correct:true, explain:"Correct. Obesity-associated insulin resistance with a compensatory high fasting insulin level is the hallmark of type 2 diabetes."},
+    {label:"B", text:"Autoimmune destruction of beta cells", correct:false, explain:"This describes type 1 diabetes, which usually presents with low — not high — insulin levels."},
+    {label:"C", text:"Excess glucagon receptor blockade", correct:false, explain:"This is not a recognized mechanism of diabetes; glucagon activity is typically relatively increased, not blocked."},
+    {label:"D", text:"Increased renal glucose excretion", correct:false, explain:"Glycosuria is a consequence, not the primary cause, of hyperglycemia."},
+  ]
+},
+{
+  id:11, topic:"diabetes", bloom:"Analyze", difficulty:"Hard",
+  stem:"A 60-year-old woman with long-standing diabetes develops proteinuria and hypertension. Renal biopsy shows thickened glomerular basement membranes and mesangial expansion. Which of the following mechanisms most likely contributed to this complication?",
+  options:[
+    {label:"A", text:"Nonenzymatic glycation of proteins", correct:true, explain:"Correct. Chronic hyperglycemia drives nonenzymatic glycation of basement membrane proteins, thickening the glomerular basement membrane and expanding mesangium — the basis of diabetic nephropathy."},
+    {label:"B", text:"Immune destruction of podocytes", correct:false, explain:"Diabetic nephropathy is primarily a metabolic/biochemical injury, not a primary autoimmune podocyte attack."},
+    {label:"C", text:"Bacterial infection of glomeruli", correct:false, explain:"There is no infectious process described; this is a chronic metabolic complication."},
+    {label:"D", text:"Cholesterol crystal deposition", correct:false, explain:"This describes atheroembolic disease, not diabetic glomerular injury."},
+  ]
+},
+{
+  id:12, topic:"lungca", bloom:"Apply", difficulty:"Easy",
+  stem:"A 58-year-old non-smoking woman presents with persistent cough. Imaging shows a peripheral lung mass. Biopsy shows malignant gland-forming epithelial cells with mucin production. Which of the following diagnoses is most likely?",
+  options:[
+    {label:"A", text:"Adenocarcinoma", correct:true, explain:"Correct. A peripheral lung mass with gland-forming, mucin-producing cells, especially in a non-smoker, is classic for adenocarcinoma."},
+    {label:"B", text:"Squamous cell carcinoma", correct:false, explain:"SCC is typically central and shows keratinization, not gland formation with mucin."},
+    {label:"C", text:"Small cell carcinoma", correct:false, explain:"Small cell carcinoma is a central, aggressive neuroendocrine tumor, not gland-forming."},
+    {label:"D", text:"Carcinoid tumor", correct:false, explain:"Carcinoid tumors are low-grade neuroendocrine tumors, not mucin-producing gland-forming carcinomas."},
+  ]
+},
+{
+  id:13, topic:"liver", bloom:"Understand", difficulty:"Moderate",
+  stem:"A 49-year-old woman with chronic hepatitis B develops progressive liver disease. She later develops confusion, bleeding tendency, and low serum albumin. Which of the following best explains these clinical findings?",
+  options:[
+    {label:"A", text:"Loss of hepatic synthetic function", correct:true, explain:"Correct. Confusion (hepatic encephalopathy from impaired ammonia clearance), bleeding (reduced clotting factor synthesis), and low albumin together reflect failing hepatic synthetic and detoxifying function."},
+    {label:"B", text:"Excess bile salt absorption", correct:false, explain:"This is not a recognized mechanism for these systemic findings."},
+    {label:"C", text:"Increased pancreatic enzyme release", correct:false, explain:"This is unrelated to chronic liver failure symptoms."},
+    {label:"D", text:"Increased splenic red cell production", correct:false, explain:"This does not explain confusion, bleeding, or hypoalbuminemia."},
+  ]
+},
+{
+  id:14, topic:"arthritis", bloom:"Apply", difficulty:"Moderate",
+  stem:"A 38-year-old woman presents with painful swelling of small joints of both hands, morning stiffness lasting more than one hour, and fatigue. Laboratory testing shows positive rheumatoid factor. Which of the following pathological processes is most likely responsible?",
+  options:[
+    {label:"A", text:"Immune-mediated synovial inflammation", correct:true, explain:"Correct. Positive rheumatoid factor with symmetric small joint pain and prolonged morning stiffness reflects immune-mediated chronic synovitis, the hallmark of RA."},
+    {label:"B", text:"Age-related cartilage erosion", correct:false, explain:"This describes osteoarthritis, a degenerative process, not the immune-driven small joint disease described here."},
+    {label:"C", text:"Uric acid deposition", correct:false, explain:"This describes gout, which typically causes acute monoarticular attacks, not symmetric polyarthritis with RF positivity."},
+    {label:"D", text:"Bacterial joint infection", correct:false, explain:"Septic arthritis is an acute infectious process, inconsistent with the chronic symmetric pattern and serology described."},
+  ]
+},
+{
+  id:15, topic:"arthritis", bloom:"Apply", difficulty:"Easy",
+  stem:"A 68-year-old man presents with chronic knee pain that worsens with activity and improves with rest. Morning stiffness lasts less than 20 minutes. X-ray shows joint space narrowing and marginal bony outgrowths. Which of the following diagnoses is most likely?",
+  options:[
+    {label:"A", text:"Osteoarthritis", correct:true, explain:"Correct. Activity-related pain relieved by rest, brief morning stiffness (<20 min), and joint space narrowing with osteophytes are classic for degenerative osteoarthritis."},
+    {label:"B", text:"Rheumatoid arthritis", correct:false, explain:"RA causes prolonged morning stiffness (>1 hour) and symmetric small joint involvement, not the pattern described here."},
+    {label:"C", text:"Septic arthritis", correct:false, explain:"Septic arthritis is acute, with fever and severe pain, not a chronic activity-related pattern."},
+    {label:"D", text:"Gouty arthritis", correct:false, explain:"Gout typically presents as acute, intensely painful monoarticular attacks, not gradual activity-related knee pain."},
+  ]
+},
+{
+  id:16, topic:"arthritis", bloom:"Apply", difficulty:"Moderate", autoTag:true,
+  stem:"A 45-year-old woman presents with bilateral swollen, tender wrists and MCP joints, morning stiffness lasting two hours, and fatigue. Rheumatoid factor and anti-CCP antibodies are strongly positive. Her physician explains the primary site of pathology in rheumatoid arthritis. Which of the following correctly identifies the primary site of pathological change in rheumatoid arthritis?",
+  options:[
+    {label:"A", text:"The articular cartilage, which undergoes primary degenerative change from mechanical loading and chondrocyte apoptosis", correct:false, explain:"This describes osteoarthritis, a mechanically driven cartilage process, not the primary immune-driven site in RA."},
+    {label:"B", text:"The synovial membrane, which undergoes hyperplasia and chronic inflammatory cell infiltration forming invasive granulation tissue", correct:true, explain:"Correct. RA primarily targets the synovial membrane, which becomes hyperplastic and infiltrated with inflammatory cells, forming invasive pannus that erodes cartilage and bone."},
+    {label:"C", text:"The subchondral bone, which develops stress fractures due to loss of overlying cartilage and altered load distribution", correct:false, explain:"This is a secondary consequence seen in osteoarthritis, not the primary pathological site in RA."},
+    {label:"D", text:"The joint capsule, which undergoes fibrosis and calcification from repeated episodes of acute crystal-induced inflammation", correct:false, explain:"This describes a chronic crystal-arthropathy pattern (e.g., pseudogout), not the primary synovial pathology of RA."},
+  ]
+},
+{
+  id:17, topic:"liver", bloom:"Understand", difficulty:"Moderate", autoTag:true,
+  stem:"A 48-year-old woman with cirrhosis develops worsening ascites and pedal edema. Her serum albumin is 1.9 g/dL. Her hepatologist explains how reduced liver synthetic function contributes to fluid accumulation. Which of the following best explains the role of hypoalbuminemia in the development of ascites in cirrhosis?",
+  options:[
+    {label:"A", text:"Low albumin directly activates hepatic stellate cells, worsening portal fibrosis and increasing sinusoidal resistance", correct:false, explain:"Stellate cell activation drives fibrosis itself, but is not how low albumin directly causes fluid accumulation."},
+    {label:"B", text:"Low albumin reduces plasma oncotic pressure, allowing fluid to shift from the intravascular space into the peritoneal cavity", correct:true, explain:"Correct. Hypoalbuminemia lowers plasma oncotic pressure, allowing fluid to shift out of the vasculature into the peritoneal cavity, contributing to ascites."},
+    {label:"C", text:"Low albumin impairs clotting factor synthesis, leading to intravascular hemolysis that reduces circulating blood volume", correct:false, explain:"Impaired clotting factor synthesis causes a bleeding tendency, not intravascular hemolysis or reduced blood volume."},
+    {label:"D", text:"Low albumin causes renal tubular dysfunction, reducing sodium excretion and expanding the extracellular fluid compartment", correct:false, explain:"Sodium retention in cirrhosis is driven mainly by neurohormonal activation (e.g., RAAS) from effective volume depletion, not a direct effect of low albumin on renal tubules."},
+  ]
+},
+{
+  id:18, topic:"lungca", bloom:"Understand", difficulty:"Moderate", autoTag:true,
+  stem:"A 70-year-old male smoker undergoes bronchoscopy for a central lung mass. Biopsy shows small cells with scant cytoplasm, finely granular nuclear chromatin, nuclear molding, and a very high mitotic index. The pathologist comments that these cells stain positive for synaptophysin and chromogranin. Which of the following best identifies the cell of origin for this type of lung tumor?",
+  options:[
+    {label:"A", text:"Type II pneumocytes lining the alveolar surface, which undergo malignant transformation from chronic irritation", correct:false, explain:"Type II pneumocytes are the presumed origin of some adenocarcinomas, not small cell carcinoma."},
+    {label:"B", text:"Neuroendocrine cells of the bronchial epithelium, which give this tumor its characteristic hormone-secreting properties", correct:true, explain:"Correct. Small cell lung carcinoma arises from bronchial neuroendocrine cells, explaining the synaptophysin/chromogranin positivity, nuclear molding, and potential for paraneoplastic hormone secretion."},
+    {label:"C", text:"Bronchial mucous gland cells that undergo squamous metaplasia followed by high-grade dysplastic transformation", correct:false, explain:"This progression describes a pathway more relevant to squamous cell carcinoma, not small cell carcinoma."},
+    {label:"D", text:"Mesothelial cells lining the pleura that invade the bronchial wall and acquire neuroendocrine differentiation", correct:false, explain:"Mesothelial origin describes mesothelioma, a distinct tumor of the pleura, not small cell lung carcinoma."},
+  ]
+},
+{
+  id:19, topic:"diabetes", bloom:"Understand", difficulty:"Easy", autoTag:true,
+  stem:"A 16-year-old girl presents with polyuria, polydipsia, and weight loss. Her fasting blood glucose is 380 mg/dL. Islet cell antibodies are detected in her serum. Her physician explains the difference between type 1 and type 2 diabetes mellitus. Which of the following best describes the underlying mechanism of beta cell destruction in type 1 diabetes mellitus?",
+  options:[
+    {label:"A", text:"Amyloid deposition within islets of Langerhans causing progressive beta cell compression and apoptosis", correct:false, explain:"Islet amyloid is more associated with long-standing type 2 diabetes, not the acute autoimmune process of type 1."},
+    {label:"B", text:"T-cell mediated autoimmune destruction of pancreatic beta cells leading to absolute insulin deficiency", correct:true, explain:"Correct. Type 1 diabetes results from T-cell mediated autoimmune destruction of beta cells, confirmed here by positive islet cell antibodies, leading to absolute insulin deficiency."},
+    {label:"C", text:"Peripheral insulin resistance in muscle and adipose tissue causing beta cell exhaustion over time", correct:false, explain:"This is the mechanism of type 2 diabetes, not type 1."},
+    {label:"D", text:"Glucotoxicity from prolonged hyperglycemia causing oxidative stress-induced beta cell dysfunction", correct:false, explain:"Glucotoxicity contributes to progressive beta cell dysfunction in type 2 diabetes, not the primary autoimmune trigger in type 1."},
+  ]
+},
+{
+  id:20, topic:"diabetes", bloom:"Apply", difficulty:"Moderate", autoTag:true,
+  stem:"A 55-year-old obese man with type 2 diabetes presents for a routine review. His HbA1c is 9.8%. His physician explains the long-term consequences of poorly controlled blood glucose. Which of the following correctly identifies the pathological mechanism linking chronic hyperglycemia to microvascular complications in diabetes?",
+  options:[
+    {label:"A", text:"Hyperglycemia activates the coagulation cascade, causing widespread venous thrombosis in small vessels", correct:false, explain:"This is not the primary mechanism linking hyperglycemia to microvascular basement membrane changes."},
+    {label:"B", text:"Persistent hyperglycemia leads to non-enzymatic glycation of proteins and excess matrix production, thickening capillary basement membranes", correct:true, explain:"Correct. Persistent hyperglycemia causes nonenzymatic glycation of structural proteins and excess extracellular matrix, thickening capillary basement membranes throughout the microvasculature."},
+    {label:"C", text:"High glucose levels stimulate mast cell degranulation, releasing histamine that increases small vessel permeability", correct:false, explain:"This is not a recognized primary mechanism of diabetic microvascular disease."},
+    {label:"D", text:"Hyperglycemia suppresses insulin receptor signaling in endothelial cells, causing endothelial apoptosis and vessel dropout", correct:false, explain:"Endothelial dysfunction does occur in diabetes, but the classic basement-membrane-thickening mechanism is glycation-driven matrix accumulation, not receptor suppression."},
+  ]
+},
+{
+  id:21, topic:"leukemia", bloom:"Understand", difficulty:"Easy", autoTag:true,
+  stem:"A 65-year-old man is diagnosed with chronic myeloid leukemia after a routine blood count shows leukocytosis with a full spectrum of myeloid cells. His cytogenetics show a translocation between chromosomes 9 and 22. A student asks about the significance of this chromosomal finding. Which of the following best describes the chromosome abnormality associated with this condition?",
+  options:[
+    {label:"A", text:"Trisomy 12, which activates proto-oncogenes by increasing gene copy number in lymphoid progenitors", correct:false, explain:"Trisomy 12 is associated with CLL, not CML."},
+    {label:"B", text:"The Philadelphia chromosome, producing a BCR-ABL fusion tyrosine kinase", correct:true, explain:"Correct. The t(9;22) translocation creates the Philadelphia chromosome, producing a constitutively active BCR-ABL fusion tyrosine kinase that drives CML — the target of drugs like imatinib."},
+    {label:"C", text:"Deletion of chromosome 5q, which inactivates tumor suppressor genes in myeloid stem cells", correct:false, explain:"Isolated del(5q) is associated with a subtype of myelodysplastic syndrome, not CML."},
+    {label:"D", text:"Inversion of chromosome 16, which disrupts core binding factor and impairs myeloid differentiation", correct:false, explain:"Inv(16) is associated with a subtype of acute myeloid leukemia (AML-M4Eo), not CML."},
+  ]
+},
+{
+  id:22, topic:"leukemia", bloom:"Apply", difficulty:"Moderate", autoTag:true,
+  stem:"A 7-year-old girl is brought to the clinic with pallor, easy bruising, and bone pain for three weeks. Her CBC shows WBC 95,000/µL with blast predominance, Hb 6.5 g/dL, and platelets 20,000/µL. The pediatrician explains to the parents the most common type of leukemia in children. Which of the following correctly identifies the most common leukemia in children and its characteristic immunophenotypic marker?",
+  options:[
+    {label:"A", text:"Acute myeloid leukemia expressing myeloperoxidase and CD33 on flow cytometry", correct:false, explain:"Myeloperoxidase and CD33 are myeloid markers seen in AML, not the most common pediatric leukemia."},
+    {label:"B", text:"Acute lymphoblastic leukemia of B-cell precursor origin expressing TdT and CD10", correct:true, explain:"Correct. B-cell precursor ALL, expressing TdT and CD10, is the most common leukemia in children."},
+    {label:"C", text:"Chronic myeloid leukemia expressing BCR-ABL fusion protein detected by FISH", correct:false, explain:"CML is rare in children and defined by the Philadelphia chromosome, not TdT/CD10 expression."},
+    {label:"D", text:"Chronic lymphocytic leukemia expressing CD5 and CD23 on mature small lymphocytes", correct:false, explain:"CLL is a disease of older adults with mature small lymphocytes — essentially never seen in children."},
+  ]
+},
+{
+  id:23, topic:"necrosis", bloom:"Apply", difficulty:"Moderate", autoTag:true,
+  stem:"A medical student is reviewing a histology slide showing dead cardiac muscle cells after a myocardial infarction. The cells retain their outline and basic architecture but appear deeply eosinophilic with no visible nuclei. The surrounding tissue shows an early neutrophilic infiltrate. Which of the following best identifies the type of necrosis seen in this slide?",
+  options:[
+    {label:"A", text:"Liquefactive necrosis", correct:false, explain:"Liquefactive necrosis is typical of the brain (low supportive stroma) or pyogenic abscesses — not myocardium."},
+    {label:"B", text:"Coagulative necrosis", correct:true, explain:"Correct. Coagulative necrosis preserves cell and tissue outlines while nuclei disappear — the classic ischemic pattern in solid organs like the heart and kidney after infarction."},
+    {label:"C", text:"Caseous necrosis", correct:false, explain:"Caseous necrosis is a feature of granulomatous disease (e.g., TB), not ischemic myocardial injury."},
+    {label:"D", text:"Fibrinoid necrosis", correct:false, explain:"Fibrinoid necrosis affects vessel walls in immune-mediated injury, not myocardial fibers themselves."},
+  ]
+},
+{
+  id:24, topic:"neoplasia", bloom:"Understand", difficulty:"Easy", autoTag:true,
+  stem:"A 30-year-old patient is told by his doctor that a mole on his back has features of a benign tumor. Which of the following best distinguishes a benign tumor from a malignant one based on these features?",
+  options:[
+    {label:"A", text:"Benign tumors grow more rapidly and are more likely to cause systemic symptoms than malignant tumors", correct:false, explain:"This is reversed — rapid growth and systemic symptoms are more typical of malignant tumors."},
+    {label:"B", text:"Benign tumors are encapsulated, show cellular uniformity, and lack the capacity to invade or metastasize", correct:true, explain:"Correct. Encapsulation, cytological uniformity, and inability to invade or metastasize are the classic defining features of benign tumors."},
+    {label:"C", text:"Benign tumors contain abundant necrosis and pleomorphism, unlike the orderly architecture of malignant tumors", correct:false, explain:"This is also reversed — abundant necrosis and pleomorphism are malignant features from disorganized growth outstripping blood supply."},
+    {label:"D", text:"Benign tumors arise only from epithelial tissue, whereas malignant tumors can arise from any tissue type", correct:false, explain:"Both benign and malignant tumors can arise from epithelial or mesenchymal tissue; origin alone doesn't determine behavior."},
+  ]
+},
+{
+  id:25, topic:"neoplasia", bloom:"Understand", difficulty:"Moderate", autoTag:true,
+  stem:"A pathology lecture covers the grading and staging of tumors. A student is asked which system better predicts patient prognosis. Which of the following best explains why staging is generally considered more important than grading in predicting patient outcome?",
+  options:[
+    {label:"A", text:"Staging relies on microscopic cellular features that directly reflect the tumor's genetic instability", correct:false, explain:"This describes grading, not staging — staging is based on anatomical extent, not microscopic features."},
+    {label:"B", text:"Staging captures the anatomical extent of disease spread, which most directly determines treatment options and survival", correct:true, explain:"Correct. Staging (e.g., TNM) reflects how far a tumor has spread — size, nodal involvement, metastasis — which most directly determines prognosis and treatment options."},
+    {label:"C", text:"Staging is performed on cytology specimens, making it faster and more reproducible than histological grading", correct:false, explain:"Staging is based on clinical, radiological, and surgical/pathological assessment of spread — not primarily cytology."},
+    {label:"D", text:"Staging reflects the tumor's differentiation status, which is the strongest independent predictor of metastatic potential", correct:false, explain:"Differentiation status is what grading measures. Staging is generally the stronger independent prognostic factor of the two."},
+  ]
+},
+{
+  id:26, topic:"thrombo", bloom:"Understand", difficulty:"Easy", autoTag:true,
+  stem:"A 50-year-old woman recovering from a total knee replacement develops sudden onset right calf swelling, warmth, and tenderness on the third postoperative day. Doppler ultrasound confirms a deep vein thrombosis. The treating physician explains that three conditions predispose to thrombosis. Which of the following correctly identifies these three predisposing conditions?",
+  options:[
+    {label:"A", text:"Hyperlipidemia, obesity, and atrial fibrillation", correct:false, explain:"These relate more to arterial disease and cardioembolism, not the classic venous thrombosis triad."},
+    {label:"B", text:"Endothelial injury, abnormal blood flow, and hypercoagulability", correct:true, explain:"Correct. Virchow's triad — endothelial injury, stasis/abnormal flow, and hypercoagulability — explains DVT risk after surgery and immobility."},
+    {label:"C", text:"Hypertension, immobility, and elevated white cell count", correct:false, explain:"These are not the core components of Virchow's triad, though immobility does contribute via stasis."},
+    {label:"D", text:"Platelet dysfunction, low fibrinogen, and prolonged PT", correct:false, explain:"These would impair, not promote, clot formation."},
+  ]
+},
+{
+  id:27, topic:"thrombo", bloom:"Understand", difficulty:"Easy", autoTag:true,
+  stem:"A 65-year-old man with atrial fibrillation is admitted with left leg pain and absent femoral pulse. The vascular surgeon explains that a clot formed in the heart has traveled to the leg artery. A medical student asks about the difference between a thrombus and an embolus. Which of the following best distinguishes an embolus from a thrombus?",
+  options:[
+    {label:"A", text:"A thrombus is always composed of platelets and fibrin, whereas an embolus is always composed of fat or air", correct:false, explain:"Thrombi and emboli can each be composed of various materials (platelets/fibrin, fat, air, tumor, amniotic fluid) — composition alone doesn't distinguish them."},
+    {label:"B", text:"An embolus is a mass that travels through the bloodstream and lodges in a distant vessel, whereas a thrombus forms and remains at its site of origin", correct:true, explain:"Correct. An embolus — often derived from a thrombus — travels through circulation and lodges elsewhere, while a thrombus remains at its site of formation."},
+    {label:"C", text:"A thrombus forms only in veins, whereas an embolus can only originate from the arterial circulation", correct:false, explain:"Thrombi form in both arteries and veins; emboli can originate from either arterial or venous sources."},
+    {label:"D", text:"An embolus is attached to the vessel wall and grows progressively, whereas a thrombus detaches and circulates freely", correct:false, explain:"This is reversed — a thrombus is attached and may grow at its origin, while an embolus detaches and circulates."},
+  ]
+},
+{
+  id:28, topic:"leukemia", bloom:"Analyze", difficulty:"Hard", autoTag:true,
+  stem:"A 70-year-old woman presents with early satiety and severe splenomegaly. Bone marrow aspiration yields a dry tap, and biopsy shows extensive reticulin and collagen fibrosis. Which of the following best explains the fibrosis in this disorder?",
+  options:[
+    {label:"A", text:"Cytokine release from abnormal megakaryocytes stimulates fibroblasts", correct:true, explain:"Correct. In primary myelofibrosis, dysplastic megakaryocytes release fibrogenic cytokines (e.g., PDGF, TGF-β) that stimulate marrow fibroblasts, producing reticulin/collagen fibrosis and the characteristic 'dry tap' on aspiration."},
+    {label:"B", text:"Monoclonal plasma cells directly deposit collagen in marrow", correct:false, explain:"This is not the mechanism of marrow fibrosis; monoclonal plasma cell proliferation describes multiple myeloma, a different disease."},
+    {label:"C", text:"Reed-Sternberg cells invade marrow and replace stromal cells", correct:false, explain:"Reed-Sternberg cells are diagnostic of Hodgkin lymphoma, not primary myelofibrosis."},
+    {label:"D", text:"Hypersegmented neutrophils release transforming enzymes in marrow", correct:false, explain:"Hypersegmented neutrophils are a feature of megaloblastic anemia, unrelated to marrow fibrosis."},
+  ]
+},
+{
+  id:29, topic:"leukemia", bloom:"Apply", difficulty:"Moderate", autoTag:true,
+  stem:"A 58-year-old man presents with headache, dizziness, facial plethora, and pruritus after a hot shower. Examination reveals splenomegaly. Laboratory studies show increased hemoglobin, hematocrit, leukocyte count, and platelet count, with low serum erythropoietin. Which of the following is the most likely underlying mutation?",
+  options:[
+    {label:"A", text:"JAK2 activating mutation", correct:true, explain:"Correct. Polycythemia vera is driven by an activating JAK2 mutation, causing erythropoietin-independent overproduction of red cells (often with white cells and platelets too) — explaining the low serum erythropoietin, facial plethora, and aquagenic pruritus after a hot shower."},
+    {label:"B", text:"BCR-ABL fusion gene", correct:false, explain:"This defines CML, which classically shows granulocytic proliferation with a left shift, not the pan-cytosis with low erythropoietin seen here."},
+    {label:"C", text:"PML-RARA fusion gene", correct:false, explain:"This defines acute promyelocytic leukemia (APL), an acute leukemia, not polycythemia vera."},
+    {label:"D", text:"MYC translocation", correct:false, explain:"MYC translocation is characteristic of Burkitt lymphoma, unrelated to this presentation."},
+  ]
+},
+{
+  id:30, topic:"anemia", bloom:"Apply", difficulty:"Moderate", autoTag:true,
+  stem:"A 39-year-old woman with autoimmune gastritis reports fatigue, paresthesias, and sore tongue. Laboratory studies show macrocytic anemia. Which of the following additional findings is most consistent with the cause of her anemia?",
+  options:[
+    {label:"A", text:"Decreased intrinsic factor leading to impaired cobalamin absorption in the ileum", correct:true, explain:"Correct. Autoimmune gastritis destroys gastric parietal cells, reducing intrinsic factor and impairing vitamin B12 (cobalamin) absorption in the terminal ileum — the mechanism of pernicious anemia."},
+    {label:"B", text:"Increased hepcidin causing iron trapping in macrophages", correct:false, explain:"This describes anemia of chronic disease, not the autoimmune gastritis/B12 pathway described here."},
+    {label:"C", text:"Anti-glomerular basement membrane antibodies causing renal failure", correct:false, explain:"This describes Goodpasture syndrome, unrelated to autoimmune gastritis or macrocytic anemia."},
+    {label:"D", text:"Excess erythropoietin from renal cortical tumors", correct:false, explain:"This would cause polycythemia, not anemia."},
+  ]
+},
+{
+  id:31, topic:"anemia", bloom:"Analyze", difficulty:"Hard", autoTag:true,
+  stem:"A 42-year-old man with chronic alcoholism presents with glossitis and fatigue. Laboratory studies show macrocytic anemia. Peripheral smear demonstrates macro-ovalocytes and hypersegmented neutrophils. Serum homocysteine is elevated, but methylmalonic acid is normal. Which of the following nutritional deficiencies is the most likely cause?",
+  options:[
+    {label:"A", text:"Folate deficiency", correct:true, explain:"Correct. Elevated homocysteine with a normal methylmalonic acid (MMA) points to folate deficiency rather than B12 deficiency — MMA rises only in B12 deficiency, since B12 (not folate) is a cofactor for the methylmalonyl-CoA mutase reaction. Alcoholism is a classic risk factor for folate deficiency."},
+    {label:"B", text:"Iron deficiency", correct:false, explain:"Iron deficiency causes microcytic, not macrocytic, anemia and doesn't explain hyperhomocysteinemia."},
+    {label:"C", text:"Vitamin B12 deficiency", correct:false, explain:"B12 deficiency would also raise methylmalonic acid, which is normal here — pointing away from B12 and toward folate deficiency."},
+    {label:"D", text:"Copper deficiency", correct:false, explain:"Copper deficiency is a rarer cause of myelodysplastic-like cytopenias, not the classic macrocytic picture with these lab findings."},
+  ]
+},
+{
+  id:32, topic:"anemia", bloom:"Apply", difficulty:"Easy", autoTag:true,
+  stem:"A 7-year-old boy is brought for evaluation of fatigue and poor school performance. He has a restricted diet consisting mainly of polished rice and tea. Peripheral smear shows microcytic hypochromic red cells with marked anisopoikilocytosis. Which of the following additional findings is most likely in this patient?",
+  options:[
+    {label:"A", text:"Low ferritin and increased transferrin concentration", correct:true, explain:"Correct. Iron deficiency anemia shows low ferritin (depleted iron stores) with a compensatory increase in transferrin (total iron-binding capacity) as the body tries to maximize iron uptake."},
+    {label:"B", text:"High ferritin and low erythropoietin concentration", correct:false, explain:"This pattern doesn't fit iron deficiency; high ferritin would suggest iron overload or an acute-phase response instead."},
+    {label:"C", text:"Hypersegmented neutrophils and elevated methylmalonic acid", correct:false, explain:"These findings indicate B12 deficiency, which causes macrocytic — not microcytic — anemia, the opposite red cell picture from this patient."},
+    {label:"D", text:"Pancytopenia with hypocellular marrow", correct:false, explain:"This describes aplastic anemia, not the microcytic, iron-deficient picture described here."},
+  ]
+},
+{
+  id:33, topic:"necrosis", bloom:"Apply", difficulty:"Moderate",
+  stem:"A 45-year-old man is brought to the emergency department after being found unconscious. His wife reports he has been a heavy drinker for years and recently complained of chest pain. ECG shows no ischemic changes. Serum troponin is mildly elevated. Liver enzymes are markedly raised. Histology of a liver biopsy taken later shows swollen hepatocytes with pale, vacuolated cytoplasm and cleared nuclei. Which of the following best describes the type of cell injury occurring in the hepatocytes at this stage?",
+  options:[
+    {label:"A", text:"Irreversible injury characterized by karyolysis and membrane rupture", correct:false, explain:"Karyolysis and membrane rupture describe irreversible injury with nuclear dissolution and loss of plasma membrane integrity — beyond the reversible stage described here."},
+    {label:"B", text:"Reversible injury characterized by intracellular accumulation of water and organelle swelling", correct:true, explain:"Correct. Swollen hepatocytes with pale, vacuolated cytoplasm and intact (though cleared) nuclei reflect reversible hydropic change — intracellular water accumulation with organelle swelling, which can resolve if the insult is removed."},
+    {label:"C", text:"Irreversible injury characterized by cytoplasmic eosinophilia and nuclear pyknosis", correct:false, explain:"Cytoplasmic eosinophilia and nuclear pyknosis are irreversible changes (coagulative necrosis), not the reversible swelling described in this biopsy."},
+    {label:"D", text:"Reversible injury characterized by lipid peroxidation and mitochondrial cristae destruction", correct:false, explain:"Lipid peroxidation with mitochondrial cristae destruction reflects free-radical-mediated membrane damage — a feature of irreversible injury, not the reversible stage."},
+  ]
+},
+{
+  id:34, topic:"leukemia", bloom:"Analyze", difficulty:"Hard",
+  stem:"A 72-year-old man presents with fatigue and frequent infections over 6 months. CBC shows WBC 85,000/µL with 80% small mature-appearing lymphocytes, Hb 10 g/dL, platelets 90,000/µL. Peripheral smear shows smudge cells. Flow cytometry reveals CD5+, CD19+, CD23+ cells. He also has palpable cervical and axillary lymphadenopathy. Which of the following best explains why infections are particularly common in this patient despite normal-appearing lymphocytes?",
+  options:[
+    {label:"A", text:"Neutropenia from bone marrow replacement prevents effective phagocytosis of bacterial pathogens", correct:false, explain:"CLL causes lymphocytosis, not primary neutropenia; marrow replacement causing neutropenia is more typical of acute leukemias."},
+    {label:"B", text:"Accumulation of functionally incompetent lymphocytes leads to hypogammaglobulinemia and impaired humoral immunity", correct:true, explain:"Correct. The clonal CLL lymphocytes are functionally incompetent B cells that fail to mature into effective antibody-producing plasma cells, leading to hypogammaglobulinemia and impaired humoral immunity — explaining recurrent infections despite a high lymphocyte count."},
+    {label:"C", text:"Splenomegaly causes excessive pooling and destruction of circulating immunoglobulins", correct:false, explain:"Splenomegaly in CLL causes cytopenias via sequestration of blood cells, not destruction of circulating immunoglobulins."},
+    {label:"D", text:"Leukemic lymphocytes actively suppress T-cell activation through expression of inhibitory ligands", correct:false, explain:"This is not the primary recognized mechanism for infection risk in CLL; humoral immune deficiency from hypogammaglobulinemia is the classic explanation."},
+  ]
+},
+];
+
+const FLASHCARDS = {
+  necrosis: [
+    {front:"Coagulative necrosis — where & why?", back:"Solid organs (heart, kidney, spleen) after ischemia. Protein denaturation preserves the cell/tissue outline; nuclei fade but architecture is retained for days."},
+    {front:"Liquefactive necrosis — where & why?", back:"Brain (lacks supportive stroma) and pyogenic bacterial abscesses — enzymatic (neutrophil) digestion liquefies tissue into a viscous fluid."},
+    {front:"Caseous necrosis — where & why?", back:"Granulomatous infections, classically TB — combines coagulative + liquefactive features into cheese-like, friable debris surrounded by a granulomatous rim."},
+    {front:"Fat necrosis — where & why?", back:"Adipose tissue, classically peripancreatic fat in acute pancreatitis — lipase release causes fatty acid liberation and calcium soap (saponification) formation."},
+    {front:"Fibrinoid necrosis — where & why?", back:"Blood vessel walls, in immune complex vasculitis or malignant hypertension — immune complexes + plasma proteins deposit in the vessel wall, appearing smudgy pink on H&E."},
+    {front:"Reversible vs irreversible cell injury", back:"Reversible: cell/organelle swelling, water accumulation, ribosome detachment — resolves if insult removed. Irreversible: nuclear changes (pyknosis, karyorrhexis, karyolysis), plasma membrane rupture, severe mitochondrial damage — leads to necrosis."},
+  ],
+  neoplasia: [
+    {front:"Benign vs malignant — 3 key discriminators", back:"Growth rate (slow vs rapid), invasion (none/pushes vs invades), and capacity to metastasize (never vs yes)."},
+    {front:"Grading vs Staging — which predicts prognosis better?", back:"Staging (anatomical extent of spread — size, nodes, metastasis) is generally a stronger independent predictor of outcome than grading (microscopic differentiation)."},
+    {front:"What does 'differentiation' describe?", back:"How closely tumor cells resemble their tissue of origin — well-differentiated tumors look more like normal tissue and tend to behave less aggressively."},
+  ],
+  rheumatic: [
+    {front:"Rheumatic fever mechanism", back:"Molecular mimicry: antibodies against group A Streptococcus M protein cross-react with cardiac (and joint/skin/CNS) antigens, 2–4 weeks after pharyngitis."},
+    {front:"Rheumatic heart disease — valve most affected & result", back:"Mitral valve most commonly — chronic leaflet thickening and fusion causes mitral stenosis, raising left atrial pressure over time and predisposing to atrial fibrillation."},
+  ],
+  endocard: [
+    {front:"Infective endocarditis — vegetation composition", back:"Bacteria embedded in a friable matrix of fibrin and platelets on the valve leaflet — fragile, so pieces readily embolize."},
+    {front:"IVDU endocarditis — typical organism & valve", back:"Staphylococcus aureus is the classic organism; tricuspid valve is characteristically involved in IV drug users."},
+    {front:"Dental-procedure endocarditis — typical organism", back:"Viridans streptococci (from oral flora) — classically infects a previously damaged or prosthetic valve."},
+  ],
+  leukemia: [
+    {front:"Most common childhood leukemia + markers", back:"B-cell precursor Acute Lymphoblastic Leukemia (ALL) — expresses TdT and CD10."},
+    {front:"CML — genetic hallmark", back:"Philadelphia chromosome, t(9;22), producing the BCR-ABL1 fusion tyrosine kinase — targeted by imatinib."},
+    {front:"CLL — classic smear finding & complication", back:"Increased mature small lymphocytes with fragile 'smudge cells' on smear; functionally incompetent B cells cause hypogammaglobulinemia and recurrent infections."},
+    {front:"AML — key translocation to know", back:"PML-RARA, t(15;17) → Acute Promyelocytic Leukemia (APL), a distinct AML subtype responsive to ATRA therapy."},
+    {front:"Primary myelofibrosis — mechanism", back:"Abnormal megakaryocytes release fibrogenic cytokines (PDGF, TGF-β) that stimulate marrow fibroblasts → reticulin/collagen fibrosis → 'dry tap' on aspiration, extramedullary hematopoiesis, and splenomegaly."},
+    {front:"Polycythemia vera — mutation & clue", back:"JAK2 activating mutation → erythropoietin-independent overproduction of red cells (often WBCs/platelets too) → low serum EPO, facial plethora, aquagenic pruritus."},
+  ],
+  pulmvasc: [
+    {front:"Pulmonary hypertension — vascular change", back:"Medial hypertrophy and intimal thickening of pulmonary arteries from chronically increased pressure/resistance."},
+    {front:"Cor pulmonale — definition & cause", back:"Right ventricular hypertrophy/dilation secondary to pulmonary disease — chronic hypoxia (e.g., COPD/chronic bronchitis) raises pulmonary vascular resistance, overloading the right heart."},
+  ],
+  diabetes: [
+    {front:"Type 1 vs Type 2 DM — core mechanism", back:"T1DM: T-cell mediated autoimmune beta cell destruction → absolute insulin deficiency. T2DM: peripheral insulin resistance with compensatory hyperinsulinemia."},
+    {front:"Diabetic microvascular disease — mechanism", back:"Chronic hyperglycemia → nonenzymatic glycation of proteins + excess matrix production → thickened capillary/glomerular basement membranes."},
+    {front:"Diabetic nephropathy — biopsy finding", back:"Thickened glomerular basement membrane and mesangial expansion (can progress to Kimmelstiel-Wilson nodules)."},
+  ],
+  lungca: [
+    {front:"Squamous cell carcinoma — location & marker", back:"Central/hilar; smoking-related; keratin pearls and intercellular bridges on histology."},
+    {front:"Adenocarcinoma — location & who", back:"Peripheral; most common lung cancer in non-smokers; gland-forming, mucin-producing cells."},
+    {front:"Small cell carcinoma — origin & markers", back:"Bronchial neuroendocrine cells; synaptophysin/chromogranin positive; nuclear molding; strongly smoking-related and aggressive."},
+  ],
+  liver: [
+    {front:"Cirrhosis — histological definition", back:"Diffuse bridging fibrosis surrounding regenerative hepatocyte nodules — replaces normal liver architecture."},
+    {front:"Hepatic failure triad", back:"Encephalopathy (impaired ammonia clearance) + bleeding tendency (reduced clotting factor synthesis) + hypoalbuminemia — all reflect loss of synthetic/detoxifying function."},
+    {front:"Ascites in cirrhosis — role of albumin", back:"Hypoalbuminemia lowers plasma oncotic pressure, favoring fluid shift from vasculature into the peritoneal cavity (plus portal hypertension and RAAS activation)."},
+  ],
+  arthritis: [
+    {front:"RA — primary site of pathology", back:"Synovial membrane — hyperplasia and chronic inflammatory infiltration form invasive pannus that erodes cartilage and bone."},
+    {front:"OA vs RA — morning stiffness clue", back:"OA: brief, <20–30 minutes, worsens with activity. RA: prolonged, >1 hour, improves with activity."},
+    {front:"RA — key serology", back:"Rheumatoid factor and anti-CCP antibodies (anti-CCP is more specific for RA)."},
+  ],
+  thrombo: [
+    {front:"Virchow's Triad", back:"Endothelial injury + abnormal blood flow (stasis/turbulence) + hypercoagulability — the three predisposing factors for thrombosis."},
+    {front:"Thrombus vs Embolus", back:"A thrombus forms and stays at its site of origin; an embolus is any mass (often from a thrombus) that travels through the bloodstream and lodges elsewhere."},
+  ],
+  anemia: [
+    {front:"Pernicious anemia — mechanism", back:"Autoimmune destruction of gastric parietal cells → reduced intrinsic factor → impaired B12 (cobalamin) absorption in the terminal ileum → macrocytic anemia + neurological symptoms (paresthesias)."},
+    {front:"Folate vs B12 deficiency — how to tell apart", back:"Both raise homocysteine. Only B12 deficiency also raises methylmalonic acid (MMA), because B12 is a cofactor for the methylmalonyl-CoA mutase reaction that folate isn't involved in."},
+    {front:"Iron deficiency anemia — classic lab pattern", back:"Low ferritin (depleted stores) + high transferrin/TIBC (compensatory) + microcytic, hypochromic red cells with anisopoikilocytosis."},
+  ],
+};
+
+const KEY_TAKEAWAYS = [
+  {topic:"necrosis", points:[
+    "Match necrosis pattern to organ/context: coagulative = solid organ ischemia; liquefactive = brain or bacterial abscess; caseous = granulomatous (TB); fat = pancreatitis; fibrinoid = vessel wall immune injury.",
+    "Preserved architecture with lost nuclei = coagulative necrosis — the ischemic 'ghost outline' pattern.",
+    "Reversible injury (swelling, water/lipid accumulation) can resolve if the insult stops; irreversible injury (nuclear pyknosis/karyolysis, membrane rupture) proceeds to necrosis.",
+  ]},
+  {topic:"neoplasia", points:[
+    "Invasion + metastatic capacity is what separates malignant from benign — not size or growth rate alone.",
+    "Staging (anatomical spread) generally outperforms grading (differentiation) as a prognostic tool.",
+  ]},
+  {topic:"rheumatic", points:[
+    "Rheumatic fever = molecular mimicry after strep pharyngitis, most often damaging the mitral valve long-term.",
+    "Mitral stenosis from RHD raises left atrial pressure → left atrial enlargement → AF risk.",
+  ]},
+  {topic:"endocard", points:[
+    "IE vegetations = bacteria + fibrin + platelets — friable and prone to embolize.",
+    "Dental procedures → viridans streptococci; IV drug use → S. aureus, often tricuspid valve.",
+  ]},
+  {topic:"leukemia", points:[
+    "ALL (child, blasts, TdT/CD10) vs CLL (older adult, mature lymphocytes, smudge cells, hypogammaglobulinemia) vs CML (BCR-ABL, splenomegaly, maturing granulocyte spectrum) vs AML (marrow failure, myeloid blasts).",
+    "Know the fusion genes: BCR-ABL1 = CML; PML-RARA = APL.",
+    "Myeloproliferative neoplasms: primary myelofibrosis (megakaryocyte cytokines → marrow fibrosis, dry tap) and polycythemia vera (JAK2 mutation, low EPO, aquagenic pruritus) sit alongside CML in this family of disorders.",
+  ]},
+  {topic:"pulmvasc", points:[
+    "Chronic hypoxia (e.g., COPD) → pulmonary vasoconstriction/remodeling → pulmonary hypertension → cor pulmonale (right heart failure).",
+  ]},
+  {topic:"diabetes", points:[
+    "T1DM = autoimmune beta cell destruction (absolute insulin deficiency); T2DM = insulin resistance (relative deficiency, high fasting insulin).",
+    "Microvascular complications (nephropathy, retinopathy, neuropathy) trace back to nonenzymatic glycation thickening basement membranes.",
+  ]},
+  {topic:"lungca", points:[
+    "Central + smoker + keratin pearls = squamous cell carcinoma. Peripheral + non-smoker + gland/mucin = adenocarcinoma. Central + neuroendocrine markers = small cell carcinoma.",
+  ]},
+  {topic:"liver", points:[
+    "Cirrhosis = bridging fibrosis + regenerative nodules, replacing normal architecture.",
+    "Hepatic failure triad: encephalopathy, bleeding tendency, hypoalbuminemia — all from lost synthetic/detox function.",
+    "Hypoalbuminemia contributes to ascites by lowering plasma oncotic pressure, alongside portal hypertension.",
+  ]},
+  {topic:"arthritis", points:[
+    "RA = immune-mediated synovitis (synovial membrane primary site), symmetric small joints, prolonged morning stiffness, RF/anti-CCP positive.",
+    "OA = degenerative cartilage loss, activity-related pain, brief morning stiffness, osteophytes on X-ray.",
+  ]},
+  {topic:"thrombo", points:[
+    "Virchow's Triad (endothelial injury, stasis, hypercoagulability) underlies venous thrombosis risk.",
+    "An embolus travels and lodges distant from its origin; a thrombus stays put.",
+  ]},
+  {topic:"anemia", points:[
+    "Macrocytic anemia: distinguish B12 vs folate deficiency using methylmalonic acid — elevated only in B12 deficiency.",
+    "Pernicious anemia = autoimmune loss of intrinsic factor → B12 malabsorption.",
+    "Microcytic anemia with low ferritin + high transferrin = iron deficiency (classic in restrictive diets).",
+  ]},
+];
+
+</script>
+<script>
+/* ============ STATE ============ */
+const STORAGE_KEY = "pathrevision_v1_progress";
+let state = {
+  answers: {},           // qid -> {selectedLabel, correct}
+  filterTopic: "all",
+  currentIndex: 0,
+};
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const saved = JSON.parse(raw);
+      state.answers = saved.answers || {};
+    }
+  }catch(e){}
+}
+function saveState(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({answers: state.answers}));
+  }catch(e){}
+}
+loadState();
+
+/* ============ FILTERED QUESTION LIST ============ */
+function getFilteredQuestions(){
+  return QUESTIONS.filter(q=>{
+    if(state.filterTopic!=="all" && q.topic!==state.filterTopic) return false;
+    return true;
+  });
+}
+
+/* ============ RENDER FILTER CHIPS ============ */
+function renderTopicFilters(){
+  const el = document.getElementById("topicFilters");
+  el.innerHTML = "";
+  const allChip = makeChip("All topics", state.filterTopic==="all", "#60a5fa");
+  allChip.onclick = ()=>{ state.filterTopic="all"; state.currentIndex=0; renderAll(); };
+  el.appendChild(allChip);
+  Object.keys(TOPICS).forEach(key=>{
+    const t = TOPICS[key];
+    const chip = makeChip(t.name, state.filterTopic===key, t.color);
+    chip.onclick = ()=>{ state.filterTopic=key; state.currentIndex=0; renderAll(); };
+    el.appendChild(chip);
+  });
+}
+function makeChip(label, active, color){
+  const d = document.createElement("div");
+  d.className = "filter-chip" + (active ? " active" : "");
+  d.textContent = label;
+  if(active){ d.style.background = color; d.style.borderColor = color; }
+  return d;
+}
+/* ============ NAVIGATOR DOTS ============ */
+function renderNavigator(){
+  const list = getFilteredQuestions();
+  const el = document.getElementById("navigator");
+  el.innerHTML = "";
+  list.forEach((q, i)=>{
+    const dot = document.createElement("div");
+    let cls = "dot";
+    const ans = state.answers[q.id];
+    if(ans){ cls += ans.correct ? " correct" : " wrong answered"; }
+    if(i === state.currentIndex) cls += " current";
+    dot.className = cls;
+    dot.textContent = i+1;
+    dot.onclick = ()=>{ state.currentIndex = i; renderQuiz(); window.scrollTo({top:0,behavior:"smooth"}); };
+    el.appendChild(dot);
+  });
+}
+
+/* ============ PROGRESS BAR ============ */
+function renderProgress(){
+  const list = getFilteredQuestions();
+  const answeredInFilter = list.filter(q=>state.answers[q.id]).length;
+  const pct = list.length ? Math.round((answeredInFilter/list.length)*100) : 0;
+  document.getElementById("progressFill").style.width = pct+"%";
+  document.getElementById("progressText").textContent = `${answeredInFilter} / ${list.length} answered`;
+
+  const allAnswered = Object.values(state.answers);
+  const allCorrect = allAnswered.filter(a=>a.correct).length;
+  document.getElementById("scoreText").textContent = `Score: ${allCorrect} / ${allAnswered.length}`;
+}
+
+/* ============ QUIZ BODY ============ */
+function renderQuiz(){
+  const list = getFilteredQuestions();
+  const body = document.getElementById("quizBody");
+  body.innerHTML = "";
+
+  if(list.length === 0){
+    body.innerHTML = `<div class="qcard"><div class="qcard-inner" style="text-align:center;color:var(--text-dim);">No questions match these filters. Try widening your selection.</div></div>`;
+    renderNavigator();
+    renderProgress();
+    return;
+  }
+
+  if(state.currentIndex >= list.length) state.currentIndex = list.length-1;
+  if(state.currentIndex < 0) state.currentIndex = 0;
+
+  const q = list[state.currentIndex];
+  const topic = TOPICS[q.topic];
+  const ans = state.answers[q.id];
+
+  const card = document.createElement("div");
+  card.className = "qcard";
+  const inner = document.createElement("div");
+  inner.className = "qcard-inner";
+  inner.style.borderLeftColor = topic.color;
+
+  const meta = document.createElement("div");
+  meta.className = "qmeta";
+  meta.innerHTML = `
+    <span class="qnum">Q${state.currentIndex+1}/${list.length}</span>
+    <span class="badge" style="color:${topic.color};border-color:${topic.color}55;">${topic.name}</span>
+    <span class="badge">${q.difficulty}</span>
+    <span class="badge">Bloom: ${q.bloom}</span>
+  `;
+  inner.appendChild(meta);
+
+  const stem = document.createElement("div");
+  stem.className = "stem";
+  stem.textContent = q.stem;
+  inner.appendChild(stem);
+
+  const optsWrap = document.createElement("div");
+  optsWrap.className = "options";
+
+  q.options.forEach(opt=>{
+    const optEl = document.createElement("div");
+    optEl.className = "option";
+    if(ans) optEl.classList.add("disabled");
+
+    let extraCls = "";
+    if(ans){
+      if(ans.selectedLabel === opt.label && opt.correct) extraCls = "selected-correct";
+      else if(ans.selectedLabel === opt.label && !opt.correct) extraCls = "selected-wrong";
+      else if(opt.correct) extraCls = "reveal-correct";
+    }
+    if(extraCls) optEl.classList.add(extraCls);
+
+    optEl.innerHTML = `<span class="opt-label">${opt.label}</span><span class="opt-text">${opt.text}</span>`;
+
+    if(!ans){
+      optEl.onclick = ()=>{
+        state.answers[q.id] = { selectedLabel: opt.label, correct: opt.correct };
+        saveState();
+        renderAll();
+      };
+    }
+    optsWrap.appendChild(optEl);
+
+    if(ans){
+      const exp = document.createElement("div");
+      exp.className = "explain " + (opt.correct ? "exp-correct" : "exp-wrong");
+      exp.textContent = opt.explain;
+      optsWrap.appendChild(exp);
+    }
+  });
+
+  inner.appendChild(optsWrap);
+
+  if(ans){
+    const banner = document.createElement("div");
+    banner.className = "feedback-banner " + (ans.correct ? "correct" : "wrong");
+    banner.textContent = ans.correct ? "✓ Correct!" : "✗ Not quite — review the explanations above.";
+    inner.appendChild(banner);
+  }
+
+  if(q.autoTag){
+    const flag = document.createElement("div");
+    flag.className = "autoflag";
+    flag.textContent = "Bloom level & difficulty for this question were auto-categorised by Claude (not specified in the source document).";
+    inner.appendChild(flag);
+  }
+
+  card.appendChild(inner);
+
+  const navBtns = document.createElement("div");
+  navBtns.className = "nav-buttons";
+  const prevBtn = document.createElement("button");
+  prevBtn.className = "navbtn";
+  prevBtn.textContent = "◀ Previous";
+  prevBtn.disabled = state.currentIndex === 0;
+  prevBtn.onclick = ()=>{ state.currentIndex--; renderAll(); window.scrollTo({top:0,behavior:"smooth"}); };
+  const nextBtn = document.createElement("button");
+  nextBtn.className = "navbtn primary";
+  nextBtn.textContent = "Next ▶";
+  nextBtn.disabled = state.currentIndex === list.length-1;
+  nextBtn.onclick = ()=>{ state.currentIndex++; renderAll(); window.scrollTo({top:0,behavior:"smooth"}); };
+  navBtns.appendChild(prevBtn);
+  navBtns.appendChild(nextBtn);
+  card.appendChild(navBtns);
+
+  body.appendChild(card);
+
+  // results summary if all in filter answered
+  const allAnsweredInFilter = list.every(q=>state.answers[q.id]);
+  if(allAnsweredInFilter){
+    renderResults(list, body);
+  }
+
+  renderNavigator();
+  renderProgress();
+}
+
+function renderResults(list, container){
+  const correctCount = list.filter(q=>state.answers[q.id].correct).length;
+  const pct = Math.round((correctCount/list.length)*100);
+
+  const div = document.createElement("div");
+  div.className = "results";
+
+  // breakdown by topic within this filtered list
+  const byTopic = {};
+  list.forEach(q=>{
+    if(!byTopic[q.topic]) byTopic[q.topic] = {correct:0, total:0};
+    byTopic[q.topic].total++;
+    if(state.answers[q.id].correct) byTopic[q.topic].correct++;
+  });
+
+  let breakdownHTML = "";
+  Object.keys(byTopic).forEach(key=>{
+    const t = TOPICS[key];
+    const b = byTopic[key];
+    const p = Math.round((b.correct/b.total)*100);
+    breakdownHTML += `
+      <div class="tb-row">
+        <span class="tb-name">${t.name}</span>
+        <div class="tb-bar-bg"><div class="tb-bar-fill" style="width:${p}%;background:${t.color};"></div></div>
+        <span class="tb-frac">${b.correct}/${b.total}</span>
+      </div>`;
+  });
+
+  div.innerHTML = `
+    <div class="big-score">${pct}%</div>
+    <div class="score-label">${correctCount} / ${list.length} correct in this set</div>
+    <div class="topic-breakdown">${breakdownHTML}</div>
+    <button class="reset-btn" id="resetSetBtn">Reset this set & try again</button>
+  `;
+  container.appendChild(div);
+
+  document.getElementById("resetSetBtn").onclick = ()=>{
+    list.forEach(q=>{ delete state.answers[q.id]; });
+    saveState();
+    state.currentIndex = 0;
+    renderAll();
+    window.scrollTo({top:0,behavior:"smooth"});
+  };
+}
+
+/* ============ FLASHCARDS ============ */
+let fcState = { topic: Object.keys(TOPICS)[0], index: 0, flipped: false };
+
+function renderFcTopicSelect(){
+  const el = document.getElementById("fcTopicSelect");
+  el.innerHTML = "";
+  Object.keys(TOPICS).forEach(key=>{
+    const t = TOPICS[key];
+    const chip = makeChip(t.name, fcState.topic===key, t.color);
+    chip.onclick = ()=>{ fcState.topic = key; fcState.index=0; fcState.flipped=false; renderFlashcard(); };
+    el.appendChild(chip);
+  });
+}
+
+function renderFlashcard(){
+  const cards = FLASHCARDS[fcState.topic] || [];
+  const el = document.getElementById("flashcardEl");
+  const topic = TOPICS[fcState.topic];
+  el.style.borderLeftColor = topic.color;
+
+  if(cards.length === 0){
+    document.getElementById("fcContent").textContent = "No flashcards for this topic yet.";
+    document.getElementById("fcCounter").textContent = "";
+    return;
+  }
+  if(fcState.index >= cards.length) fcState.index = 0;
+  if(fcState.index < 0) fcState.index = cards.length-1;
+
+  const card = cards[fcState.index];
+  document.getElementById("fcSideLabel").textContent = fcState.flipped ? "ANSWER" : "QUESTION";
+  document.getElementById("fcContent").textContent = fcState.flipped ? card.back : card.front;
+  document.getElementById("fcCounter").textContent = `Card ${fcState.index+1} of ${cards.length} — ${topic.name}`;
+}
+
+document.getElementById("flashcardEl").onclick = ()=>{
+  fcState.flipped = !fcState.flipped;
+  renderFlashcard();
+};
+document.getElementById("fcFlip").onclick = ()=>{
+  fcState.flipped = !fcState.flipped;
+  renderFlashcard();
+};
+document.getElementById("fcPrev").onclick = ()=>{
+  fcState.index--; fcState.flipped=false; renderFlashcard();
+};
+document.getElementById("fcNext").onclick = ()=>{
+  fcState.index++; fcState.flipped=false; renderFlashcard();
+};
+
+/* ============ KEY FACTS ============ */
+function renderKeyFacts(){
+  const el = document.getElementById("kfArea");
+  el.innerHTML = "";
+  KEY_TAKEAWAYS.forEach(entry=>{
+    const t = TOPICS[entry.topic];
+    const div = document.createElement("div");
+    div.className = "kf-topic";
+    div.style.borderLeftColor = t.color;
+    const ul = entry.points.map(p=>`<li>${p}</li>`).join("");
+    div.innerHTML = `<h3 style="color:${t.color};">${t.name}</h3><ul>${ul}</ul>`;
+    el.appendChild(div);
+  });
+}
+
+/* ============ TABS ============ */
+document.querySelectorAll(".tab").forEach(tab=>{
+  tab.onclick = ()=>{
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+    tab.classList.add("active");
+    document.getElementById("panel-"+tab.dataset.panel).classList.add("active");
+    window.scrollTo({top:0,behavior:"smooth"});
+  };
+});
+
+/* ============ INIT ============ */
+function renderAll(){
+  renderTopicFilters();
+  renderQuiz();
+}
+renderAll();
+renderFcTopicSelect();
+renderFlashcard();
+renderKeyFacts();
+</script>
+</body>
+</html>
