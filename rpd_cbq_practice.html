@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+<title>Reproductive &amp; Endocrine Pathology — CBQ Practice</title>
+<style>
+:root{
+  --navy:#0b2942;
+  --navy2:#123a5c;
+  --teal:#0f766e;
+  --teal-light:#e6f5f3;
+  --gold:#b8860b;
+  --anat:#2563eb;
+  --anat-bg:#eaf1fd;
+  --physio:#7c3aed;
+  --physio-bg:#f2ecfd;
+  --path:#0f766e;
+  --path-bg:#e6f5f3;
+  --pharm:#c2410c;
+  --pharm-bg:#fdece2;
+  --added:#b8860b;
+  --added-bg:#fdf6e3;
+  --bg:#f4f6f8;
+  --card:#ffffff;
+  --ink:#1c2b3a;
+  --ink-soft:#5b6b7a;
+  --border:#dfe6ec;
+  --radius:14px;
+  --shadow:0 2px 10px rgba(11,41,66,.08);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+body{padding-bottom:60px;}
+.header{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);
+  color:#fff;padding:22px 18px 18px;position:sticky;top:0;z-index:30;
+  box-shadow:0 2px 12px rgba(0,0,0,.18);
+}
+.header h1{margin:0 0 4px;font-size:1.15rem;font-weight:700;letter-spacing:.2px;}
+.header p{margin:0;font-size:.8rem;opacity:.85;}
+.progress-wrap{margin-top:12px;background:rgba(255,255,255,.15);border-radius:20px;height:8px;overflow:hidden;}
+.progress-bar{height:100%;background:linear-gradient(90deg,#4fd1c5,#38b2ac);width:0%;transition:width .35s ease;}
+.progress-text{font-size:.72rem;margin-top:6px;opacity:.9;}
+
+.tabs{
+  display:flex;overflow-x:auto;gap:8px;padding:10px 12px;background:#fff;
+  position:sticky;top:0;z-index:29;border-bottom:1px solid var(--border);
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{
+  flex:0 0 auto;border:1.5px solid var(--border);background:#fbfcfd;color:var(--ink-soft);
+  padding:9px 16px;border-radius:999px;font-size:.8rem;font-weight:600;white-space:nowrap;cursor:pointer;
+  transition:all .15s ease;
+}
+.tab-btn.active{background:var(--navy);border-color:var(--navy);color:#fff;}
+.tab-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--border);margin-right:6px;vertical-align:middle;}
+.tab-btn.done .tab-dot{background:#38b2ac;}
+
+.container{max-width:760px;margin:0 auto;padding:16px 14px 40px;}
+.case{display:none;}
+.case.active{display:block;animation:fadein .25s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.stem-card{
+  background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:18px 18px 16px;margin-bottom:16px;border-left:5px solid var(--navy);
+}
+.stem-card .stem-label{font-size:.68rem;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--navy2);margin-bottom:6px;}
+.stem-card p{margin:0 0 10px;font-size:.93rem;line-height:1.55;color:var(--ink);}
+.stem-card p:last-child{margin-bottom:0;}
+.case-title{font-size:1.05rem;font-weight:700;color:var(--navy);margin:4px 0 2px;}
+.case-system{font-size:.78rem;color:var(--ink-soft);margin-bottom:12px;}
+
+.qcard{
+  background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+  margin-bottom:14px;overflow:hidden;border-left:5px solid var(--path);
+}
+.qcard.tag-anatomy{border-left-color:var(--anat);}
+.qcard.tag-physiology{border-left-color:var(--physio);}
+.qcard.tag-pathology{border-left-color:var(--path);}
+.qcard.tag-pharmacology{border-left-color:var(--pharm);}
+.qcard.tag-added{border-left-color:var(--added);}
+
+.qhead{padding:14px 16px 8px;display:flex;align-items:flex-start;gap:10px;}
+.qnum{
+  flex:0 0 auto;width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;
+}
+.qbody{flex:1;min-width:0;}
+.qtext{font-size:.92rem;line-height:1.5;color:var(--ink);margin:0;}
+.qmeta{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px;}
+.badge{font-size:.66rem;font-weight:700;padding:3px 9px;border-radius:999px;letter-spacing:.3px;text-transform:uppercase;}
+.badge-anatomy{background:var(--anat-bg);color:var(--anat);}
+.badge-physiology{background:var(--physio-bg);color:var(--physio);}
+.badge-pathology{background:var(--path-bg);color:var(--path);}
+.badge-pharmacology{background:var(--pharm-bg);color:var(--pharm);}
+.badge-added{background:var(--added-bg);color:var(--added);}
+.badge-marks{background:#eef2f6;color:var(--ink-soft);}
+
+.qactions{padding:0 16px 16px;}
+textarea{
+  width:100%;min-height:74px;border:1.5px solid var(--border);border-radius:10px;
+  padding:10px 12px;font-size:.88rem;font-family:inherit;color:var(--ink);resize:vertical;
+  background:#fbfcfd;line-height:1.45;
+}
+textarea:focus{outline:none;border-color:var(--navy2);background:#fff;}
+.qfooter{display:flex;justify-content:space-between;align-items:center;margin-top:9px;gap:8px;}
+.reveal-btn{
+  border:none;background:var(--navy);color:#fff;padding:9px 16px;border-radius:9px;
+  font-size:.8rem;font-weight:600;cursor:pointer;transition:background .15s ease;
+}
+.reveal-btn:active{background:var(--navy2);}
+.reveal-btn.shown{background:#e2e8ee;color:var(--navy);}
+.save-hint{font-size:.68rem;color:var(--ink-soft);opacity:0;transition:opacity .3s ease;}
+.save-hint.show{opacity:1;}
+
+.answer-box{
+  display:none;margin-top:12px;background:var(--teal-light);border-left:4px solid var(--teal);
+  border-radius:10px;padding:12px 14px;
+}
+.answer-box.open{display:block;animation:fadein .25s ease;}
+.answer-label{font-size:.68rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--teal);margin-bottom:6px;}
+.answer-box p{margin:0 0 8px;font-size:.87rem;line-height:1.55;color:#0e3b34;}
+.answer-box p:last-child{margin-bottom:0;}
+.answer-box ul{margin:0 0 8px;padding-left:18px;}
+.answer-box li{font-size:.87rem;line-height:1.5;color:#0e3b34;margin-bottom:3px;}
+.answer-box strong{color:#08302a;}
+
+.case-nav{display:flex;justify-content:space-between;margin-top:22px;gap:10px;}
+.nav-btn{
+  flex:1;border:1.5px solid var(--border);background:#fff;color:var(--navy);
+  padding:12px;border-radius:10px;font-size:.85rem;font-weight:600;cursor:pointer;
+}
+.nav-btn:disabled{opacity:.35;}
+
+.toolbar{
+  max-width:760px;margin:0 auto;padding:0 14px;display:flex;gap:10px;justify-content:flex-end;
+}
+.reset-btn{
+  border:none;background:none;color:var(--ink-soft);font-size:.72rem;padding:6px 4px;
+  cursor:pointer;text-decoration:underline;
+}
+.note{
+  background:var(--added-bg);border:1px dashed var(--added);border-radius:10px;
+  padding:9px 12px;font-size:.76rem;color:#7a5c00;margin-bottom:14px;
+}
+@media (max-width:480px){
+  .header h1{font-size:1.02rem;}
+  .qtext{font-size:.89rem;}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Reproductive &amp; Endocrine Pathology</h1>
+  <p>Case-Based Question practice · self-answer, then reveal the model answer</p>
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+  <div class="progress-text" id="progressText">0 of 0 questions attempted</div>
+</div>
+
+<div class="tabs" id="tabs"></div>
+
+<div class="toolbar">
+  <button class="reset-btn" id="resetBtn">Reset my progress</button>
+</div>
+
+<div class="container" id="container"></div>
+
+<script>
+const CASES = [
+{
+  id:1,
+  title:"Case 1 · Male hypogonadism and testosterone therapy",
+  system:"Reproductive endocrinology — male",
+  stems:[
+    "A 26-year-old male was diagnosed as having hypogonadism based on low levels of sex hormones, delayed puberty and delayed development of male secondary sexual characteristics. There is diminished synthesis of testosterone resulting in impaired spermatogenesis. As part of his treatment, the physician initiated intramuscular testosterone enanthate to restore normal androgen levels and promote the development of male secondary sexual characteristics."
+  ],
+  note:"Added: 3 physiology questions on male hormones, inserted before the steroidogenesis question as requested.",
+  questions:[
+    {tag:"added",badge:"Added · Physiology",q:"Name the components of the hypothalamic-pituitary-testicular (HPT) axis and state where each hormone is secreted.",
+     a:["<strong>Hypothalamus</strong> secretes gonadotropin-releasing hormone (GnRH) in a pulsatile manner.",
+        "<strong>Anterior pituitary (gonadotrophs)</strong> secretes luteinising hormone (LH) and follicle-stimulating hormone (FSH) in response to GnRH.",
+        "<strong>Testis</strong> — Leydig cells secrete testosterone (under LH control); Sertoli cells secrete inhibin B, androgen-binding protein and support spermatogenesis (under FSH and testosterone control)."]},
+    {tag:"added",badge:"Added · Physiology",q:"Explain the actions of LH and FSH on their respective testicular target cells.",
+     a:["<strong>LH</strong> acts on Leydig cells via a G-protein coupled receptor, stimulating cholesterol side-chain cleavage (StAR protein/CYP11A1) and driving testosterone synthesis.",
+        "<strong>FSH</strong> acts on Sertoli cells, stimulating secretion of androgen-binding protein (which concentrates testosterone locally for spermatogenesis), inhibin B, and supporting maturation of spermatogonia through the blood–testis barrier."]},
+    {tag:"added",badge:"Added · Physiology",q:"Describe the negative feedback control of testosterone secretion in the HPT axis.",
+     a:["Rising testosterone (and its peripheral conversion to oestradiol) feeds back negatively on the <strong>hypothalamus</strong>, reducing GnRH pulse frequency/amplitude, and on the <strong>anterior pituitary</strong>, reducing LH sensitivity to GnRH.",
+        "<strong>Inhibin B</strong> from Sertoli cells selectively suppresses FSH secretion at the pituitary, without significantly affecting GnRH or LH.",
+        "This closed loop keeps circulating testosterone within a physiological range; in this patient's primary hypogonadism, low testosterone removes feedback inhibition so LH and FSH are typically elevated."]},
+    {tag:"pathology",badge:"Physiology",q:"a) In which cell type does steroidogenesis in the testes occur?",
+     a:["Steroidogenesis (testosterone synthesis) occurs in the <strong>Leydig (interstitial) cells</strong>, located in the connective tissue between the seminiferous tubules."]},
+    {tag:"pathology",badge:"Physiology",marks:"5 marks",q:"b) Outline the major pathway for steroidogenesis in the testes.",
+     a:["Cholesterol enters the mitochondrion; the <strong>StAR protein</strong> transports it to the inner mitochondrial membrane, where <strong>CYP11A1 (cholesterol side-chain cleavage enzyme)</strong> converts it to <strong>pregnenolone</strong> — the rate-limiting step.",
+        "Pregnenolone leaves the mitochondrion and is converted via the <strong>Δ5 pathway</strong> (preferred in humans): pregnenolone → 17α-hydroxypregnenolone → dehydroepiandrosterone (DHEA) → androstenediol → <strong>testosterone</strong>, using 17α-hydroxylase/17,20-lyase (CYP17A1), 3β-hydroxysteroid dehydrogenase and 17β-hydroxysteroid dehydrogenase.",
+        "An alternate <strong>Δ4 pathway</strong> proceeds pregnenolone → progesterone → 17-OH progesterone → androstenedione → testosterone using the same enzyme set in a different order.",
+        "LH stimulation via cAMP/PKA drives the whole sequence; testosterone is then secreted or further converted to dihydrotestosterone (5α-reductase) or oestradiol (aromatase) in target tissues."]},
+    {tag:"anatomy",badge:"Physiology",q:"c) Name another organ and its associated cells that are involved in androgen synthesis.",
+     a:["The <strong>adrenal cortex</strong> — specifically the <strong>zona reticularis</strong> — synthesises the weak androgens DHEA, DHEA-sulfate and androstenedione, which can be peripherally converted to testosterone."]},
+    {tag:"pharmacology",badge:"Pharmacology",q:"d) Describe the mechanism of action of testosterone in this condition.",
+     a:["Testosterone diffuses into target cells and binds the cytoplasmic <strong>androgen receptor (AR)</strong>; the hormone–receptor complex translocates to the nucleus, dimerises, and binds <strong>androgen response elements (AREs)</strong> on DNA to regulate transcription of genes driving virilisation, spermatogenesis and anabolic effects.",
+        "In some tissues (e.g. prostate, skin, external genitalia) testosterone is first converted by <strong>5α-reductase</strong> to the more potent <strong>dihydrotestosterone (DHT)</strong>, which binds the same receptor with higher affinity.",
+        "In bone and brain, testosterone is aromatised to <strong>oestradiol</strong>, which acts via oestrogen receptors — important for epiphyseal closure and bone mineral density."]},
+    {tag:"pharmacology",badge:"Pharmacology",q:"e) List FOUR potential adverse effects of testosterone in this patient.",
+     a:["<strong>Erythrocytosis/polycythaemia</strong> (increased haematocrit, thrombotic risk)","<strong>Gynaecomastia</strong> (from peripheral aromatisation to oestradiol)","<strong>Acne and oily skin / hirsutism</strong>","<strong>Suppression of endogenous LH/FSH</strong> leading to testicular atrophy and impaired fertility (negative feedback on the HPT axis)","Other acceptable answers: worsening of obstructive sleep apnoea, adverse lipid changes (↓HDL), mood/behavioural changes, fluid retention."]},
+    {tag:"pharmacology",badge:"Pharmacology",q:"f) Identify THREE major absolute contraindications to testosterone therapy.",
+     a:["<strong>Known or suspected carcinoma of the prostate</strong>","<strong>Male breast carcinoma</strong>","<strong>Severe untreated erythrocytosis</strong> (haematocrit &gt;54%) — or severe untreated obstructive sleep apnoea / uncontrolled heart failure are also accepted."]}
+  ]
+},
+{
+  id:2,
+  title:"Case 2 · Benign prostatic hyperplasia",
+  system:"Reproductive pathology — male, lower urinary tract",
+  stems:[
+    "A 68-year-old man presents with difficulty in starting urination, a weak urine stream, increased frequency and urgency. Digital rectal examination reveals a symmetrically enlarged, smooth, and firm prostate, suggestive of benign prostatic hyperplasia (BPH). He is prescribed tamsulosin and finasteride."
+  ],
+  note:"Added: 3 anatomy questions on the prostate gland, inserted before the pathology questions as requested.",
+  questions:[
+    {tag:"added",badge:"Added · Anatomy",q:"Describe the zonal anatomy of the prostate gland and state which zone is most relevant to BPH.",
+     a:["McNeal's zonal classification divides the prostate into the <strong>peripheral zone</strong> (largest, posterior — most common site of prostate carcinoma), the <strong>central zone</strong> (surrounds the ejaculatory ducts), and the <strong>transition zone</strong> (surrounds the proximal urethra).",
+        "The <strong>transition zone</strong> is the site of origin of benign prostatic hyperplasia; its nodular enlargement compresses the prostatic urethra and produces the obstructive symptoms seen in this patient."]},
+    {tag:"added",badge:"Added · Anatomy",q:"Describe the anatomical relations of the prostate gland.",
+     a:["<strong>Superior</strong> — base related to the neck of the bladder.","<strong>Inferior</strong> — apex rests on the urogenital diaphragm.","<strong>Anterior</strong> — pubic symphysis, separated by retropubic (Retzius) fat and the puboprostatic ligaments.","<strong>Posterior</strong> — rectal ampulla, separated by Denonvilliers' fascia; this relation allows the prostate to be palpated on digital rectal examination.","<strong>Lateral</strong> — levator ani muscle and the prostatic venous plexus."]},
+    {tag:"added",badge:"Added · Anatomy",q:"Outline the blood supply, lymphatic drainage and nerve supply of the prostate.",
+     a:["<strong>Arterial supply</strong> — inferior vesical artery (main supply), with contributions from the middle rectal and internal pudendal arteries, branches of the internal iliac artery.",
+        "<strong>Venous drainage</strong> — prostatic venous plexus, which communicates with the vesical venous plexus and drains into the internal iliac veins; it also connects with the vertebral venous plexus (Batson's plexus), a route for metastatic spread to the vertebrae.",
+        "<strong>Lymphatic drainage</strong> — chiefly to the internal iliac and obturator lymph nodes.",
+        "<strong>Nerve supply</strong> — sympathetic (T11–L2) and parasympathetic (S2–S4) fibres from the inferior hypogastric (pelvic) plexus; sympathetic α1-adrenergic fibres control smooth muscle tone of the prostatic stroma and capsule, which is the target of tamsulosin."]},
+    {tag:"pathology",badge:"Pathology",marks:"4 Marks",q:"(a) A biopsy was done to confirm the diagnosis. Describe the histopathological findings that will be seen in BPH.",
+     a:["<strong>Nodular hyperplasia</strong> of both glandular and stromal (fibromuscular) elements, characteristically arising in the transition zone.",
+        "Glands show <strong>papillary infolding</strong> and are lined by a double cell layer — an inner columnar secretory layer and an outer flattened basal cell layer — with an intact basement membrane and <strong>no cytological atypia</strong>.",
+        "Cystic dilatation of glands with intraluminal <strong>corpora amylacea</strong> (eosinophilic concretions).",
+        "Variable proportion of stromal (fibromuscular) versus glandular nodules producing the smooth, firm, symmetrically enlarged gland felt on DRE."]},
+    {tag:"pathology",badge:"Pathology",marks:"4 Marks",q:"(b) Explain the pathophysiology of the urinary symptoms in the patient.",
+     a:["Symptoms arise from two components acting together at the bladder outlet:",
+        "<strong>Static (mechanical) component</strong> — physical enlargement of the transition zone narrows and elongates the prostatic urethra, causing outflow obstruction.",
+        "<strong>Dynamic component</strong> — increased α1-adrenergic tone in prostatic and bladder-neck smooth muscle increases urethral resistance independent of gland size.",
+        "Combined obstruction leads to <strong>detrusor muscle hypertrophy and instability</strong>, producing hesitancy, weak stream, frequency, urgency and incomplete emptying — the symptom complex of lower urinary tract symptoms (LUTS)."]},
+    {tag:"pharmacology",badge:"Pharmacology",marks:"3 Marks",q:"(c) Describe the mechanism of action of tamsulosin in the treatment of this condition.",
+     a:["Tamsulosin is a selective <strong>α1A-adrenergic receptor antagonist</strong>.",
+        "By blocking α1A receptors, which predominate in prostatic smooth muscle and the bladder neck, it relaxes smooth muscle tone, reducing the <strong>dynamic component</strong> of obstruction and improving urine flow without significantly lowering blood pressure (due to receptor selectivity)."]},
+    {tag:"pharmacology",badge:"Pharmacology",marks:"3 Marks",q:"(d) Describe the mechanism of action of finasteride in the treatment of this condition.",
+     a:["Finasteride is a <strong>5α-reductase type 2 inhibitor</strong>.",
+        "It blocks conversion of testosterone to the more potent <strong>dihydrotestosterone (DHT)</strong> within the prostate, reducing the trophic androgenic stimulus to glandular tissue, which shrinks prostate volume over months and addresses the <strong>static component</strong> of obstruction."]},
+    {tag:"pharmacology",badge:"Pharmacology",marks:"1 Marks",q:"(e) List TWO adverse effects of tamsulosin.",
+     a:["<strong>Orthostatic hypotension / dizziness</strong>","<strong>Retrograde (dry) ejaculation</strong> — nasal congestion and intraoperative floppy iris syndrome are also accepted."]}
+  ]
+},
+{
+  id:3,
+  title:"Case 3 · Pelvic inflammatory disease and chronic endometritis",
+  system:"Reproductive pathology — female, genital tract infection",
+  stems:[
+    "A 22-year-old sexually active woman presents with a 4-day history of lower abdominal pain, fever, and abnormal vaginal discharge. She reports pain during intercourse and irregular vaginal bleeding. On examination, there is cervical motion tenderness and bilateral adnexal tenderness. A pregnancy test is negative. Transvaginal ultrasound shows thickened, fluid-filled fallopian tubes. Vaginal swabs are positive for Chlamydia trachomatis, confirming a diagnosis of pelvic inflammatory disease (PID).",
+    "Due to recurrent symptoms, an endometrial biopsy was done and she was diagnosed with chronic endometritis."
+  ],
+  questions:[
+    {tag:"anatomy",badge:"Anatomy",q:"a) Describe the anatomy of the non-pregnant cervix uteri: (i) shape and length.",
+     a:["The cervix is the lower, cylindrical/conical part of the uterus, roughly <strong>2.5 cm in length</strong> in the non-pregnant, nulliparous state, continuous above with the isthmus of the uterine body and opening below into the vagina."]},
+    {tag:"anatomy",badge:"Anatomy",q:"a) (ii) Vaginal and supravaginal parts, with their relations.",
+     a:["The <strong>supravaginal part</strong> lies above the vaginal attachment: anteriorly related to the base of the bladder (separated by loose connective tissue), posteriorly to the rectum via the recto-uterine pouch (of Douglas), and laterally to the ureter (which runs close to the cervix within the transverse cervical/cardinal ligament — clinically important, as the ureter can be injured during hysterectomy) and the uterine artery.",
+        "The <strong>vaginal part (portio vaginalis)</strong> projects into the vault of the vagina, surrounded by the anterior, posterior and lateral vaginal fornices, and presents the external os."]},
+    {tag:"anatomy",badge:"Anatomy",q:"a) (iii) Cervical canal (endocervix).",
+     a:["A fusiform (spindle-shaped) canal extending from the internal os (continuous with the uterine cavity) to the external os (opening into the vagina), thrown into <strong>plicae palmatae</strong> (palm-leaf folds) and lined by mucus-secreting glands."]},
+    {tag:"anatomy",badge:"Anatomy",q:"a) (iv) Lining epithelium of the cervix.",
+     a:["The <strong>endocervix</strong> is lined by simple mucus-secreting columnar epithelium.",
+        "The <strong>ectocervix</strong> is lined by non-keratinised stratified squamous epithelium, continuous with the vaginal epithelium.",
+        "The two meet at the <strong>squamocolumnar junction (transformation zone)</strong>, a site of active metaplasia and clinical significance for cervical infection and neoplasia."]},
+    {tag:"pathology",badge:"Pathology",q:"a) (v) Role of the cervix in PID.",
+     a:["Normally, cervical mucus forms a protective barrier limiting ascent of organisms from the lower to upper genital tract.",
+        "In this patient, <strong>Chlamydia trachomatis</strong> preferentially infects the columnar epithelium of the transformation zone, causing cervicitis; the cervical barrier is breached and organisms ascend through the endocervical canal into the endometrium and fallopian tubes, producing endometritis and salpingitis — the basis of PID."]},
+    {tag:"anatomy",badge:"Anatomy",q:"b) List FOUR (4) segments/parts of the uterine tube from medial to lateral.",
+     a:["<strong>Interstitial (intramural) part</strong> — within the uterine wall.","<strong>Isthmus</strong> — narrow, thick-walled segment nearest the uterus.","<strong>Ampulla</strong> — widest, longest part; usual site of fertilisation.","<strong>Infundibulum</strong> — funnel-shaped lateral end bearing the fimbriae, related to the ovary."]},
+    {tag:"anatomy",badge:"Anatomy",q:"c) Describe the peritoneal folds related to the uterine tube.",
+     a:["The uterine tube lies within the free upper margin of the <strong>mesosalpinx</strong>, the uppermost part of the broad ligament, which suspends the tube and carries its blood vessels and lymphatics between its two peritoneal layers."]},
+    {tag:"pathology",badge:"Microbiology",q:"b) Describe TWO structural characteristics of Chlamydia trachomatis.",
+     a:["It is an <strong>obligate intracellular bacterium</strong> that cannot generate its own ATP, relying on the host cell ('energy parasite').",
+        "Its cell wall lacks a conventional peptidoglycan layer (no muramic acid), making it structurally atypical among Gram-negative organisms and intrinsically resistant to beta-lactam antibiotics."]},
+    {tag:"pathology",badge:"Microbiology",q:"Describe the life-cycle of the organism.",
+     a:["The infectious, metabolically inactive <strong>elementary body (EB)</strong> attaches to and is endocytosed by susceptible columnar epithelial cells.",
+        "Within 6–8 hours the EB reorganises into the larger, metabolically active but non-infectious <strong>reticulate body (RB)</strong>, which replicates by binary fission inside a cytoplasmic inclusion.",
+        "After 24–48 hours RBs condense back into infectious EBs, and the cell lyses (or the inclusion is released), releasing EBs to infect neighbouring cells — a full cycle taking roughly <strong>48–72 hours</strong>."]},
+    {tag:"pathology",badge:"Microbiology",q:"c) List THREE laboratory methods used in the identification of Chlamydia trachomatis.",
+     a:["<strong>Nucleic acid amplification tests (NAAT/PCR)</strong> — most sensitive and specific, current gold standard for clinical diagnosis.","<strong>Direct fluorescent antibody testing / antigen detection (ELISA)</strong>.","<strong>Cell culture</strong> (e.g. McCoy cells) — traditional gold standard, now used mainly in research or medico-legal contexts.","Serology and Giemsa staining for intracytoplasmic inclusions are also accepted."]},
+    {tag:"pathology",badge:"Prevention",q:"d) List TWO measures to prevent Chlamydia trachomatis infection.",
+     a:["<strong>Consistent and correct condom use</strong> during sexual intercourse.","<strong>Screening and treatment of sexual partners</strong>, with abstinence until treatment is completed, to prevent reinfection and onward transmission; routine screening of sexually active young women is also accepted."]},
+    {tag:"pathology",badge:"Pathology",q:"g) Describe the endometrial biopsy findings in chronic endometritis and state the clinical significance.",
+     a:["The histological hallmark is an <strong>infiltrate of plasma cells</strong> in the endometrial stroma (identified on H&amp;E or confirmed with CD138 immunostain), accompanied by lymphocytes, stromal oedema, and spindle-shaped stromal fibroblasts, without the cyclical glandular changes expected for the reported cycle phase.",
+        "Clinical significance: chronic endometritis is associated with <strong>infertility, recurrent implantation failure and recurrent pregnancy loss</strong>, as well as abnormal uterine bleeding; it is treatable with antibiotics (commonly doxycycline), and recognising it can guide fertility management."]},
+    {tag:"pathology",badge:"Pathology",q:"i) List the complications that can develop in this patient and explain the basis of their development.",
+     a:["<strong>Tubo-ovarian abscess</strong> — extension of suppurative infection into the ovary and tube.",
+        "<strong>Infertility</strong> — inflammation causes fibrosis and scarring of the delicate tubal mucosa, obliterating the lumen and impairing ovum transport.",
+        "<strong>Ectopic pregnancy</strong> — tubal scarring and adhesions impede transport of the fertilised ovum, predisposing it to implant within the tube.",
+        "<strong>Chronic pelvic pain</strong> and <strong>peritoneal adhesions</strong> — organisation of inflammatory exudate leads to fibrous adhesions between pelvic structures.",
+        "<strong>Fitz-Hugh-Curtis syndrome</strong> — perihepatitis from direct or lymphatic spread of infection to the liver capsule, causing 'violin-string' adhesions."]}
+  ]
+},
+{
+  id:4,
+  title:"Case 4 · Abnormal uterine bleeding on combined oral contraceptive",
+  system:"Reproductive physiology and pharmacology — female",
+  stems:[
+    "A 42-year-old female came to the hospital complaining of prolonged heavy menstrual bleeding and dysmenorrhea over the past six months. She was diagnosed with abnormal uterine bleeding and was prescribed a combined oral contraceptive pill to be taken starting from the 5th to the 25th day of the cycle for 6 cycles."
+  ],
+  questions:[
+    {tag:"physiology",badge:"Physiology",q:"a) Explain the effects of the ovarian hormones on the uterine lining in each phase of the uterine cycle.",
+     a:["<strong>Menstrual phase</strong> — withdrawal of oestrogen and progesterone (following corpus luteum regression) causes spiral artery vasoconstriction, ischaemia and shedding of the functional layer of the endometrium.",
+        "<strong>Proliferative phase</strong> — rising <strong>oestrogen</strong> from developing ovarian follicles stimulates regeneration of the endometrium from the basal layer, with glandular and stromal proliferation and spiral artery elongation.",
+        "<strong>Secretory phase</strong> — <strong>progesterone</strong> from the corpus luteum (with oestrogen) converts the endometrium into a secretory state: glands become tortuous and glycogen-rich, stroma becomes oedematous and undergoes predecidual change, preparing for potential implantation.",
+        "<strong>Ischaemic phase</strong> — if no fertilisation occurs, corpus luteum regression causes falling hormone levels, spiral artery constriction and tissue breakdown, initiating the next menstrual phase."]},
+    {tag:"physiology",badge:"Physiology",q:"b) Explain the feedback mechanisms involved in the hypothalamic-pituitary-ovarian axis of the luteal phase.",
+     a:["The corpus luteum secretes high levels of <strong>progesterone</strong> (and moderate oestrogen), which exert <strong>negative feedback</strong> on the hypothalamus (reducing GnRH pulse frequency) and anterior pituitary, suppressing FSH and LH secretion and preventing new follicular development during this phase.",
+        "If fertilisation does not occur, the corpus luteum undergoes luteolysis around day 24–26 (in the absence of hCG support), progesterone and oestrogen levels fall, negative feedback is released, and FSH begins to rise to recruit follicles for the next cycle."]},
+    {tag:"physiology",badge:"Physiology",q:"c) Explain alterations in the feedback loops of the hypothalamic-pituitary-ovarian axis that can result in abnormal uterine bleeding.",
+     a:["In <strong>anovulatory cycles</strong> (common in this perimenopausal age group), a follicle fails to rupture and no corpus luteum forms, so the endometrium is exposed to continuous, <strong>unopposed oestrogen</strong> without the stabilising, organising effect of progesterone.",
+        "This drives persistent proliferation, outgrowing its blood supply, leading to irregular, asynchronous breakdown and unpredictable, often heavy bleeding — rather than the coordinated shedding seen after a normal progesterone withdrawal.",
+        "Disordered or irregular GnRH pulsatility (e.g. with age-related ovarian changes) can further disrupt the normal FSH/LH pattern, contributing to erratic follicular development."]},
+    {tag:"pathology",badge:"Pathology",q:"List the causes of abnormal uterine bleeding in a middle-aged female.",
+     a:["Remembered using the FIGO <strong>PALM-COEIN</strong> classification:",
+        "<strong>Structural (PALM)</strong> — Polyp, Adenomyosis, Leiomyoma (fibroid), Malignancy and hyperplasia.",
+        "<strong>Non-structural (COEIN)</strong> — Coagulopathy, Ovulatory dysfunction, Endometrial (primary disorder of local haemostasis), Iatrogenic (e.g. anticoagulants, hormonal contraception), Not yet classified."]},
+    {tag:"pathology",badge:"Pathology",q:"List the red flag features in a patient with AUB that should prompt urgent investigation for endometrial or cervical pathology.",
+     a:["<strong>Postmenopausal bleeding</strong>.","Persistent <strong>intermenstrual bleeding</strong> or bleeding that fails to respond to initial treatment.","New-onset AUB in a woman <strong>&gt;45 years</strong>, or with risk factors for endometrial cancer (obesity, PCOS, diabetes, tamoxifen use, nulliparity).","A palpable pelvic mass, or postcoital bleeding suggestive of cervical pathology."]},
+    {tag:"pharmacology",badge:"Pharmacology",q:"d) List TWO therapeutic benefits for prescribing combined oral contraceptive pill to this patient.",
+     a:["<strong>Reduces menstrual blood loss</strong> and regulates cycle length by providing a controlled, predictable withdrawal bleed.","<strong>Reduces dysmenorrhoea</strong> and, with longer-term use, reduces the risk of endometrial (and ovarian) cancer."]},
+    {tag:"pharmacology",badge:"Pharmacology",q:"e) Describe the mechanism of action of combined oral contraceptive pill in this condition.",
+     a:["The exogenous oestrogen–progestogen combination suppresses the hypothalamic-pituitary-ovarian axis via <strong>negative feedback</strong>, inhibiting FSH/LH secretion and preventing follicular development and ovulation — removing the source of unopposed oestrogen.",
+        "The steady exogenous hormone levels produce a <strong>thin, stable, well-organised endometrium</strong> with synchronous, controlled shedding, reducing the volume and irregularity of bleeding."]},
+    {tag:"pharmacology",badge:"Pharmacology",q:"f) List TWO clinical conditions that are contraindications to the use of combined oral contraceptive pills.",
+     a:["<strong>History of venous thromboembolism</strong> or known thrombophilia.","<strong>Migraine with aura</strong>, uncontrolled hypertension, smokers over 35 years, oestrogen-dependent malignancy (e.g. breast cancer) or active liver disease are also accepted (choose any two)."]}
+  ]
+},
+{
+  id:5,
+  title:"Case 5 · Carcinoma of the breast",
+  system:"Reproductive pathology — female, breast",
+  stems:[
+    "A 60-year-old woman has felt a lump in her breast for the past 2 months. On physical examination, a firm 2 to 3 cm mass is palpable in the upper outer quadrant of her right breast. There are no palpable axillary nodes. A lumpectomy with axillary node dissection is performed. Histopathological examination confirmed diagnosis of malignancy of the breast.",
+    "Following surgery and radiation therapy, systemic therapy was started with chemotherapy and hormonal therapy. Hormonal therapy comprised of tamoxifen."
+  ],
+  questions:[
+    {tag:"pathology",badge:"Pathology",q:"1a. State TWO common histological subtypes of carcinoma of breast.",
+     a:["<strong>Invasive ductal carcinoma, no special type (NST)</strong> — the most common subtype.","<strong>Invasive lobular carcinoma</strong> — the second most common subtype."]},
+    {tag:"pathology",badge:"Pathology",q:"1b. List TWO clinical examination findings which would indicate an advanced stage of carcinoma in the patient.",
+     a:["<strong>Skin changes</strong> — peau d'orange, dimpling, ulceration, or fixation of the tumour to skin or underlying chest wall.","<strong>Palpable, matted or fixed axillary/supraclavicular lymphadenopathy</strong>; nipple retraction or bloody discharge is also accepted."]},
+    {tag:"pathology",badge:"Pathology",q:"1c. List THREE criteria used in the Scarff-Bloom-Richardson grading system for breast carcinoma.",
+     a:["<strong>Degree of tubule/gland formation</strong>.","<strong>Nuclear pleomorphism</strong> (variation in nuclear size and shape).","<strong>Mitotic count</strong> (number of mitoses per high-power field)."]},
+    {tag:"pathology",badge:"Pathology",q:"1d. List any THREE prognostic factors of carcinoma of the breast.",
+     a:["<strong>Tumour size</strong> and <strong>axillary lymph node status</strong> — the single most important prognostic factor.","<strong>Histological grade and type</strong>.","<strong>Hormone receptor status (ER/PR)</strong> and <strong>HER2 status</strong>; lymphovascular invasion and patient age are also accepted."]},
+    {tag:"pharmacology",badge:"Pharmacology",q:"1e. Explain the mechanism of action of hormonal therapy with tamoxifen in this patient.",
+     a:["Tamoxifen is a <strong>selective oestrogen receptor modulator (SERM)</strong>.",
+        "It competitively binds the oestrogen receptor in breast tissue, acting as an <strong>antagonist</strong> and blocking oestrogen-driven proliferation of hormone receptor-positive tumour cells.",
+        "In other tissues such as the endometrium and bone, it behaves as a partial <strong>agonist</strong> — which explains its efficacy in ER-positive breast cancer but also its endometrial and bone effects."]},
+    {tag:"pharmacology",badge:"Pharmacology",q:"1f. Suggest a drug to treat this patient if the cancer is found to be resistant to tamoxifen. Explain its mechanism of action.",
+     a:["An <strong>aromatase inhibitor</strong> (e.g. anastrozole or letrozole) is appropriate, particularly in a postmenopausal woman.",
+        "It inhibits the aromatase enzyme responsible for peripheral conversion of androgens to oestrogens in adipose and other extragonadal tissue, lowering circulating oestrogen levels and depriving ER-positive tumour cells of their growth stimulus.",
+        "Alternatively, <strong>fulvestrant</strong> — a pure oestrogen receptor antagonist that binds and degrades the receptor — is also accepted."]},
+    {tag:"pharmacology",badge:"Pharmacology",q:"1g. List TWO common side effects of tamoxifen.",
+     a:["<strong>Hot flushes</strong> and menstrual irregularities.","Increased risk of <strong>endometrial hyperplasia/carcinoma</strong> (from partial agonist effect on the endometrium); increased venous thromboembolism risk is also accepted."]}
+  ]
+}
+];
+
+const STORAGE_KEY = "rpd_cbq_progress_v1";
+let progress = {};
+try{ progress = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }catch(e){ progress = {}; }
+let currentCase = 0;
+let totalQ = 0;
+
+function saveProgress(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); }catch(e){}
+}
+
+function qid(caseId, idx){ return "c"+caseId+"_q"+idx; }
+
+function buildTabs(){
+  const tabs = document.getElementById("tabs");
+  tabs.innerHTML = "";
+  CASES.forEach((c,i)=>{
+    const btn = document.createElement("button");
+    btn.className = "tab-btn" + (i===0 ? " active":"");
+    btn.innerHTML = '<span class="tab-dot"></span>Case '+c.id;
+    btn.onclick = ()=> showCase(i);
+    btn.dataset.idx = i;
+    tabs.appendChild(btn);
+  });
+}
+
+function renderCase(c, idx){
+  const div = document.createElement("div");
+  div.className = "case" + (idx===0 ? " active":"");
+  div.id = "case-"+idx;
+
+  let stemHtml = '<div class="stem-card"><div class="stem-label">Clinical vignette</div>';
+  stemHtml += '<div class="case-title">'+c.title+'</div><div class="case-system">'+c.system+'</div>';
+  c.stems.forEach(s=>{ stemHtml += '<p>'+s+'</p>'; });
+  stemHtml += '</div>';
+  if(c.note){
+    stemHtml += '<div class="note">'+c.note+'</div>';
+  }
+  div.innerHTML = stemHtml;
+
+  c.questions.forEach((q,qi)=>{
+    const id = qid(c.id, qi);
+    totalQ++;
+    const card = document.createElement("div");
+    card.className = "qcard tag-"+q.tag;
+    const marksBadge = q.marks ? '<span class="badge badge-marks">'+q.marks+'</span>' : "";
+    let badgeClass = "badge-pathology";
+    if(q.tag==="anatomy") badgeClass="badge-anatomy";
+    if(q.tag==="physiology") badgeClass="badge-physiology";
+    if(q.tag==="pharmacology") badgeClass="badge-pharmacology";
+    if(q.tag==="added") badgeClass="badge-added";
+
+    const answerHtml = q.a.map(line=>{
+      return /^[A-Z]/.test(line) && q.a.length>1 && !line.match(/^<strong>/) ? '<p>'+line+'</p>' : '<p>'+line+'</p>';
+    }).join("");
+
+    card.innerHTML =
+      '<div class="qhead">'+
+        '<div class="qnum">'+(qi+1)+'</div>'+
+        '<div class="qbody">'+
+          '<p class="qtext">'+q.q+'</p>'+
+          '<div class="qmeta"><span class="badge '+badgeClass+'">'+q.badge+'</span>'+marksBadge+'</div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="qactions">'+
+        '<textarea placeholder="Type your own answer here first, then reveal the model answer to compare..." data-id="'+id+'"></textarea>'+
+        '<div class="qfooter">'+
+          '<span class="save-hint" id="hint_'+id+'">Saved</span>'+
+          '<button class="reveal-btn" data-id="'+id+'">Reveal model answer</button>'+
+        '</div>'+
+        '<div class="answer-box" id="ans_'+id+'">'+
+          '<div class="answer-label">Model answer</div>'+
+          answerHtml+
+        '</div>'+
+      '</div>';
+    div.appendChild(card);
+  });
+
+  const navRow = document.createElement("div");
+  navRow.className = "case-nav";
+  navRow.innerHTML =
+    '<button class="nav-btn" id="prevBtn">&larr; Previous case</button>'+
+    '<button class="nav-btn" id="nextBtn">Next case &rarr;</button>';
+  div.appendChild(navRow);
+
+  return div;
+}
+
+function renderAll(){
+  const container = document.getElementById("container");
+  container.innerHTML = "";
+  CASES.forEach((c,i)=>{
+    const el = renderCase(c,i);
+    container.appendChild(el);
+  });
+  attachHandlers();
+  restoreState();
+  updateProgress();
+}
+
+function attachHandlers(){
+  document.querySelectorAll("textarea[data-id]").forEach(ta=>{
+    ta.addEventListener("input", ()=>{
+      const id = ta.dataset.id;
+      progress[id] = progress[id] || {};
+      progress[id].text = ta.value;
+      progress[id].attempted = ta.value.trim().length > 0;
+      saveProgress();
+      updateProgress();
+      const hint = document.getElementById("hint_"+id);
+      if(hint){
+        hint.classList.add("show");
+        clearTimeout(hint._t);
+        hint._t = setTimeout(()=>hint.classList.remove("show"), 1200);
+      }
+    });
+  });
+
+  document.querySelectorAll(".reveal-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.dataset.id;
+      const box = document.getElementById("ans_"+id);
+      const open = box.classList.toggle("open");
+      btn.textContent = open ? "Hide model answer" : "Reveal model answer";
+      btn.classList.toggle("shown", open);
+      progress[id] = progress[id] || {};
+      progress[id].revealed = true;
+      progress[id].attempted = true;
+      saveProgress();
+      updateProgress();
+    });
+  });
+
+  document.querySelectorAll("#prevBtn").forEach(btn=>{
+    btn.addEventListener("click", ()=> showCase(currentCase-1));
+  });
+  document.querySelectorAll("#nextBtn").forEach(btn=>{
+    btn.addEventListener("click", ()=> showCase(currentCase+1));
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", ()=>{
+    if(confirm("Clear all your saved answers and progress for this tool?")){
+      progress = {};
+      saveProgress();
+      renderAll();
+      showCase(0);
+      window.scrollTo({top:0, behavior:"smooth"});
+    }
+  });
+}
+
+function restoreState(){
+  Object.keys(progress).forEach(id=>{
+    const entry = progress[id];
+    const ta = document.querySelector('textarea[data-id="'+id+'"]');
+    if(ta && entry.text) ta.value = entry.text;
+    if(entry.revealed){
+      const box = document.getElementById("ans_"+id);
+      const btn = document.querySelector('.reveal-btn[data-id="'+id+'"]');
+      if(box){ box.classList.add("open"); }
+      if(btn){ btn.textContent = "Hide model answer"; btn.classList.add("shown"); }
+    }
+  });
+}
+
+function updateProgress(){
+  const attempted = Object.values(progress).filter(p=>p.attempted).length;
+  const pct = totalQ ? Math.round((attempted/totalQ)*100) : 0;
+  document.getElementById("progressBar").style.width = pct+"%";
+  document.getElementById("progressText").textContent = attempted+" of "+totalQ+" questions attempted";
+
+  CASES.forEach((c,i)=>{
+    const caseAttempted = c.questions.some((q,qi)=>{
+      const id = qid(c.id, qi);
+      return progress[id] && progress[id].attempted;
+    });
+    const tabBtn = document.querySelectorAll(".tab-btn")[i];
+    if(tabBtn) tabBtn.classList.toggle("done", caseAttempted);
+  });
+}
+
+function showCase(idx){
+  if(idx<0 || idx>=CASES.length) return;
+  currentCase = idx;
+  document.querySelectorAll(".case").forEach((el,i)=>{
+    el.classList.toggle("active", i===idx);
+  });
+  document.querySelectorAll(".tab-btn").forEach((btn,i)=>{
+    btn.classList.toggle("active", i===idx);
+  });
+  document.querySelectorAll("#prevBtn").forEach(b=> b.disabled = idx===0);
+  document.querySelectorAll("#nextBtn").forEach(b=> b.disabled = idx===CASES.length-1);
+  const activeTab = document.querySelectorAll(".tab-btn")[idx];
+  if(activeTab) activeTab.scrollIntoView({behavior:"smooth", inline:"center", block:"nearest"});
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+buildTabs();
+renderAll();
+showCase(0);
+</script>
+</body>
+</html>
