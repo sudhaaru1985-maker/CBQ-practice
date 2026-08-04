@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Cardiovascular Pathology Revision Hub</title>
+<style>
+  :root{
+    --bg:#f4f6fa; --card-bg:#ffffff; --text:#222831; --muted:#5b6472;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:'Segoe UI', Roboto, Arial, sans-serif;
+    background:var(--bg); color:var(--text); font-size:16px; line-height:1.5;
+    -webkit-tap-highlight-color: transparent;
+  }
+  header{
+    background:linear-gradient(135deg,#8e0e00,#1f1c18);
+    color:#fff; padding:22px 16px; text-align:center;
+    box-shadow:0 2px 8px rgba(0,0,0,0.2);
+  }
+  header h1{margin:0; font-size:1.5rem;}
+  header p{margin:6px 0 0; font-size:0.95rem; opacity:0.9;}
+  .wrap{max-width:900px; margin:0 auto; padding:16px;}
+  .home-grid{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:14px; margin-top:16px;
+  }
+  .topic-card{
+    background:var(--card-bg); border-left:8px solid var(--tc);
+    border-radius:10px; padding:16px; cursor:pointer;
+    box-shadow:0 2px 6px rgba(0,0,0,0.08); transition:transform .15s;
+    min-height:90px; display:flex; flex-direction:column; justify-content:center;
+  }
+  .topic-card:active{transform:scale(0.97);}
+  .topic-card h3{margin:0 0 6px; font-size:1.05rem; color:var(--tc);}
+  .topic-card .badge{
+    font-size:0.85rem; color:var(--muted); display:flex; gap:10px; flex-wrap:wrap;
+  }
+  .topic-card .score-pill{
+    background:var(--tc); color:#fff; padding:2px 10px; border-radius:12px; font-size:0.8rem;
+  }
+  .topbar{
+    display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap;
+  }
+  .btn{
+    border:none; border-radius:8px; padding:10px 16px; font-size:0.95rem;
+    cursor:pointer; font-weight:600;
+  }
+  .btn-back{background:#e4e7ec; color:#333;}
+  .btn-primary{background:var(--tc); color:#fff;}
+  .btn-outline{background:#fff; border:2px solid var(--tc); color:var(--tc);}
+  .tabs{display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;}
+  .tab{
+    padding:9px 14px; border-radius:20px; background:#fff; border:2px solid var(--tc);
+    color:var(--tc); font-weight:600; cursor:pointer; font-size:0.9rem;
+  }
+  .tab.active{background:var(--tc); color:#fff;}
+  .topic-title{border-left:8px solid var(--tc); padding-left:12px; margin:8px 0 18px;}
+  .topic-title h2{margin:0; color:var(--tc); font-size:1.3rem;}
+
+  /* Facts */
+  .facts-list{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px;}
+  .facts-list li{
+    background:#fff; border-left:6px solid var(--tc); border-radius:8px;
+    padding:12px 14px; box-shadow:0 1px 4px rgba(0,0,0,0.06); font-size:0.98rem;
+  }
+
+  /* Flashcards */
+  .flash-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px;}
+  .flip-card{background:transparent; perspective:1000px; height:150px; cursor:pointer;}
+  .flip-inner{
+    position:relative; width:100%; height:100%; text-align:center;
+    transition:transform .5s; transform-style:preserve-3d;
+  }
+  .flip-card.flipped .flip-inner{transform:rotateY(180deg);}
+  .flip-front,.flip-back{
+    position:absolute; width:100%; height:100%; -webkit-backface-visibility:hidden;
+    backface-visibility:hidden; border-radius:10px; padding:14px;
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    box-shadow:0 2px 6px rgba(0,0,0,0.1); font-size:0.95rem; overflow:auto;
+  }
+  .flip-front{background:#fff; border:2px solid var(--tc); color:var(--text); font-weight:600;}
+  .flip-back{background:var(--tc); color:#fff; transform:rotateY(180deg);}
+  .flip-hint{font-size:0.75rem; color:var(--muted); text-align:center; margin-top:6px;}
+
+  /* Quiz */
+  .quiz-box{background:#fff; border-radius:10px; padding:18px; border:2px solid var(--tc); box-shadow:0 2px 6px rgba(0,0,0,0.08);}
+  .quiz-progress{font-size:0.85rem; color:var(--muted); margin-bottom:8px;}
+  .quiz-q{font-size:1.02rem; font-weight:600; margin-bottom:14px;}
+  .option{
+    display:block; width:100%; text-align:left; background:#f7f8fa; border:2px solid #dfe3e8;
+    border-radius:8px; padding:12px 14px; margin-bottom:10px; font-size:0.95rem; cursor:pointer;
+  }
+  .option.correct{background:#e3f7e8; border-color:#2e8b45; color:#1e5c2c; font-weight:600;}
+  .option.incorrect{background:#fbe6e6; border-color:#c0392b; color:#8a2418; font-weight:600;}
+  .option:disabled{cursor:default;}
+  .explain{
+    margin-top:10px; padding:12px; background:#fff8e6; border-left:5px solid #e0a500;
+    border-radius:6px; font-size:0.9rem; display:none;
+  }
+  .quiz-nav{display:flex; justify-content:space-between; margin-top:16px;}
+  .result-box{text-align:center; padding:20px;}
+  .result-box .big-score{font-size:2.2rem; font-weight:700; color:var(--tc); margin:10px 0;}
+  footer{text-align:center; padding:20px; color:var(--muted); font-size:0.8rem;}
+  @media (max-width:480px){
+    header h1{font-size:1.25rem;}
+    .flip-card{height:170px;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Cardiovascular Pathology Revision Hub</h1>
+  <p>MBBS Year 1 &middot; Key Facts, Flashcards &amp; Quizzes</p>
+</header>
+<div class="wrap" id="app"></div>
+<footer>Content aligned to Robbins Pathology &middot; For revision use only</footer>
+
+<script>
+const topics = [
+{
+  id:'athero', name:'Atherosclerosis & Aneurysm', color:'#e74c3c',
+  facts:[
+    "Response-to-injury hypothesis: chronic endothelial injury (hyperlipidaemia, hypertension, smoking, toxins) triggers lipoprotein insudation, monocyte adhesion/migration, and smooth muscle proliferation.",
+    "Fatty streaks are the earliest lesions — lipid-filled macrophages (foam cells) beneath the intima; seen even in children and are reversible.",
+    "The mature atheromatous (fibrofatty) plaque has a fibrous cap (smooth muscle cells, collagen) covering a necrotic lipid core with foam cells, cholesterol clefts, and debris.",
+    "Complicated plaques show calcification, ulceration/rupture, superimposed thrombosis, or intraplaque haemorrhage — rupture triggers most acute coronary events.",
+    "Distribution (most to least severely affected): abdominal aorta > coronary arteries > popliteal artery > internal carotid > vessels of the circle of Willis.",
+    "Abdominal aortic aneurysm (AAA) is most often due to atherosclerosis, typically infrarenal; major risk factors are smoking, hypertension, and age.",
+    "Thoracic aortic aneurysm is classically linked to hypertension-driven cystic medial degeneration, and to connective tissue disorders (Marfan syndrome, Ehlers-Danlos).",
+    "Berry (saccular) aneurysms occur at branch points of the circle of Willis, associated with hypertension and ADPKD; rupture causes subarachnoid haemorrhage.",
+    "A true aneurysm is bounded by all three intact (though attenuated) vessel wall layers; a false aneurysm (pseudoaneurysm) is a contained extravascular haematoma communicating with the lumen after a wall breach."
+  ],
+  flash:[
+    {f:"Earliest identifiable lesion of atherosclerosis?", b:"Fatty streak — lipid-laden macrophages (foam cells) in the intima"},
+    {f:"Two components of an established atheromatous plaque?", b:"Fibrous cap + necrotic lipid core"},
+    {f:"Most common site for an abdominal aortic aneurysm?", b:"Infrarenal abdominal aorta"},
+    {f:"Connective tissue disorder classically causing thoracic aortic aneurysm via cystic medial degeneration?", b:"Marfan syndrome"},
+    {f:"Where do berry aneurysms typically occur?", b:"Bifurcation points of the circle of Willis"},
+    {f:"True aneurysm vs false aneurysm?", b:"True = all 3 wall layers intact; False = contained haematoma through a wall defect"},
+    {f:"Vessel most severely affected by atherosclerosis?", b:"Abdominal aorta"},
+    {f:"What usually triggers acute coronary events on a stable plaque?", b:"Plaque rupture with superimposed thrombosis"}
+  ],
+  quiz:[
+    {q:"A 62-year-old man with long-standing hyperlipidaemia undergoes coronary angiography showing a plaque with a thin fibrous cap and large lipid core. Which feature makes this plaque most prone to rupture?",
+     o:["Thick fibrous cap with minimal inflammation","Thin fibrous cap overlying a large necrotic lipid core","Dense calcification throughout the plaque","Absence of macrophages"], a:1,
+     e:"Thin-capped, lipid-rich, macrophage-dense plaques are unstable and prone to rupture, triggering thrombosis."},
+    {q:"A 70-year-old smoker is found on ultrasound to have a 6-cm dilation of the infrarenal abdominal aorta. Which is the strongest predisposing factor?",
+     o:["Atherosclerosis","Viral aortitis","Marfan syndrome","Rheumatic heart disease"], a:0,
+     e:"AAA is most commonly due to atherosclerosis, with smoking and hypertension as major risk factors."},
+    {q:"A 25-year-old tall man with long limbs and lens dislocation presents with a widened mediastinum and aortic root dilation. Histology of the aortic wall would most likely show which finding?",
+     o:["Granulomatous inflammation with giant cells","Cystic medial degeneration","Fibrinoid necrosis of the media","Dense atherosclerotic plaque"], a:1,
+     e:"Marfan syndrome causes cystic medial degeneration, weakening the aortic wall and predisposing to aneurysm/dissection."},
+    {q:"A 58-year-old hypertensive woman suddenly develops the 'worst headache of her life' and loses consciousness. CT shows subarachnoid haemorrhage. Which vascular lesion is most likely responsible?",
+     o:["Ruptured berry aneurysm at the circle of Willis","Aortic dissection","Charcot-Bouchard microaneurysm","Mycotic aneurysm"], a:0,
+     e:"Berry aneurysms at circle of Willis bifurcations are the classic cause of spontaneous subarachnoid haemorrhage."},
+    {q:"After femoral artery catheterisation, a patient develops a pulsatile, tender groin swelling that communicates with the arterial lumen through a wall defect, contained by surrounding haematoma. What is this called?",
+     o:["True aneurysm","False (pseudo) aneurysm","Arteriovenous fistula","Varicose vein"], a:1,
+     e:"A pseudoaneurysm is a contained haematoma communicating with the vessel lumen through a defect, not bounded by all three wall layers."}
+  ]
+},
+{
+  id:'vasculitis', name:'Vasculitis', color:'#9b59b6',
+  facts:[
+    "Vasculitides are classified by vessel size: large (Takayasu arteritis, giant cell arteritis), medium (polyarteritis nodosa, Kawasaki disease), small (ANCA-associated and immune complex-mediated vasculitides).",
+    "Giant cell (temporal) arteritis: granulomatous inflammation of the media with multinucleate giant cells; elderly patients, elevated ESR, risk of irreversible blindness from ophthalmic artery involvement.",
+    "Takayasu arteritis ('pulseless disease'): affects the aortic arch and its major branches, typically in women under 40, causing diminished upper limb pulses.",
+    "Polyarteritis nodosa (PAN): necrotizing vasculitis of medium-sized muscular arteries, spares the lungs, classically associated with hepatitis B; ANCA-negative.",
+    "Kawasaki disease: medium-vessel vasculitis in children under 5, mucocutaneous lymph node syndrome; major complication is coronary artery aneurysm.",
+    "ANCA-associated small-vessel vasculitides: granulomatosis with polyangiitis (GPA, c-ANCA/PR3, necrotizing granulomas of respiratory tract + glomerulonephritis), microscopic polyangiitis (MPA, p-ANCA/MPO, non-granulomatous), eosinophilic granulomatosis with polyangiitis (EGPA, asthma + eosinophilia + p-ANCA).",
+    "IgA vasculitis (Henoch–Schönlein purpura): IgA immune-complex mediated, children, palpable purpura on buttocks/legs, abdominal pain, arthralgia, and IgA nephropathy-like renal disease.",
+    "Diagnostic histology of active necrotizing vasculitis: fibrinoid necrosis of the vessel wall with mixed inflammatory infiltrate."
+  ],
+  flash:[
+    {f:"Vasculitis most associated with hepatitis B?", b:"Polyarteritis nodosa"},
+    {f:"ANCA type in granulomatosis with polyangiitis?", b:"c-ANCA (anti-PR3)"},
+    {f:"ANCA type in microscopic polyangiitis?", b:"p-ANCA (anti-MPO)"},
+    {f:"Major cardiac complication of Kawasaki disease?", b:"Coronary artery aneurysm"},
+    {f:"Large-vessel vasculitis affecting young women, causing absent pulses?", b:"Takayasu arteritis"},
+    {f:"Vasculitis that can cause sudden blindness in the elderly?", b:"Giant cell (temporal) arteritis"},
+    {f:"Immunoglobulin implicated in Henoch–Schönlein purpura?", b:"IgA"},
+    {f:"Vasculitis featuring asthma and eosinophilia?", b:"Eosinophilic granulomatosis with polyangiitis (Churg-Strauss)"}
+  ],
+  quiz:[
+    {q:"A 78-year-old woman reports sudden painless loss of vision in one eye along with jaw claudication and a tender, cord-like temporal artery. Which artery's involvement explains the vision loss?",
+     o:["Central retinal artery","Ophthalmic artery","Posterior cerebral artery","Middle meningeal artery"], a:1,
+     e:"Giant cell arteritis can involve the ophthalmic artery, causing sudden irreversible blindness — an ophthalmic emergency."},
+    {q:"A 35-year-old woman presents with fatigue, arm claudication, and markedly unequal blood pressures between her two arms. Angiography shows thickening and narrowing of the aortic arch and its branches. Which diagnosis fits best?",
+     o:["Takayasu arteritis","Kawasaki disease","Polyarteritis nodosa","Buerger disease"], a:0,
+     e:"Takayasu arteritis ('pulseless disease') classically affects young women, involving the aortic arch and great vessels."},
+    {q:"A 40-year-old man with chronic hepatitis B presents with abdominal pain, weight loss, hypertension, and mononeuritis multiplex. Renal angiography shows multiple small aneurysms of medium-sized arteries. Which finding is expected on biopsy?",
+     o:["Granulomas with giant cells","Fibrinoid necrosis of medium-sized muscular arteries, sparing the lungs","IgA deposits in vessel walls","Eosinophilic infiltration with granulomas"], a:1,
+     e:"PAN causes necrotizing inflammation of medium arteries, spares the lungs, and is linked to hepatitis B."},
+    {q:"A 3-year-old boy has had fever for 5 days with conjunctival injection, red cracked lips, and a diffuse rash. Echocardiography 3 weeks later reveals a dilated, aneurysmal right coronary artery. What was the underlying diagnosis?",
+     o:["Rheumatic fever","Kawasaki disease","Infective endocarditis","Scarlet fever"], a:1,
+     e:"Kawasaki disease's most feared complication is coronary artery aneurysm, which can lead to thrombosis or MI later in life."},
+    {q:"A 7-year-old child develops palpable purpura over the buttocks and lower legs, colicky abdominal pain, joint pain, and haematuria one week after an upper respiratory infection. Renal biopsy would most likely show deposition of which immunoglobulin?",
+     o:["IgG","IgE","IgA","IgM"], a:2,
+     e:"Henoch–Schönlein purpura is an IgA-mediated small-vessel vasculitis with a nephropathy resembling IgA nephropathy."}
+  ]
+},
+{
+  id:'thrombo', name:'Thromboembolism', color:'#3498db',
+  facts:[
+    "Virchow's triad — endothelial injury, abnormal blood flow (stasis/turbulence), and hypercoagulability — underlies thrombus formation.",
+    "Deep vein thrombosis of the lower limb is the most common source of venous thromboemboli; risk factors include immobilisation, surgery, malignancy (Trousseau syndrome), pregnancy, and oral contraceptives.",
+    "Pulmonary embolism usually arises from lower-limb DVT; a large saddle embolus at the pulmonary artery bifurcation can cause sudden death, while smaller emboli cause wedge-shaped haemorrhagic pulmonary infarcts.",
+    "Paradoxical embolism occurs when a venous thrombus crosses a patent foramen ovale or atrial septal defect to enter the systemic circulation.",
+    "Fat embolism syndrome follows long-bone fracture or orthopaedic trauma; classic triad is respiratory distress, neurological symptoms, and petechial rash.",
+    "Air embolism is associated with decompression sickness (rapid ascent from diving) or venous catheter trauma.",
+    "Amniotic fluid embolism is a peripartum event that can trigger disseminated intravascular coagulation with high maternal mortality.",
+    "Lines of Zahn (alternating pale platelet/fibrin and dark red cell layers) indicate an antemortem thrombus formed in flowing blood, distinguishing it from a postmortem clot."
+  ],
+  flash:[
+    {f:"Three components of Virchow's triad?", b:"Endothelial injury, stasis, hypercoagulability"},
+    {f:"Most common site of origin for pulmonary emboli?", b:"Deep veins of the lower limb"},
+    {f:"Route by which a venous clot enters the systemic arterial circulation?", b:"Paradoxical embolism via PFO/ASD"},
+    {f:"Classic triad of fat embolism syndrome?", b:"Respiratory distress, neurological changes, petechial rash"},
+    {f:"Cause of decompression sickness?", b:"Nitrogen gas bubbles forming on rapid ascent/decompression"},
+    {f:"Feature distinguishing antemortem from postmortem thrombus?", b:"Lines of Zahn"},
+    {f:"Eponym for cancer-associated migratory thrombophlebitis?", b:"Trousseau syndrome"},
+    {f:"Obstetric complication that can trigger DIC?", b:"Amniotic fluid embolism"}
+  ],
+  quiz:[
+    {q:"A 45-year-old woman on the combined oral contraceptive pill develops sudden pleuritic chest pain and breathlessness two weeks after a long-haul flight. Which is the most likely underlying mechanism?",
+     o:["Embolisation of a thrombus from the deep leg veins","Fat globules from bone marrow entering circulation","Nitrogen bubble formation in the blood","Amniotic fluid entering maternal circulation"], a:0,
+     e:"Immobility + OCP use are classic DVT risk factors; the resulting clot embolises to the lungs as a PE."},
+    {q:"A 50-year-old man with metastatic pancreatic cancer develops recurrent, migratory episodes of painful, tender superficial veins in different limbs. Which term describes this hypercoagulable phenomenon?",
+     o:["Virchow's triad","Trousseau syndrome","Paradoxical embolism","Lines of Zahn"], a:1,
+     e:"Trousseau syndrome is migratory thrombophlebitis associated with occult visceral malignancy, especially pancreatic cancer."},
+    {q:"A 30-year-old woman with a known atrial septal defect develops sudden right-sided weakness after a long car journey, without atrial fibrillation. Doppler shows a DVT in her calf. Which mechanism best explains her stroke?",
+     o:["Cardioembolism from atrial fibrillation","Paradoxical embolism through the septal defect","Fat embolism","Rupture of a berry aneurysm"], a:1,
+     e:"A venous clot can cross a septal defect to reach the systemic (arterial) circulation — paradoxical embolism."},
+    {q:"A 20-year-old man sustains a femoral shaft fracture in a road traffic accident. Two days later he develops confusion, breathlessness, and a petechial rash over his chest. What is the most likely diagnosis?",
+     o:["Pulmonary thromboembolism","Fat embolism syndrome","Air embolism","Amniotic fluid embolism"], a:1,
+     e:"Long bone fracture + the classic triad (respiratory distress, confusion, petechiae) points to fat embolism syndrome."},
+    {q:"Histological examination of a thrombus removed from a leg vein shows alternating pale and dark laminations. What does this finding indicate?",
+     o:["The clot formed after death","The clot formed during life, in flowing blood","The clot is composed purely of fibrin","The clot represents a fat embolus"], a:1,
+     e:"Lines of Zahn form only in flowing blood during life, distinguishing antemortem thrombi from postmortem clots."}
+  ]
+},
+{
+  id:'ihd', name:'Ischaemic Heart Disease', color:'#e67e22',
+  facts:[
+    "IHD spans stable/unstable angina, acute MI, chronic IHD, and sudden cardiac death, due to atherosclerotic coronary disease in over 90% of cases.",
+    "Acute coronary syndromes result from acute plaque change (rupture, fissuring, or erosion) with superimposed thrombosis causing sudden luminal occlusion.",
+    "LAD occlusion causes anterior/anteroseptal infarcts (most common); RCA occlusion causes inferior/posterior infarcts; LCx occlusion causes lateral infarcts.",
+    "MI timeline: <12h often no gross change (early: wavy fibres, contraction band necrosis); 12–24h dark mottling, coagulative necrosis begins; 1–3 days neutrophilic infiltrate; 3–7 days macrophages remove debris — wall is softest, highest rupture risk; 1–2 weeks granulation tissue at margins; 2 months onward dense collagenous scar.",
+    "Cardiac troponin I/T is the most sensitive/specific biomarker, rising at 3–4h, peaking ~24h, remaining elevated 7–10 days; CK-MB rises at 4–6h and normalises by 48–72h, useful for detecting reinfarction.",
+    "Early complications: fatal arrhythmia (most common cause of pre-hospital death), cardiogenic shock; free wall and papillary muscle rupture peak around day 3–7.",
+    "Late complications: ventricular aneurysm (thin, non-contractile wall) and mural thrombus with risk of systemic embolisation."
+  ],
+  flash:[
+    {f:"Most common artery occluded in MI, and territory affected?", b:"LAD — anterior wall"},
+    {f:"Cardiac biomarker that stays elevated for 7–10 days?", b:"Troponin I/T"},
+    {f:"Cardiac biomarker useful for detecting reinfarction due to rapid normalisation?", b:"CK-MB"},
+    {f:"Time window of highest risk for myocardial wall rupture?", b:"Day 3–7 (softest, most macrophage-laden infarct)"},
+    {f:"Most common cause of death in the first hour after MI?", b:"Fatal arrhythmia"},
+    {f:"Histological hallmark of myocardial necrosis at 1–3 days?", b:"Coagulative necrosis with neutrophilic infiltrate"},
+    {f:"What replaces necrotic myocardium after 2 months?", b:"Dense collagenous scar"},
+    {f:"Complication where infarcted wall becomes a thin, non-contractile bulge later?", b:"Ventricular aneurysm"}
+  ],
+  quiz:[
+    {q:"A 60-year-old man develops crushing chest pain and dies suddenly 2 hours later. At autopsy the heart shows no gross or routine light-microscopic abnormality. Which finding might still be present in this very early window?",
+     o:["Dense collagenous scar","Wavy fibres and contraction band necrosis","Granulation tissue","Neutrophilic infiltration"], a:1,
+     e:"In the first few hours, subtle changes like wavy fibres and contraction bands may be the only clue before overt necrosis develops."},
+    {q:"A 58-year-old woman is admitted with an anterior STEMI. On day 5 she suddenly collapses with signs of cardiac tamponade and dies. Which complication most likely occurred?",
+     o:["Ventricular aneurysm","Free wall rupture","Mural thrombus embolisation","Fibrinous pericarditis alone"], a:1,
+     e:"Day 3–7 is when the infarcted wall is softest (macrophage-mediated debris removal), the peak time for free wall rupture and tamponade."},
+    {q:"Three weeks after an MI, a patient's troponin has normalised but he has persistent exertional dyspnoea and echocardiography shows a thin, dyskinetic outward bulge of the LV wall. What is this called?",
+     o:["Papillary muscle rupture","Ventricular aneurysm","Cardiac tamponade","Restrictive cardiomyopathy"], a:1,
+     e:"A late, thinned, non-contractile scarred bulge of the ventricular wall is a ventricular aneurysm."},
+    {q:"A patient presents 5 days after an initial MI with recurrent chest pain. Troponin is still elevated from the first event. Which biomarker is preferred to detect a new reinfarction at this point?",
+     o:["CK-MB","Troponin T","Myoglobin only","LDH"], a:0,
+     e:"CK-MB normalises within 48–72h, so a new rise at day 5 (when troponin is still elevated from before) suggests reinfarction."},
+    {q:"Occlusion of which coronary artery is most likely to produce an inferior wall myocardial infarction?",
+     o:["Left anterior descending artery","Right coronary artery","Left circumflex artery","Left main coronary artery"], a:1,
+     e:"The RCA typically supplies the inferior (and often posterior) wall of the left ventricle in most people."}
+  ]
+},
+{
+  id:'htn', name:'Hypertension', color:'#c0392b',
+  facts:[
+    "About 90–95% of hypertension is essential (primary, multifactorial); secondary causes include renal artery stenosis, chronic renal disease, primary aldosteronism, phaeochromocytoma, and coarctation of the aorta.",
+    "Benign hypertension produces hyaline arteriolosclerosis: homogeneous, eosinophilic (pink hyaline) thickening of arteriolar walls, also seen in diabetes mellitus.",
+    "Malignant hypertension (typically BP >180/120 with end-organ damage) produces hyperplastic arteriolosclerosis with 'onion-skin' concentric laminated thickening, plus fibrinoid necrosis of arterioles.",
+    "Malignant hypertension can present with papilledema, flame-shaped retinal haemorrhages, encephalopathy, and rapidly progressive renal failure.",
+    "Chronic hypertension causes concentric left ventricular hypertrophy and predisposes to both ischaemic and haemorrhagic stroke.",
+    "Hypertensive intracerebral haemorrhage classically results from rupture of Charcot–Bouchard microaneurysms in small penetrating vessels (basal ganglia/thalamus).",
+    "Benign nephrosclerosis produces a finely granular kidney surface; malignant hypertension produces a 'flea-bitten' kidney from petechial haemorrhages."
+  ],
+  flash:[
+    {f:"Arteriolar lesion of benign/essential hypertension?", b:"Hyaline arteriolosclerosis"},
+    {f:"Arteriolar lesion of malignant hypertension?", b:"Hyperplastic ('onion-skin') arteriolosclerosis with fibrinoid necrosis"},
+    {f:"Type of LV hypertrophy caused by chronic hypertension?", b:"Concentric hypertrophy"},
+    {f:"Site of microaneurysms responsible for hypertensive brain haemorrhage?", b:"Lenticulostriate/penetrating vessels (basal ganglia) — Charcot-Bouchard microaneurysms"},
+    {f:"Kidney appearance in malignant hypertension?", b:"'Flea-bitten' kidney"},
+    {f:"BP threshold roughly defining malignant hypertension?", b:">180/120 mmHg with end-organ damage"},
+    {f:"Most common overall category of hypertension?", b:"Essential (primary) hypertension"},
+    {f:"Endocrine tumour causing secondary hypertension via catecholamine excess?", b:"Phaeochromocytoma"}
+  ],
+  quiz:[
+    {q:"A 55-year-old man with a 20-year history of poorly controlled hypertension has echocardiography showing symmetrically thickened LV walls with a normal chamber size. Which pattern of hypertrophy does this represent?",
+     o:["Eccentric hypertrophy","Concentric hypertrophy","Dilated chamber with thin walls","Asymmetric septal hypertrophy"], a:1,
+     e:"Chronic pressure overload from hypertension causes concentric LV hypertrophy — thickened walls, normal/reduced chamber size."},
+    {q:"A 60-year-old hypertensive man suddenly develops right-sided weakness and reduced consciousness. CT shows haemorrhage in the basal ganglia. Rupture of which structure most likely caused this?",
+     o:["Berry aneurysm","Charcot-Bouchard microaneurysm","Mycotic aneurysm","Arteriovenous malformation"], a:1,
+     e:"Charcot-Bouchard microaneurysms on small penetrating vessels are the classic cause of hypertensive basal ganglia haemorrhage."},
+    {q:"Renal biopsy in a patient with long-standing, well-controlled hypertension shows homogeneous pink hyaline thickening of the arteriolar walls. What is this lesion called?",
+     o:["Fibrinoid necrosis","Hyaline arteriolosclerosis","Onion-skin lesion","Medial calcific sclerosis"], a:1,
+     e:"Hyaline arteriolosclerosis is the arteriolar lesion of benign/essential hypertension (and diabetes)."},
+    {q:"A 40-year-old woman presents with BP 220/130 mmHg, severe headache, and blurred vision. Fundoscopy shows papilledema and flame haemorrhages. Renal biopsy shows concentric, laminated arteriolar thickening with fibrinoid necrosis. What is the diagnosis?",
+     o:["Benign nephrosclerosis","Malignant hypertension","Diabetic nephropathy","Atherosclerotic renal disease"], a:1,
+     e:"Very high BP with end-organ damage and onion-skin/fibrinoid necrosis on biopsy defines malignant hypertension."},
+    {q:"Which of the following is a recognised secondary, surgically correctable cause of hypertension in a young patient with radiofemoral pulse delay?",
+     o:["Essential hypertension","Coarctation of the aorta","Primary hyperaldosteronism","Chronic glomerulonephritis"], a:1,
+     e:"Coarctation of the aorta classically causes upper-limb hypertension with radiofemoral delay and is surgically correctable."}
+  ]
+},
+{
+  id:'rhd_ie', name:'RHD, IE & Valvular Disease', color:'#16a085',
+  facts:[
+    "Acute rheumatic fever follows Group A streptococcal pharyngitis (not skin infection) by 2–4 weeks; pathogenesis is molecular mimicry between streptococcal antigens and cardiac tissue.",
+    "Diagnosis uses the Jones criteria — major features: migratory polyarthritis, carditis, subcutaneous nodules, erythema marginatum, Sydenham chorea.",
+    "Acute rheumatic carditis shows Aschoff bodies (fibrinoid necrosis foci with Anitschkow cells) in the myocardium, and small, warty, sterile vegetations along valve closure lines (verrucous endocarditis), producing pancarditis.",
+    "Chronic RHD causes fibrous thickening, commissural fusion, and calcification of valves; the mitral valve is most commonly affected (fish-mouth/buttonhole stenosis), often with the aortic valve.",
+    "Acute infective endocarditis is typically caused by virulent organisms (e.g. S. aureus) on previously normal valves, with rapid, destructive, large friable vegetations; subacute IE is typically caused by low-virulence organisms (e.g. viridans streptococci) on damaged valves, with an indolent course.",
+    "IE complications: septic emboli and immune-complex phenomena — Osler nodes (tender), Roth spots (retinal), Janeway lesions (painless macules), glomerulonephritis.",
+    "Non-bacterial thrombotic (marantic) endocarditis: small, sterile vegetations along the line of valve closure, associated with malignancy/hypercoagulable states.",
+    "Libman–Sacks endocarditis: small, sterile vegetations on both surfaces of valve leaflets, associated with SLE.",
+    "Calcific aortic stenosis is the most common valvular disease in the elderly (degenerative 'wear-and-tear'); a bicuspid aortic valve leads to earlier-onset calcific stenosis."
+  ],
+  flash:[
+    {f:"Preceding infection that triggers acute rheumatic fever?", b:"Group A streptococcal pharyngitis"},
+    {f:"Pathognomonic myocardial lesion of rheumatic carditis?", b:"Aschoff body (with Anitschkow cells)"},
+    {f:"Valve most commonly affected in chronic RHD?", b:"Mitral valve"},
+    {f:"Organism typically causing acute, destructive infective endocarditis?", b:"Staphylococcus aureus"},
+    {f:"Organism typically causing subacute infective endocarditis on a damaged valve?", b:"Viridans streptococci"},
+    {f:"Autoimmune condition associated with Libman-Sacks endocarditis?", b:"SLE"},
+    {f:"Endocarditis type associated with malignancy, small sterile vegetations?", b:"Non-bacterial thrombotic (marantic) endocarditis"},
+    {f:"Most common cause of calcific aortic stenosis in the elderly?", b:"Age-related degenerative calcification"},
+    {f:"Congenital valve anomaly predisposing to early calcific aortic stenosis?", b:"Bicuspid aortic valve"}
+  ],
+  quiz:[
+    {q:"A 9-year-old boy develops migratory joint pains and a new pansystolic murmur three weeks after an untreated sore throat. Myocardial biopsy would most likely show which finding?",
+     o:["Aschoff bodies with Anitschkow cells","Non-caseating granulomas","Coagulative necrosis with neutrophils","Amyloid deposition"], a:0,
+     e:"Aschoff bodies with Anitschkow (caterpillar) cells are the pathognomonic lesion of acute rheumatic carditis."},
+    {q:"A 45-year-old man with a history of childhood rheumatic fever presents with exertional dyspnoea. Echocardiography shows a thickened mitral valve with fused, calcified commissures and a narrowed 'fish-mouth' orifice. What is this lesion?",
+     o:["Mitral valve prolapse","Chronic rheumatic mitral stenosis","Libman-Sacks endocarditis","Non-bacterial thrombotic endocarditis"], a:1,
+     e:"Commissural fusion producing a fish-mouth mitral orifice is characteristic of chronic rheumatic mitral stenosis."},
+    {q:"An intravenous drug user presents with high fever and a new regurgitant murmur. Blood cultures grow Staphylococcus aureus, with a large, friable vegetation causing valve destruction within days. Which type of endocarditis fits?",
+     o:["Subacute infective endocarditis","Acute infective endocarditis","Non-bacterial thrombotic endocarditis","Libman-Sacks endocarditis"], a:1,
+     e:"Rapid, destructive disease from a virulent organism like S. aureus on a normal valve is classic acute IE."},
+    {q:"A 30-year-old woman with SLE is found incidentally to have small, sterile vegetations on both the atrial and ventricular surfaces of her mitral valve. What is this finding called?",
+     o:["Marantic endocarditis","Libman-Sacks endocarditis","Acute rheumatic endocarditis","Infective endocarditis"], a:1,
+     e:"Libman-Sacks endocarditis features small sterile vegetations on both surfaces of valve leaflets in SLE."},
+    {q:"An 80-year-old man with a tricuspid (3-cusp) but heavily calcified aortic valve presents with exertional syncope and a harsh systolic ejection murmur. What is the most likely underlying process?",
+     o:["Rheumatic valvulitis","Age-related degenerative calcification","Infective endocarditis","Carcinoid heart disease"], a:1,
+     e:"Senile calcific aortic stenosis from degenerative wear-and-tear is the most common valve disease in the elderly."}
+  ]
+},
+{
+  id:'hf', name:'Heart Failure', color:'#2980b9',
+  facts:[
+    "Left-sided heart failure is most often caused by IHD, hypertension, valvular disease, or primary myocardial disease; it produces pulmonary congestion and oedema.",
+    "Left heart failure features: dyspnoea, orthopnoea, paroxysmal nocturnal dyspnoea; lung histology shows 'heart failure cells' — haemosiderin-laden alveolar macrophages from chronic congestion.",
+    "Right-sided heart failure is most commonly caused by left-sided heart failure (backward transmission); when due primarily to lung disease/pulmonary hypertension it is called cor pulmonale.",
+    "Right heart failure produces systemic venous congestion: hepatomegaly with 'nutmeg liver', ascites, jugular venous distension, and peripheral pitting oedema.",
+    "Systolic (HFrEF) reflects impaired contractility; diastolic (HFpEF) reflects impaired ventricular relaxation/filling with preserved systolic function.",
+    "High-output heart failure occurs when a normal/increased cardiac output is still insufficient for excessive metabolic demand — causes include severe anaemia, thyrotoxicosis, AV fistula, and beriberi.",
+    "Compensatory mechanisms: Frank-Starling mechanism, RAAS activation, sympathetic activation, and natriuretic peptide release (e.g. BNP, a clinical biomarker)."
+  ],
+  flash:[
+    {f:"Histological hallmark in lungs in chronic left heart failure?", b:"Haemosiderin-laden macrophages ('heart failure cells')"},
+    {f:"Liver finding in chronic right heart failure?", b:"Nutmeg liver (centrilobular congestion)"},
+    {f:"Most common cause of right-sided heart failure?", b:"Left-sided heart failure"},
+    {f:"Term for right heart failure due to primary lung disease?", b:"Cor pulmonale"},
+    {f:"Biomarker released in response to ventricular wall stress?", b:"BNP (B-type natriuretic peptide)"},
+    {f:"Two causes of high-output heart failure?", b:"Severe anaemia, thyrotoxicosis (also AV fistula, beriberi)"},
+    {f:"Heart failure type with preserved ejection fraction but impaired filling?", b:"Diastolic heart failure (HFpEF)"},
+    {f:"Compensatory mechanism where increased preload increases contractile force?", b:"Frank-Starling mechanism"}
+  ],
+  quiz:[
+    {q:"A 68-year-old man with chronic left ventricular failure undergoes lung biopsy for an unrelated nodule. Which incidental finding reflecting chronic pulmonary congestion would be expected?",
+     o:["Caseating granulomas","Haemosiderin-laden macrophages","Neutrophilic infiltration","Non-caseating granulomas"], a:1,
+     e:"Chronic pulmonary congestion causes microhaemorrhages that macrophages phagocytose, forming haemosiderin-laden 'heart failure cells'."},
+    {q:"A 55-year-old man with long-standing left heart failure develops bilateral ankle swelling, ascites, and tender hepatomegaly. Liver biopsy shows centrilobular congestion and haemorrhage giving a mottled appearance. What is this pattern called?",
+     o:["Fatty liver","Nutmeg liver","Cirrhotic liver","Chronic active hepatitis"], a:1,
+     e:"Chronic passive congestion of the liver from right heart failure produces the classic 'nutmeg liver' pattern."},
+    {q:"A 35-year-old woman with severe hyperthyroidism develops tachycardia, warm extremities, and signs of heart failure despite a structurally normal heart and elevated cardiac output. What type of heart failure is this?",
+     o:["Low-output systolic heart failure","High-output heart failure","Diastolic heart failure","Isolated right heart failure"], a:1,
+     e:"Thyrotoxicosis increases metabolic demand beyond what even an elevated cardiac output can meet — high-output failure."},
+    {q:"A patient with COPD and pulmonary hypertension develops right ventricular hypertrophy and failure without evidence of left heart disease. What term describes this?",
+     o:["Eisenmenger syndrome","Cor pulmonale","Restrictive cardiomyopathy","Cardiac tamponade"], a:1,
+     e:"Cor pulmonale is right heart failure secondary to primary lung disease/pulmonary hypertension."},
+    {q:"Which neurohormonal marker is most useful clinically to support a diagnosis of heart failure and reflects ventricular wall stress?",
+     o:["Troponin I","CK-MB","B-type natriuretic peptide (BNP)","C-reactive protein"], a:2,
+     e:"BNP is released from stretched ventricular myocardium and is a key clinical biomarker for heart failure."}
+  ]
+},
+{
+  id:'cardiomyo', name:'Cardiomyopathy', color:'#8e44ad',
+  facts:[
+    "Dilated cardiomyopathy (DCM) is the most common cardiomyopathy; systolic dysfunction with a dilated 'balloon' heart and eccentric hypertrophy. Causes: genetic mutations, prior myocarditis (esp. Coxsackievirus B), chronic alcohol use, peripartum state, doxorubicin/anthracycline toxicity.",
+    "Hypertrophic cardiomyopathy (HCM) is usually autosomal dominant, most often from sarcomeric contractile protein mutations (e.g. beta-myosin heavy chain); asymmetric septal hypertrophy with myofibre disarray, diastolic dysfunction, possible LVOT obstruction, and a leading cause of sudden cardiac death in young athletes.",
+    "Restrictive cardiomyopathy: impaired ventricular filling with normal/near-normal cavity size, wall thickness, and systolic function; causes include amyloidosis, sarcoidosis, haemochromatosis, endomyocardial fibrosis, and Loeffler endocarditis.",
+    "Arrhythmogenic right ventricular cardiomyopathy (ARVC): desmosomal protein gene mutations causing fibrofatty replacement of RV myocardium, ventricular arrhythmias, and risk of sudden death.",
+    "Takotsubo (stress-induced) cardiomyopathy: apical ballooning on echocardiography, triggered by intense emotional/physical stress via catecholamine excess, mimics acute MI clinically but without significant obstructive coronary disease.",
+    "Peripartum cardiomyopathy is a form of dilated cardiomyopathy presenting in the last month of pregnancy or within months postpartum."
+  ],
+  flash:[
+    {f:"Most common cardiomyopathy overall?", b:"Dilated cardiomyopathy"},
+    {f:"Gene class most often responsible for hypertrophic cardiomyopathy?", b:"Sarcomeric/contractile protein genes (e.g. beta-myosin heavy chain)"},
+    {f:"Cardiomyopathy causing myofibre disarray and sudden death risk in young athletes?", b:"Hypertrophic cardiomyopathy"},
+    {f:"Cardiomyopathy with normal wall thickness/chamber size but impaired filling?", b:"Restrictive cardiomyopathy"},
+    {f:"Two systemic infiltrative diseases causing restrictive cardiomyopathy?", b:"Amyloidosis and sarcoidosis (also haemochromatosis)"},
+    {f:"Cardiomyopathy from desmosomal protein mutations causing fibrofatty RV replacement?", b:"Arrhythmogenic right ventricular cardiomyopathy"},
+    {f:"Stress-induced cardiomyopathy mimicking MI without coronary occlusion?", b:"Takotsubo (apical ballooning) cardiomyopathy"},
+    {f:"Chemotherapy drug class classically causing dilated cardiomyopathy?", b:"Anthracyclines (e.g. doxorubicin)"}
+  ],
+  quiz:[
+    {q:"A 30-year-old competitive athlete collapses and dies suddenly during a match. Autopsy shows asymmetric thickening of the interventricular septum and myofibre disarray on histology. What is the diagnosis?",
+     o:["Dilated cardiomyopathy","Hypertrophic cardiomyopathy","Restrictive cardiomyopathy","Arrhythmogenic right ventricular cardiomyopathy"], a:1,
+     e:"Asymmetric septal hypertrophy with myofibre disarray is classic for hypertrophic cardiomyopathy, a leading cause of sudden death in young athletes."},
+    {q:"A 45-year-old man with a 20-year history of heavy alcohol use presents with progressive dyspnoea and a globally dilated, poorly contracting left ventricle. What is the most likely diagnosis?",
+     o:["Restrictive cardiomyopathy","Dilated cardiomyopathy","Hypertrophic cardiomyopathy","Takotsubo cardiomyopathy"], a:1,
+     e:"Chronic alcohol use is a recognised toxic cause of dilated cardiomyopathy."},
+    {q:"A 65-year-old woman with systemic AL amyloidosis develops progressive dyspnoea. Echocardiography shows normal ventricular wall thickness and cavity size but severely impaired diastolic filling. Which cardiomyopathy does this represent?",
+     o:["Dilated cardiomyopathy","Hypertrophic cardiomyopathy","Restrictive cardiomyopathy","Peripartum cardiomyopathy"], a:2,
+     e:"Amyloid infiltration impairs ventricular filling without dilating the chamber or thickening walls abnormally — restrictive pattern."},
+    {q:"A young man with recurrent palpitations and a family history of sudden cardiac death is found to have fibrofatty replacement of the right ventricular free wall on cardiac MRI. Mutation in which class of proteins is most likely responsible?",
+     o:["Sarcomeric contractile proteins","Desmosomal proteins","Dystrophin","Mitochondrial DNA proteins"], a:1,
+     e:"ARVC results from mutations in desmosomal proteins that normally anchor cardiac myocytes together."},
+    {q:"A 60-year-old woman develops sudden chest pain and breathlessness after receiving news of a family member's death. ECG shows ST changes but coronary angiography is normal; echocardiography shows apical ballooning of the left ventricle. What is the diagnosis?",
+     o:["Acute myocardial infarction","Takotsubo cardiomyopathy","Hypertrophic cardiomyopathy","Restrictive cardiomyopathy"], a:1,
+     e:"Emotional stress trigger + apical ballooning + normal coronaries is the classic picture of Takotsubo cardiomyopathy."}
+  ]
+}
+];
+
+let state = { view:'home', topicId:null, tab:'facts', quizIndex:0, quizScore:0, answered:[] };
+
+function getScore(id){
+  const raw = localStorage.getItem('cvhub_score_'+id);
+  return raw ? JSON.parse(raw) : null;
+}
+function saveScore(id, score, total){
+  localStorage.setItem('cvhub_score_'+id, JSON.stringify({score, total}));
+}
+
+function render(){
+  const app = document.getElementById('app');
+  if(state.view === 'home'){
+    app.innerHTML = renderHome();
+    document.querySelectorAll('.topic-card').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        state.view='topic'; state.topicId=el.dataset.id; state.tab='facts';
+        render();
+      });
+    });
+  } else {
+    const topic = topics.find(t=>t.id===state.topicId);
+    app.innerHTML = renderTopic(topic);
+    document.documentElement.style.setProperty('--tc', topic.color);
+    document.getElementById('backBtn').addEventListener('click', ()=>{ state.view='home'; render(); });
+    document.querySelectorAll('.tab').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        state.tab = el.dataset.tab;
+        if(state.tab==='quiz'){ state.quizIndex=0; state.quizScore=0; state.answered=[]; }
+        render();
+      });
+    });
+    if(state.tab==='flash'){
+      document.querySelectorAll('.flip-card').forEach(el=>{
+        el.addEventListener('click', ()=> el.classList.toggle('flipped'));
+      });
+    }
+    if(state.tab==='quiz'){
+      bindQuizEvents(topic);
+    }
+  }
+}
+
+function renderHome(){
+  let cards = topics.map(t=>{
+    const sc = getScore(t.id);
+    const pill = sc ? `<span class="score-pill">Quiz: ${sc.score}/${sc.total}</span>` : `<span class="score-pill" style="opacity:0.6;">Quiz: not attempted</span>`;
+    return `<div class="topic-card" data-id="${t.id}" style="--tc:${t.color}">
+      <h3>${t.name}</h3>
+      <div class="badge">${pill}</div>
+    </div>`;
+  }).join('');
+  return `<div class="home-grid">${cards}</div>`;
+}
+
+function renderTopic(topic){
+  let tabsHtml = `
+    <div class="tabs">
+      <div class="tab ${state.tab==='facts'?'active':''}" data-tab="facts">Key Facts</div>
+      <div class="tab ${state.tab==='flash'?'active':''}" data-tab="flash">Flashcards</div>
+      <div class="tab ${state.tab==='quiz'?'active':''}" data-tab="quiz">Quiz (5 Qs)</div>
+    </div>
+  `;
+  let content = '';
+  if(state.tab==='facts'){
+    content = `<ul class="facts-list">${topic.facts.map(f=>`<li>${f}</li>`).join('')}</ul>`;
+  } else if(state.tab==='flash'){
+    content = `<div class="flash-grid">${topic.flash.map((c,i)=>`
+      <div class="flip-card" data-i="${i}">
+        <div class="flip-inner">
+          <div class="flip-front">${c.f}</div>
+          <div class="flip-back">${c.b}</div>
+        </div>
+      </div>`).join('')}</div>
+      <p class="flip-hint">Tap a card to reveal the answer</p>`;
+  } else if(state.tab==='quiz'){
+    content = renderQuiz(topic);
+  }
+  return `
+    <div class="topbar">
+      <button class="btn btn-back" id="backBtn">&larr; Back to topics</button>
+    </div>
+    <div class="topic-title" style="border-color:${topic.color}"><h2 style="color:${topic.color}">${topic.name}</h2></div>
+    ${tabsHtml}
+    ${content}
+  `;
+}
+
+function renderQuiz(topic){
+  if(state.quizIndex >= topic.quiz.length){
+    saveScore(topic.id, state.quizScore, topic.quiz.length);
+    return `
+      <div class="quiz-box">
+        <div class="result-box">
+          <div>Quiz complete!</div>
+          <div class="big-score">${state.quizScore} / ${topic.quiz.length}</div>
+          <button class="btn btn-primary" id="retryBtn">Retry Quiz</button>
+        </div>
+      </div>
+    `;
+  }
+  const q = topic.quiz[state.quizIndex];
+  const answeredThis = state.answered[state.quizIndex];
+  let optsHtml = q.o.map((opt,i)=>{
+    let cls = 'option';
+    if(answeredThis !== undefined){
+      if(i===q.a) cls += ' correct';
+      else if(i===answeredThis && answeredThis!==q.a) cls += ' incorrect';
+    }
+    return `<button class="${cls}" data-i="${i}" ${answeredThis!==undefined?'disabled':''}>${String.fromCharCode(65+i)}. ${opt}</button>`;
+  }).join('');
+  return `
+    <div class="quiz-box">
+      <div class="quiz-progress">Question ${state.quizIndex+1} of ${topic.quiz.length} &middot; Score: ${state.quizScore}</div>
+      <div class="quiz-q">${q.q}</div>
+      <div class="options">${optsHtml}</div>
+      <div class="explain" id="explainBox" style="${answeredThis!==undefined?'display:block;':''}"><strong>Explanation:</strong> ${q.e}</div>
+      <div class="quiz-nav">
+        <span></span>
+        <button class="btn btn-primary" id="nextBtn" ${answeredThis===undefined?'style="display:none;"':''}>
+          ${state.quizIndex===topic.quiz.length-1 ? 'See Result' : 'Next Question'}
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function bindQuizEvents(topic){
+  const retryBtn = document.getElementById('retryBtn');
+  if(retryBtn){
+    retryBtn.addEventListener('click', ()=>{
+      state.quizIndex=0; state.quizScore=0; state.answered=[]; render();
+    });
+    return;
+  }
+  document.querySelectorAll('.option').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const i = parseInt(btn.dataset.i);
+      const q = topic.quiz[state.quizIndex];
+      if(state.answered[state.quizIndex] !== undefined) return;
+      state.answered[state.quizIndex] = i;
+      if(i === q.a) state.quizScore++;
+      render();
+    });
+  });
+  const nextBtn = document.getElementById('nextBtn');
+  if(nextBtn){
+    nextBtn.addEventListener('click', ()=>{
+      state.quizIndex++;
+      render();
+    });
+  }
+}
+
+render();
+</script>
+</body>
+</html>

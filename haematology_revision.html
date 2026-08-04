@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Haematology Revision — MBBS Year 1</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+  :root{
+    --bg:#EEF1F5;
+    --surface:#FFFFFF;
+    --surface-alt:#F6F3EC;
+    --ink:#1C2430;
+    --muted:#5B6472;
+    --line:#D8DEE6;
+    --crimson:#9A2B42;
+    --crimson-deep:#7A2033;
+    --navy:#24435F;
+    --gold:#B98A2E;
+    --good:#2F7D5A;
+    --good-bg:#E4F2EB;
+    --bad:#B33A3A;
+    --bad-bg:#FBE9E7;
+    --radius:14px;
+    --shadow:0 1px 2px rgba(28,36,48,0.06), 0 6px 20px rgba(28,36,48,0.06);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', system-ui, sans-serif;
+    font-size:15.5px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:40px;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px;}
+
+  /* ---------- Header ---------- */
+  header{
+    background:linear-gradient(135deg, var(--navy) 0%, #1a3247 100%);
+    color:#F3F5F8;
+    padding:26px 16px 20px;
+    border-bottom:4px solid var(--crimson);
+  }
+  header .wrap{display:flex;align-items:center;gap:14px;}
+  .cell-mark{flex:0 0 auto;width:46px;height:46px;}
+  header h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.5rem;
+    margin:0 0 2px;
+    letter-spacing:-0.01em;
+  }
+  header p{
+    margin:0;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:#B9C6D6;
+  }
+
+  /* ---------- Tabs ---------- */
+  nav.tabs{
+    position:sticky;top:0;z-index:20;
+    background:var(--bg);
+    border-bottom:1px solid var(--line);
+    padding-top:10px;
+  }
+  nav.tabs .wrap{display:flex;gap:8px;padding-bottom:10px;}
+  .tab-btn{
+    flex:1;
+    font-family:'IBM Plex Sans',sans-serif;
+    font-weight:600;
+    font-size:0.85rem;
+    padding:11px 6px;
+    border-radius:10px;
+    border:1.5px solid var(--line);
+    background:var(--surface);
+    color:var(--muted);
+    cursor:pointer;
+    transition:all .15s ease;
+    min-height:44px;
+  }
+  .tab-btn.active{
+    background:var(--ink);
+    border-color:var(--ink);
+    color:#fff;
+  }
+
+  main{padding-top:18px;}
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  /* ---------- Specimen tag (signature element) ---------- */
+  .tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.68rem;
+    font-weight:600;
+    letter-spacing:0.05em;
+    padding:3px 9px 3px 8px;
+    border:1.3px dashed var(--muted);
+    border-radius:3px;
+    color:var(--navy);
+    background:var(--surface);
+    position:relative;
+    top:-2px;
+  }
+  .tag.c-crimson{border-color:var(--crimson);color:var(--crimson-deep);}
+  .tag.c-navy{border-color:var(--navy);color:var(--navy);}
+  .tag.c-gold{border-color:var(--gold);color:#8a6a1f;}
+
+  /* ---------- Key Facts ---------- */
+  .fact-card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-left:5px solid var(--crimson);
+    border-radius:var(--radius);
+    margin-bottom:12px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .fact-card.n-navy{border-left-color:var(--navy);}
+  .fact-card.n-gold{border-left-color:var(--gold);}
+  .fact-head{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:14px 16px;cursor:pointer;
+    min-height:44px;
+  }
+  .fact-head h2{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:1.05rem;
+    margin:0;
+  }
+  .fact-head .chev{color:var(--muted);font-size:0.9rem;transition:transform .2s;flex:0 0 auto;}
+  .fact-card.open .chev{transform:rotate(180deg);}
+  .fact-body{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .25s ease;
+    padding:0 16px;
+  }
+  .fact-card.open .fact-body{max-height:900px;padding:0 16px 16px;}
+  .fact-body ul{margin:0;padding-left:0;list-style:none;}
+  .fact-body li{
+    position:relative;
+    padding:6px 0 6px 22px;
+    font-size:0.93rem;
+    color:#2A3340;
+    border-top:1px solid #EEF0F3;
+  }
+  .fact-body li:first-child{border-top:none;}
+  .fact-body li::before{
+    content:'';
+    position:absolute;left:2px;top:13px;
+    width:9px;height:9px;border-radius:50%;
+    background:radial-gradient(circle at 35% 35%, #fff 0%, var(--crimson) 40%, var(--crimson-deep) 100%);
+    border:1px solid var(--crimson-deep);
+  }
+
+  /* ---------- Flashcards ---------- */
+  .chip-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px;}
+  .chip{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.68rem;font-weight:600;letter-spacing:0.03em;
+    padding:7px 11px;
+    border-radius:20px;
+    border:1.3px solid var(--line);
+    background:var(--surface);
+    color:var(--muted);
+    cursor:pointer;
+    min-height:32px;
+  }
+  .chip.active{background:var(--navy);border-color:var(--navy);color:#fff;}
+
+  .flash-stage{perspective:1400px;margin-bottom:14px;}
+  .flash-card{
+    position:relative;
+    min-height:220px;
+    border-radius:var(--radius);
+    cursor:pointer;
+    transform-style:preserve-3d;
+    transition:transform .5s cubic-bezier(.4,.2,.2,1);
+  }
+  .flash-card.flipped{transform:rotateY(180deg);}
+  .face{
+    position:absolute;inset:0;
+    backface-visibility:hidden;
+    border-radius:var(--radius);
+    border:1px solid var(--line);
+    box-shadow:var(--shadow);
+    padding:26px 22px;
+    display:flex;flex-direction:column;justify-content:center;
+  }
+  .face.front{background:var(--surface);}
+  .face.back{
+    background:var(--navy);
+    color:#F3F5F8;
+    transform:rotateY(180deg);
+  }
+  .face .kicker{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.66rem;letter-spacing:0.08em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:10px;
+  }
+  .face.back .kicker{color:#9FB2C6;}
+  .face .body-txt{
+    font-family:'Fraunces',serif;font-weight:500;
+    font-size:1.15rem;line-height:1.4;
+  }
+  .face.back .body-txt{font-family:'IBM Plex Sans',sans-serif;font-weight:400;font-size:0.98rem;}
+  .face .hint{
+    margin-top:14px;font-size:0.75rem;color:var(--muted);font-style:italic;
+  }
+  .flash-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .flash-controls .grp{display:flex;gap:8px;}
+  .btn{
+    font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:0.85rem;
+    padding:10px 14px;border-radius:10px;border:1.5px solid var(--ink);
+    background:var(--ink);color:#fff;cursor:pointer;min-height:44px;
+  }
+  .btn.ghost{background:var(--surface);color:var(--ink);}
+  .btn.crimson{background:var(--crimson);border-color:var(--crimson);}
+  .btn:disabled{opacity:0.35;cursor:default;}
+  .counter{
+    font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--muted);
+    text-align:center;margin-bottom:10px;
+  }
+
+  /* ---------- Quiz ---------- */
+  .quiz-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:10px;}
+  .score-pill{
+    font-family:'IBM Plex Mono',monospace;font-size:0.75rem;font-weight:600;
+    background:var(--surface);border:1.3px dashed var(--muted);border-radius:20px;
+    padding:5px 12px;color:var(--navy);white-space:nowrap;
+  }
+  .progress-bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:16px;}
+  .progress-bar > div{height:100%;background:var(--crimson);transition:width .3s;}
+  .q-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:18px 18px 20px;
+  }
+  .q-card .q-tag{margin-bottom:10px;}
+  .q-stem{font-size:0.98rem;margin:0 0 14px;color:#20293A;}
+  .opt{
+    display:block;width:100%;text-align:left;
+    background:var(--surface-alt);border:1.5px solid var(--line);border-radius:10px;
+    padding:11px 13px;margin-bottom:9px;font-size:0.9rem;color:var(--ink);
+    cursor:pointer;font-family:'IBM Plex Sans',sans-serif;
+    min-height:44px;
+  }
+  .opt .lab{font-family:'IBM Plex Mono',monospace;font-weight:700;margin-right:8px;color:var(--muted);}
+  .opt.correct{background:var(--good-bg);border-color:var(--good);}
+  .opt.correct .lab{color:var(--good);}
+  .opt.incorrect{background:var(--bad-bg);border-color:var(--bad);}
+  .opt.incorrect .lab{color:var(--bad);}
+  .opt:disabled{cursor:default;}
+  .explain{
+    margin-top:12px;padding:12px 13px;border-radius:10px;
+    background:#F2F6F3;border:1px solid #CFE3D6;font-size:0.87rem;color:#22412F;
+    display:none;
+  }
+  .explain.show{display:block;}
+  .explain b{color:var(--good);}
+  .q-footer{display:flex;justify-content:flex-end;margin-top:14px;}
+  .done-card{
+    text-align:center;padding:34px 18px;background:var(--surface);
+    border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
+  }
+  .done-card h2{font-family:'Fraunces',serif;margin:0 0 6px;}
+  .done-card .big{font-family:'IBM Plex Mono',monospace;font-size:2.1rem;color:var(--crimson-deep);margin:10px 0;}
+
+  section.intro{
+    font-size:0.9rem;color:var(--muted);margin-bottom:16px;
+  }
+  h3.section-title{
+    font-family:'Fraunces',serif;font-weight:600;font-size:1.05rem;
+    margin:22px 0 10px;color:var(--ink);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <svg class="cell-mark" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="42" fill="none" stroke="#C0455E" stroke-width="6"/>
+      <ellipse cx="50" cy="50" rx="16" ry="10" fill="#C0455E" opacity="0.55"/>
+    </svg>
+    <div>
+      <h1>Haematology Revision</h1>
+      <p>MBBS Year 1 &middot; Specimen Set HB-01</p>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="wrap">
+    <button class="tab-btn active" data-tab="facts">Key Facts</button>
+    <button class="tab-btn" data-tab="cards">Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">Practice MCQs</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ============ KEY FACTS ============ -->
+  <section id="panel-facts" class="panel active">
+    <p class="intro">Tap a specimen card to expand. Facts are organised by the topics tested in this set.</p>
+    <div id="facts-list"></div>
+  </section>
+
+  <!-- ============ FLASHCARDS ============ -->
+  <section id="panel-cards" class="panel">
+    <p class="intro">Tap the card to flip it. Filter by topic below.</p>
+    <div class="chip-row" id="flash-chips"></div>
+    <div class="counter" id="flash-counter"></div>
+    <div class="flash-stage">
+      <div class="flash-card" id="flash-card">
+        <div class="face front">
+          <div class="kicker" id="flash-front-tag"></div>
+          <div class="body-txt" id="flash-front-text"></div>
+          <div class="hint">Tap to flip</div>
+        </div>
+        <div class="face back">
+          <div class="kicker">Answer</div>
+          <div class="body-txt" id="flash-back-text"></div>
+        </div>
+      </div>
+    </div>
+    <div class="flash-controls">
+      <button class="btn ghost" id="flash-prev">&larr; Prev</button>
+      <div class="grp">
+        <button class="btn ghost" id="flash-shuffle">Shuffle</button>
+        <button class="btn crimson" id="flash-known">Mark known</button>
+      </div>
+      <button class="btn ghost" id="flash-next">Next &rarr;</button>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section id="panel-quiz" class="panel">
+    <p class="intro">36 new practice questions across six topic sets. Pick a topic to begin.</p>
+    <div class="chip-row" id="quiz-chips"></div>
+    <div id="quiz-area"></div>
+  </section>
+
+</main>
+
+<script>
+/* ================= DATA: KEY FACTS ================= */
+const facts = [
+  { tag:"RBC · GEN", cls:"n-crimson", title:"General Concepts of RBC Disorders", items:[
+    "MCV classifies anaemia: microcytic (&lt;80 fL), normocytic (80–100 fL), macrocytic (&gt;100 fL).",
+    "RDW measures variation in red cell size (anisocytosis) — high in iron deficiency, usually normal in thalassaemia trait, helping distinguish the two microcytic anaemias.",
+    "Reticulocyte count/production index reflects marrow response: appropriately raised in haemolysis or acute blood loss; inappropriately low in marrow failure or ineffective erythropoiesis.",
+    "Smear vocabulary: anisocytosis (size variation), poikilocytosis (shape variation), polychromasia (young RBCs), hypochromia (pale cells, wide central pallor).",
+    "Anaemia is classified mechanistically as decreased production, increased destruction (haemolysis), or blood loss."
+  ]},
+  { tag:"NUTR", cls:"n-navy", title:"Nutritional Anaemias", items:[
+    "Iron deficiency anaemia: microcytic hypochromic; low ferritin, high TIBC, low serum iron. Pica and koilonychia are classic clues.",
+    "Commonest causes of IDA in adults: chronic blood loss (GI, menstrual); also decreased intake, malabsorption, and increased demand (pregnancy).",
+    "Megaloblastic anaemia (B12/folate deficiency): macrocytic, hypersegmented neutrophils, nuclear–cytoplasmic asynchrony in marrow precursors.",
+    "Pernicious anaemia: autoimmune destruction of gastric parietal cells → loss of intrinsic factor → B12 malabsorption; linked to atrophic gastritis.",
+    "Only B12 (not folate) deficiency causes neurological disease (subacute combined degeneration), since B12 is required for myelin synthesis."
+  ]},
+  { tag:"HAEM·LYS", cls:"n-crimson", title:"Haemolytic Anaemias", items:[
+    "Haemolysis hallmarks: raised indirect bilirubin, raised LDH, low haptoglobin, raised reticulocyte count.",
+    "Hereditary spherocytosis: RBC membrane protein defect (spectrin/ankyrin); spherocytes, increased osmotic fragility, Coombs-negative.",
+    "G6PD deficiency: X-linked; oxidative stress (drugs, infection, fava beans) precipitates haemolysis with Heinz bodies and bite cells.",
+    "Sickle cell disease: beta-globin point mutation (Glu→Val) → HbS polymerises when deoxygenated → sickling, vaso-occlusion, and haemolysis.",
+    "Autoimmune haemolytic anaemia: antibody-coated RBCs destroyed by spleen/complement; confirmed with a positive direct Coombs (antiglobulin) test."
+  ]},
+  { tag:"APLA", cls:"n-navy", title:"Aplastic Anaemia", items:[
+    "Defined by pancytopenia with a hypocellular marrow replaced by fat, and a low reticulocyte count.",
+    "Causes: idiopathic/autoimmune, drugs, viral infection (parvovirus B19, hepatitis), radiation, chemotherapy.",
+    "Presents with fatigue (anaemia), infections (neutropenia), bruising/bleeding (thrombocytopenia) — without lymphadenopathy or organomegaly.",
+    "Key distinguishing point from leukaemia/infiltrative marrow disease: no circulating blasts, no organomegaly."
+  ]},
+  { tag:"LEUK", cls:"n-gold", title:"Leukaemias", items:[
+    "AML: myeloid blasts, MPO-positive, TdT-negative. Acute promyelocytic leukaemia (a subtype) shows t(15;17) PML-RARA, Auer rods, and a high risk of DIC.",
+    "ALL: lymphoblasts, TdT-positive; predominantly a childhood leukaemia.",
+    "CML: t(9;22) BCR-ABL (Philadelphia chromosome); marked leukocytosis with left shift, basophilia, low leukocyte alkaline phosphatase, massive splenomegaly; treated with tyrosine kinase inhibitors.",
+    "CLL: monoclonal mature B lymphocytes, smudge cells on smear, often incidental/asymptomatic; can be complicated by autoimmune haemolytic anaemia."
+  ]},
+  { tag:"MPN", cls:"n-gold", title:"Chronic Myeloproliferative Disorders", items:[
+    "Polycythaemia vera: JAK2 mutation; raised Hb/Hct with low erythropoietin; facial plethora, aquagenic pruritus, thrombosis risk.",
+    "Essential thrombocythaemia: marked thrombocytosis with giant platelets; risk of both thrombosis and paradoxical bleeding.",
+    "Primary myelofibrosis: marrow fibrosis, teardrop-shaped RBCs (dacrocytes), splenomegaly from extramedullary haematopoiesis.",
+    "PV, ET and PMF arise from a myeloid stem cell and often carry JAK2 mutations; CML is instead driven by BCR-ABL."
+  ]},
+  { tag:"LN", cls:"n-navy", title:"Lymphadenopathy", items:[
+    "Reactive lymphadenopathy: tender, mobile nodes with preserved architecture and reactive follicular hyperplasia; usually post-infective.",
+    "Malignant lymphadenopathy: typically firm/hard, fixed, non-tender, progressively enlarging, often with B symptoms (fever, night sweats, weight loss).",
+    "Generalised lymphadenopathy should raise suspicion for systemic disease — lymphoma, leukaemia, infection, or autoimmune disease.",
+    "Excisional biopsy (not FNA alone) is preferred when lymphoma is suspected, since architecture must be assessed."
+  ]},
+  { tag:"LNFOMA", cls:"n-crimson", title:"Lymphomas", items:[
+    "Hodgkin lymphoma: Reed–Sternberg cells (binucleate, 'owl's eye') of B-cell origin in a mixed inflammatory background; nodular sclerosis is commonest, lymphocyte-rich carries the best prognosis.",
+    "Burkitt lymphoma: t(8;14) MYC–IGH translocation; 'starry sky' pattern from macrophages engulfing apoptotic tumour cells; strongly EBV-associated in the endemic (jaw) form.",
+    "Follicular lymphoma: t(14;18) BCL2–IGH translocation; indolent course, nodular growth pattern.",
+    "Non-Hodgkin lymphomas are more heterogeneous overall and more often involve extranodal sites than Hodgkin lymphoma."
+  ]},
+  { tag:"MM", cls:"n-gold", title:"Multiple Myeloma", items:[
+    "Malignant plasma cell proliferation producing a monoclonal immunoglobulin (M-spike / paraprotein).",
+    "CRAB features: hyperCalcaemia, Renal failure, Anaemia, Bone lesions (punched-out lytic lesions).",
+    "Bone lesions arise from osteoclast activation by tumour-derived cytokines (e.g. RANKL, IL-6) — not increased osteoblastic activity.",
+    "Renal failure is often due to light-chain (Bence Jones protein) cast nephropathy.",
+    "Hyperviscosity syndrome (blurred vision, headache, mucosal bleeding, confusion) is a medical emergency from raised paraprotein.",
+    "Waldenström macroglobulinaemia: IgM paraproteinaemia causing hyperviscosity, typically without lytic bone lesions."
+  ]},
+  { tag:"HAEMO·ST", cls:"n-navy", title:"Bleeding Disorders", items:[
+    "Platelet disorders (e.g. ITP): mucocutaneous bleeding — petechiae, purpura, epistaxis; normal PT/aPTT, low platelet count.",
+    "Coagulation factor disorders (e.g. haemophilia A/B): deep bleeding — haemarthrosis, muscle haematomas; prolonged aPTT (intrinsic pathway), normal platelets.",
+    "Von Willebrand disease: commonest inherited bleeding disorder; mucocutaneous bleeding with a mildly prolonged aPTT (vWF stabilises factor VIII).",
+    "Vitamin K deficiency: impairs synthesis of factors II, VII, IX, X; prolongs both PT and aPTT — classic in newborns without prophylaxis.",
+    "DIC: consumption of platelets and clotting factors causes simultaneous bleeding and microthrombosis — schistocytes, low fibrinogen, prolonged PT/aPTT, low platelets."
+  ]}
+];
+
+/* ================= DATA: FLASHCARDS ================= */
+const flashcards = [
+  {cat:"general", front:"What does an elevated RDW indicate?", back:"Increased variation in red cell size (anisocytosis) — helps separate iron deficiency (high RDW) from thalassaemia trait (usually normal RDW) in microcytic anaemia."},
+  {cat:"general", front:"Which index defines an anaemia as microcytic, normocytic, or macrocytic?", back:"Mean corpuscular volume (MCV)."},
+  {cat:"general", front:"What does a low reticulocyte production index in an anaemic patient suggest?", back:"An inadequate bone marrow response — i.e. a production problem rather than haemolysis or acute blood loss."},
+  {cat:"general", front:"Define poikilocytosis.", back:"Variation in red cell shape on peripheral smear."},
+  {cat:"nha", front:"Classic iron studies in iron deficiency anaemia?", back:"Low serum iron, low ferritin, high TIBC (transferrin), low transferrin saturation."},
+  {cat:"nha", front:"What smear finding is characteristic of megaloblastic anaemia?", back:"Macro-ovalocytes and hypersegmented neutrophils (≥5 lobes)."},
+  {cat:"nha", front:"Mechanism of pernicious anaemia?", back:"Autoimmune destruction of gastric parietal cells → loss of intrinsic factor → B12 malabsorption."},
+  {cat:"nha", front:"What triggers haemolysis in G6PD deficiency?", back:"Oxidative stress — certain drugs (e.g. antimalarials, sulfonamides), infections, or fava beans — producing Heinz bodies and bite cells."},
+  {cat:"nha", front:"What confirms autoimmune haemolytic anaemia?", back:"A positive direct Coombs (antiglobulin) test."},
+  {cat:"nha", front:"Defining marrow finding in aplastic anaemia?", back:"Hypocellular marrow with fatty replacement, causing pancytopenia with a low reticulocyte count."},
+  {cat:"nha", front:"Why is haptoglobin low in haemolysis?", back:"It binds free plasma haemoglobin released from lysed RBCs and is consumed/cleared."},
+  {cat:"leuk", front:"Immunophenotype clue for ALL vs AML blasts?", back:"ALL: TdT-positive lymphoblasts. AML: MPO-positive, TdT-negative myeloblasts."},
+  {cat:"leuk", front:"Cytogenetic hallmark of CML?", back:"t(9;22) BCR-ABL fusion (Philadelphia chromosome)."},
+  {cat:"leuk", front:"Typical smear finding in CLL?", back:"Smudge cells among monoclonal mature small lymphocytes."},
+  {cat:"leuk", front:"Mutation driving polycythaemia vera?", back:"JAK2 activating mutation, with low serum erythropoietin."},
+  {cat:"leuk", front:"Key smear feature of primary myelofibrosis?", back:"Teardrop-shaped red cells (dacrocytes), reflecting marrow fibrosis."},
+  {cat:"leuk", front:"Main risk in essential thrombocythaemia?", back:"Both thrombosis and (paradoxically) bleeding, due to marked but qualitatively abnormal thrombocytosis."},
+  {cat:"lymphaden", front:"Node features favouring reactive over malignant lymphadenopathy?", back:"Tender, soft, mobile nodes with preserved architecture, usually following infection."},
+  {cat:"lymphaden", front:"Node features favouring malignancy?", back:"Firm/hard, fixed, non-tender, progressively enlarging nodes, often with B symptoms."},
+  {cat:"lymphaden", front:"Why is excisional biopsy preferred over FNA when lymphoma is suspected?", back:"It preserves nodal architecture, which is essential for diagnosing and subtyping lymphoma."},
+  {cat:"lymphaden", front:"Cat-scratch disease lymphadenitis — organism and histology?", back:"Bartonella henselae; stellate granulomas with central necrosis."},
+  {cat:"lymphoma", front:"Cell of origin and morphology in Hodgkin lymphoma?", back:"B-cell origin; binucleate Reed–Sternberg cells with prominent nucleoli ('owl's eye') in a mixed inflammatory background."},
+  {cat:"lymphoma", front:"Translocation and appearance of Burkitt lymphoma?", back:"t(8;14) MYC–IGH; 'starry sky' pattern from tingible-body macrophages; strongly EBV-associated in the endemic form."},
+  {cat:"lymphoma", front:"Translocation in follicular lymphoma?", back:"t(14;18) causing BCL2 overexpression, blocking apoptosis."},
+  {cat:"lymphoma", front:"Which Hodgkin subtype has the best prognosis?", back:"Lymphocyte-rich classical Hodgkin lymphoma."},
+  {cat:"lymphoma", front:"Mechanism of lytic bone lesions in multiple myeloma?", back:"Osteoclast activation by tumour-derived cytokines (e.g. RANKL, IL-6) — not increased osteoblastic activity."},
+  {cat:"lymphoma", front:"How does Waldenström macroglobulinaemia differ from multiple myeloma?", back:"IgM paraprotein causing hyperviscosity, typically without lytic bone lesions."},
+  {cat:"bleeding", front:"Classic bleeding pattern in platelet disorders vs coagulation factor disorders?", back:"Platelet disorders → mucocutaneous bleeding (petechiae, purpura). Factor disorders → deep bleeding (haemarthrosis, muscle haematomas)."},
+  {cat:"bleeding", front:"Coagulation profile in haemophilia A?", back:"Prolonged aPTT, normal PT, normal platelet count (factor VIII deficiency)."},
+  {cat:"bleeding", front:"Why does von Willebrand disease cause a mildly prolonged aPTT?", back:"vWF stabilises factor VIII in plasma; its deficiency secondarily lowers factor VIII activity."},
+  {cat:"bleeding", front:"Laboratory picture of DIC?", back:"Low platelets, prolonged PT/aPTT, low fibrinogen, raised D-dimer, and schistocytes from microangiopathic haemolysis."},
+  {cat:"bleeding", front:"Which clotting factors depend on vitamin K?", back:"Factors II, VII, IX, and X (plus proteins C and S)."}
+];
+
+/* ================= DATA: QUIZ QUESTIONS ================= */
+const questions = [
+  // ---- General RBC disorders (5) ----
+  {cat:"general", q:"A peripheral smear shows red cells with a central pallor area exceeding one-third of the cell diameter. This finding is termed:",
+   opts:["Anisocytosis","Hypochromia","Poikilocytosis","Polychromasia"], ans:1,
+   exp:"Widened central pallor reflects reduced haemoglobin content per cell — hypochromia."},
+  {cat:"general", q:"Red cell distribution width (RDW) primarily reflects which of the following?",
+   opts:["Average red cell size","Variation in red cell size (anisocytosis)","Red cell shape abnormality","Haemoglobin concentration per cell"], ans:1,
+   exp:"RDW quantifies the degree of anisocytosis (size variation) among red cells."},
+  {cat:"general", q:"An anaemic patient has an appropriately elevated reticulocyte count. Which mechanism best explains this?",
+   opts:["Bone marrow suppression","Compensatory marrow response to red cell loss or destruction","Ineffective erythropoiesis","Iron deficiency"], ans:1,
+   exp:"A brisk reticulocytosis signals a healthy marrow compensating for haemolysis or blood loss."},
+  {cat:"general", q:"Which laboratory index is used to classify anaemia as microcytic, normocytic, or macrocytic?",
+   opts:["MCH","MCV","MCHC","RDW"], ans:1,
+   exp:"MCV (mean corpuscular volume) defines the size-based anaemia category."},
+  {cat:"general", q:"A patient's anaemia workup shows a low reticulocyte production index. This most strongly suggests:",
+   opts:["Increased red cell destruction","Acute blood loss","Inadequate marrow response","Dilutional anaemia from fluid overload"], ans:2,
+   exp:"A low production index despite anaemia points to a marrow production defect rather than peripheral loss/destruction."},
+
+  // ---- Nutritional / Haemolytic / Aplastic (10) ----
+  {cat:"nha", q:"A 28-year-old vegan woman has fatigue and glossitis. Blood film shows macrocytic RBCs and hypersegmented neutrophils. The most likely deficiency is:",
+   opts:["Vitamin B12 or folate","Vitamin B6","Vitamin C","Vitamin K"], ans:0,
+   exp:"Macrocytosis with hypersegmented neutrophils is the classic megaloblastic picture of B12/folate deficiency."},
+  {cat:"nha", q:"A 24-year-old woman with iron deficiency anaemia reports craving ice. This symptom is called:",
+   opts:["Koilonychia","Pica","Angular stomatitis","Glossitis"], ans:1,
+   exp:"Pica (craving non-nutritive substances like ice) is a recognised feature of iron deficiency."},
+  {cat:"nha", q:"In iron deficiency anaemia, TIBC is typically elevated. This is best explained by:",
+   opts:["Increased hepatic transferrin synthesis in the iron-deficient state","Decreased transferrin synthesis","Increased iron stores","Ongoing haemolysis"], ans:0,
+   exp:"Low iron stores upregulate transferrin production, raising TIBC."},
+  {cat:"nha", q:"A 6-year-old boy of Mediterranean descent has microcytic anaemia, target cells, normal iron studies, and elevated HbA2 on electrophoresis. Diagnosis?",
+   opts:["Iron deficiency anaemia","Beta-thalassaemia trait","Sickle cell disease","Hereditary spherocytosis"], ans:1,
+   exp:"Microcytosis with normal iron studies and raised HbA2 is characteristic of beta-thalassaemia trait."},
+  {cat:"nha", q:"A patient develops acute haemolysis with dark urine after taking an antimalarial drug. Smear shows bite cells and Heinz bodies. The likely enzyme deficiency is:",
+   opts:["Pyruvate kinase","Glucose-6-phosphate dehydrogenase (G6PD)","Hexokinase","Glucose-6-phosphatase"], ans:1,
+   exp:"Oxidant-drug triggered haemolysis with bite cells/Heinz bodies is classic for G6PD deficiency."},
+  {cat:"nha", q:"A 5-year-old boy has jaundice, splenomegaly, spherocytes on smear, and a negative direct Coombs test. The mechanism is best explained by:",
+   opts:["RBC membrane protein defect (spectrin/ankyrin)","Autoimmune RBC destruction","Enzyme deficiency","Haemoglobinopathy"], ans:0,
+   exp:"Coombs-negative spherocytosis with splenomegaly points to hereditary spherocytosis, a membrane cytoskeletal defect."},
+  {cat:"nha", q:"A patient with sickle cell disease develops sudden severe bone pain. The pathogenesis of this vaso-occlusive crisis is best explained by:",
+   opts:["Polymerisation of deoxygenated HbS causing sickling and microvascular occlusion","Immune-mediated vascular inflammation","Platelet aggregation from thrombocytosis","Fat embolism"], ans:0,
+   exp:"Hypoxia-induced HbS polymerisation deforms RBCs into sickle shapes that occlude the microvasculature."},
+  {cat:"nha", q:"A patient after chemotherapy has pancytopenia and bruising. Marrow biopsy shows marked hypocellularity with fatty replacement. Diagnosis?",
+   opts:["Aplastic anaemia","Myelodysplastic syndrome","Acute leukaemia","Myelofibrosis"], ans:0,
+   exp:"A hypocellular, fat-replaced marrow with pancytopenia defines aplastic anaemia."},
+  {cat:"nha", q:"A patient develops a positive direct Coombs test and haemolysis after starting a new antibiotic. This is best explained by:",
+   opts:["Drug-induced antibody-mediated RBC destruction","Mechanical RBC fragmentation","Osmotic RBC lysis","Complement deficiency"], ans:0,
+   exp:"Certain drugs induce antibodies against RBC antigens, producing a Coombs-positive drug-induced haemolytic anaemia."},
+  {cat:"nha", q:"A patient with chronic haemolytic anaemia has raised indirect bilirubin and low haptoglobin. The low haptoglobin is best explained by:",
+   opts:["Haptoglobin binds free plasma haemoglobin and is consumed","Decreased hepatic synthesis from liver failure","Increased renal excretion of haptoglobin","Dilutional effect from fluid overload"], ans:0,
+   exp:"Haptoglobin scavenges free haemoglobin released during haemolysis and is cleared along with it, lowering its plasma level."},
+
+  // ---- Leukaemia & chronic myeloproliferative disorders (6) ----
+  {cat:"leuk", q:"A 4-year-old boy has fatigue, bone pain, and bruising. Blasts are positive for TdT and CD10. Diagnosis?",
+   opts:["Acute lymphoblastic leukaemia","Acute myeloid leukaemia","Chronic myeloid leukaemia","Chronic lymphocytic leukaemia"], ans:0,
+   exp:"TdT-positive lymphoblasts in a child are characteristic of acute lymphoblastic leukaemia."},
+  {cat:"leuk", q:"A 62-year-old asymptomatic man has marked lymphocytosis with smudge cells on peripheral smear. Most likely diagnosis?",
+   opts:["Chronic lymphocytic leukaemia","Acute lymphoblastic leukaemia","Hairy cell leukaemia","Mantle cell lymphoma"], ans:0,
+   exp:"Smudge cells with monoclonal mature lymphocytosis, often incidental, is classic for CLL."},
+  {cat:"leuk", q:"A patient with CML is started on imatinib. Its mechanism of action is best described as:",
+   opts:["Tyrosine kinase inhibition of the BCR-ABL fusion protein","Inhibition of topoisomerase II","Alkylation of DNA","Inhibition of dihydrofolate reductase"], ans:0,
+   exp:"Imatinib is a tyrosine kinase inhibitor targeting the constitutively active BCR-ABL protein in CML."},
+  {cat:"leuk", q:"A 50-year-old woman has facial plethora, pruritus after bathing, raised Hb/Hct, and low erythropoietin. She is at increased risk of:",
+   opts:["Thrombosis","Bleeding diathesis from thrombocytopenia","Osteolytic bone lesions","Opportunistic infections"], ans:0,
+   exp:"Polycythaemia vera raises blood viscosity and cell mass, predisposing to arterial and venous thrombosis."},
+  {cat:"leuk", q:"A patient with primary myelofibrosis has a peripheral smear examined. Which finding is most characteristic?",
+   opts:["Teardrop-shaped RBCs (dacrocytes)","Spherocytes","Isolated schistocytes only","Target cells only"], ans:0,
+   exp:"Dacrocytes (teardrop cells) result from marrow fibrosis distorting RBCs as they squeeze through the marrow."},
+  {cat:"leuk", q:"A 55-year-old man is diagnosed with essential thrombocythaemia. He is most at risk of:",
+   opts:["Both thrombosis and bleeding","Iron deficiency only","Megaloblastic anaemia only","Renal failure"], ans:0,
+   exp:"Markedly elevated but qualitatively abnormal platelets in ET predispose to both thrombotic and haemorrhagic complications."},
+
+  // ---- Lymphadenopathy (4) ----
+  {cat:"lymphaden", q:"A 22-year-old man has a firm, non-tender, enlarging cervical node for 3 weeks with night sweats and weight loss. Which feature most raises concern for malignancy over a reactive cause?",
+   opts:["Node mobility and tenderness","A fixed, hard, non-tender node with systemic B symptoms","A recent upper respiratory infection","Bilateral tender nodes"], ans:1,
+   exp:"Fixed, hard, painless nodes with B symptoms are red flags for malignant rather than reactive lymphadenopathy."},
+  {cat:"lymphaden", q:"A 6-year-old boy develops tender, mobile cervical lymphadenopathy after a streptococcal throat infection. The underlying histological process is:",
+   opts:["Reactive follicular hyperplasia","Nodal effacement by malignant cells","Granulomatous necrosis","Caseous necrosis"], ans:0,
+   exp:"Infection-driven reactive nodes show follicular hyperplasia with preserved architecture."},
+  {cat:"lymphaden", q:"A 40-year-old man has generalised lymphadenopathy and fever. Which clinical feature favours a benign/reactive cause over malignancy?",
+   opts:["Node size under 1 cm, soft, mobile, resolving over weeks","Progressive enlargement over months, hard and fixed","Supraclavicular location","Associated splenomegaly and weight loss"], ans:0,
+   exp:"Small, soft, mobile, self-resolving nodes are typical of a benign reactive process."},
+  {cat:"lymphaden", q:"A 35-year-old woman with a cat scratch develops tender axillary lymphadenopathy; biopsy shows stellate granulomas with central necrosis. Most likely cause?",
+   opts:["Reactive lymphadenitis due to Bartonella henselae","Hodgkin lymphoma","Non-Hodgkin lymphoma","Metastatic carcinoma"], ans:0,
+   exp:"Cat-scratch disease (Bartonella henselae) classically produces stellate granulomatous lymphadenitis."},
+
+  // ---- Lymphoma and multiple myeloma (6) ----
+  {cat:"lymphoma", q:"A 55-year-old man with multiple myeloma has renal failure, an M-spike, and Bence Jones proteinuria. His renal impairment is best explained by:",
+   opts:["Light-chain cast nephropathy","Immune complex glomerulonephritis","Renal artery stenosis","Amyloid deposition alone"], ans:0,
+   exp:"Free light chains precipitate in the renal tubules, causing cast nephropathy — the commonest cause of renal failure in myeloma."},
+  {cat:"lymphoma", q:"A 60-year-old man with multiple myeloma develops hypercalcaemia. The mechanism is best explained by:",
+   opts:["Osteoclast activation by tumour-derived cytokines (e.g. RANKL, IL-6)","Increased vitamin D activation","A parathyroid adenoma","Decreased renal calcium excretion alone"], ans:0,
+   exp:"Myeloma cells secrete cytokines that activate osteoclasts, causing bone resorption and hypercalcaemia."},
+  {cat:"lymphoma", q:"A 30-year-old man has a rapidly growing mediastinal mass. Biopsy shows sheets of large lymphocytes with a 'starry sky' pattern and a very high proliferation index. This is most consistent with:",
+   opts:["Burkitt lymphoma","Hodgkin lymphoma","Follicular lymphoma","Chronic lymphocytic leukaemia"], ans:0,
+   exp:"The starry-sky pattern with a near-100% proliferation rate is characteristic of Burkitt lymphoma."},
+  {cat:"lymphoma", q:"A 45-year-old woman has cervical lymphadenopathy; biopsy shows Reed–Sternberg cells with lymphocytes, eosinophils, and plasma cells. Which classical Hodgkin lymphoma subtype carries the best prognosis?",
+   opts:["Lymphocyte-rich","Lymphocyte-depleted","Mixed cellularity","Nodular sclerosis with extensive mixed cellularity"], ans:0,
+   exp:"Among classical Hodgkin lymphoma subtypes, lymphocyte-rich disease has the most favourable prognosis."},
+  {cat:"lymphoma", q:"A 28-year-old woman has a slow-growing, painless axillary node. Biopsy shows a nodular pattern of centrocytes and centroblasts with t(14;18) causing BCL2 overexpression. Diagnosis?",
+   opts:["Follicular lymphoma","Burkitt lymphoma","Mantle cell lymphoma","Hodgkin lymphoma"], ans:0,
+   exp:"t(14;18) BCL2–IGH with a nodular growth pattern is diagnostic of follicular lymphoma."},
+  {cat:"lymphoma", q:"A 65-year-old man has an IgM monoclonal spike and hyperviscosity symptoms, but no lytic bone lesions on skeletal survey. Most likely diagnosis?",
+   opts:["Waldenström macroglobulinaemia","Multiple myeloma","Monoclonal gammopathy of undetermined significance (MGUS)","Chronic lymphocytic leukaemia"], ans:0,
+   exp:"IgM paraproteinaemia with hyperviscosity and no lytic lesions is characteristic of Waldenström macroglobulinaemia."},
+
+  // ---- Bleeding disorders (5) ----
+  {cat:"bleeding", q:"A 6-year-old boy has haemarthrosis after minor trauma. aPTT is prolonged, PT and platelet count are normal. Most likely diagnosis?",
+   opts:["Haemophilia A","Von Willebrand disease","Vitamin K deficiency","Immune thrombocytopenic purpura"], ans:0,
+   exp:"Isolated prolonged aPTT with haemarthrosis is classic for a factor VIII deficiency (haemophilia A)."},
+  {cat:"bleeding", q:"A 25-year-old woman has easy bruising, mucosal bleeding, and a mildly prolonged aPTT with a normal platelet count and PT. Most likely diagnosis?",
+   opts:["Von Willebrand disease","Haemophilia A","Vitamin K deficiency","Disseminated intravascular coagulation"], ans:0,
+   exp:"Mucocutaneous bleeding with a mildly prolonged aPTT (from secondary factor VIII lowering) is typical of von Willebrand disease."},
+  {cat:"bleeding", q:"A 5-year-old girl develops sudden petechiae and purpura two weeks after a viral illness, with an isolated low platelet count. The most likely mechanism is:",
+   opts:["Immune-mediated platelet destruction","Bone marrow failure","Platelet consumption in microthrombi","Decreased platelet production from vitamin deficiency"], ans:0,
+   exp:"Post-viral isolated thrombocytopenia in a child is classic for immune thrombocytopenic purpura."},
+  {cat:"bleeding", q:"A septic 50-year-old man has widespread bleeding, schistocytes, low platelets, prolonged PT/aPTT, and low fibrinogen. Most likely diagnosis?",
+   opts:["Disseminated intravascular coagulation","Immune thrombocytopenic purpura","Haemophilia A","Von Willebrand disease"], ans:0,
+   exp:"Consumption of platelets and clotting factors with schistocytes and low fibrinogen defines DIC."},
+  {cat:"bleeding", q:"A newborn delivered at home without vitamin K prophylaxis bleeds from the umbilical stump on day 2, with prolonged PT and aPTT. This is best explained by:",
+   opts:["Deficiency of vitamin K-dependent clotting factors (II, VII, IX, X)","Haemophilia A","Von Willebrand disease","Disseminated intravascular coagulation"], ans:0,
+   exp:"Lack of vitamin K prophylaxis impairs synthesis of factors II, VII, IX, X, prolonging both PT and aPTT."}
+];
+
+const CAT_LABELS = {
+  general:"General RBC Disorders", nha:"Nutritional / Haemolytic / Aplastic",
+  leuk:"Leukaemia & Myeloproliferative", lymphaden:"Lymphadenopathy",
+  lymphoma:"Lymphoma & Myeloma", bleeding:"Bleeding Disorders"
+};
+
+/* ================= TAB SWITCHING ================= */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ================= RENDER FACTS ================= */
+const factsList = document.getElementById('facts-list');
+facts.forEach((f,i)=>{
+  const card = document.createElement('div');
+  card.className = 'fact-card '+f.cls;
+  card.innerHTML = `
+    <div class="fact-head">
+      <div><span class="tag ${f.cls.replace('n-','c-')}">${f.tag}</span></div>
+      <h2 style="flex:1;margin-left:10px;">${f.title}</h2>
+      <span class="chev">&#9660;</span>
+    </div>
+    <div class="fact-body"><ul>${f.items.map(it=>`<li>${it}</li>`).join('')}</ul></div>
+  `;
+  card.querySelector('.fact-head').addEventListener('click', ()=> card.classList.toggle('open'));
+  if(i===0) card.classList.add('open');
+  factsList.appendChild(card);
+});
+
+/* ================= FLASHCARDS ================= */
+let flashFiltered = flashcards.slice();
+let flashIdx = 0;
+let flashKnown = [];
+try{ flashKnown = JSON.parse(localStorage.getItem('haem_flash_known')||'[]'); }catch(e){ flashKnown=[]; }
+
+const chipDefs = [{k:'all',l:'All'}].concat(Object.keys(CAT_LABELS).map(k=>({k,l:CAT_LABELS[k]})));
+const flashChipRow = document.getElementById('flash-chips');
+let flashCat = 'all';
+chipDefs.forEach(c=>{
+  const chip = document.createElement('button');
+  chip.className='chip'+(c.k==='all'?' active':'');
+  chip.textContent=c.l;
+  chip.addEventListener('click', ()=>{
+    flashCat = c.k;
+    document.querySelectorAll('#flash-chips .chip').forEach(ch=>ch.classList.remove('active'));
+    chip.classList.add('active');
+    flashFiltered = flashCat==='all' ? flashcards.slice() : flashcards.filter(f=>f.cat===flashCat);
+    flashIdx = 0;
+    renderFlash();
+  });
+  flashChipRow.appendChild(chip);
+});
+
+const flashCardEl = document.getElementById('flash-card');
+function flashId(card){ return card.cat+'::'+card.front; }
+function renderFlash(){
+  if(flashFiltered.length===0){ return; }
+  const card = flashFiltered[flashIdx];
+  flashCardEl.classList.remove('flipped');
+  document.getElementById('flash-front-tag').textContent = CAT_LABELS[card.cat] + (flashKnown.includes(flashId(card)) ? ' · known' : '');
+  document.getElementById('flash-front-text').textContent = card.front;
+  document.getElementById('flash-back-text').textContent = card.back;
+  document.getElementById('flash-counter').textContent = `Card ${flashIdx+1} / ${flashFiltered.length}`;
+}
+flashCardEl.addEventListener('click', ()=> flashCardEl.classList.toggle('flipped'));
+document.getElementById('flash-next').addEventListener('click', ()=>{
+  flashIdx = (flashIdx+1) % flashFiltered.length; renderFlash();
+});
+document.getElementById('flash-prev').addEventListener('click', ()=>{
+  flashIdx = (flashIdx-1+flashFiltered.length) % flashFiltered.length; renderFlash();
+});
+document.getElementById('flash-shuffle').addEventListener('click', ()=>{
+  for(let i=flashFiltered.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [flashFiltered[i],flashFiltered[j]]=[flashFiltered[j],flashFiltered[i]];
+  }
+  flashIdx=0; renderFlash();
+});
+document.getElementById('flash-known').addEventListener('click', ()=>{
+  const id = flashId(flashFiltered[flashIdx]);
+  if(!flashKnown.includes(id)) flashKnown.push(id);
+  try{ localStorage.setItem('haem_flash_known', JSON.stringify(flashKnown)); }catch(e){}
+  renderFlash();
+});
+renderFlash();
+
+/* ================= QUIZ ================= */
+const quizChipRow = document.getElementById('quiz-chips');
+let quizSet = [];
+let quizIdx = 0;
+let quizScore = 0;
+let quizAnswered = false;
+
+chipDefs.filter(c=>c.k!=='all').forEach(c=>{
+  const chip = document.createElement('button');
+  chip.className='chip';
+  chip.textContent = c.l + ' ('+questions.filter(q=>q.cat===c.k).length+')';
+  chip.addEventListener('click', ()=> startQuiz(c.k));
+  quizChipRow.appendChild(chip);
+});
+const allChip = document.createElement('button');
+allChip.className='chip';
+allChip.textContent='All ('+questions.length+')';
+allChip.addEventListener('click', ()=> startQuiz('all'));
+quizChipRow.insertBefore(allChip, quizChipRow.firstChild);
+
+function startQuiz(cat){
+  document.querySelectorAll('#quiz-chips .chip').forEach(c=>c.classList.remove('active'));
+  const idx = cat==='all' ? 0 : chipDefs.findIndex(c=>c.k===cat);
+  quizSet = (cat==='all' ? questions.slice() : questions.filter(q=>q.cat===cat));
+  for(let i=quizSet.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [quizSet[i],quizSet[j]]=[quizSet[j],quizSet[i]];
+  }
+  quizIdx=0; quizScore=0; quizAnswered=false;
+  renderQuiz();
+}
+
+function renderQuiz(){
+  const area = document.getElementById('quiz-area');
+  if(quizSet.length===0){
+    area.innerHTML = '<p class="intro">Choose a topic above to start a practice set.</p>';
+    return;
+  }
+  if(quizIdx >= quizSet.length){
+    area.innerHTML = `
+      <div class="done-card">
+        <div class="tag c-crimson">RESULT</div>
+        <h2>Set complete</h2>
+        <div class="big">${quizScore} / ${quizSet.length}</div>
+        <button class="btn crimson" id="quiz-restart">Try again (shuffled)</button>
+      </div>`;
+    document.getElementById('quiz-restart').addEventListener('click', ()=>{
+      for(let i=quizSet.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [quizSet[i],quizSet[j]]=[quizSet[j],quizSet[i]];
+      }
+      quizIdx=0; quizScore=0; quizAnswered=false; renderQuiz();
+    });
+    return;
+  }
+  const q = quizSet[quizIdx];
+  quizAnswered = false;
+  const pct = Math.round((quizIdx/quizSet.length)*100);
+  area.innerHTML = `
+    <div class="quiz-top">
+      <span class="score-pill">Score ${quizScore}/${quizIdx}</span>
+      <span class="score-pill">Q ${quizIdx+1} / ${quizSet.length}</span>
+    </div>
+    <div class="progress-bar"><div style="width:${pct}%"></div></div>
+    <div class="q-card">
+      <div class="q-tag"><span class="tag c-navy">${CAT_LABELS[q.cat]}</span></div>
+      <p class="q-stem">${q.q}</p>
+      <div id="opts-wrap"></div>
+      <div class="explain" id="explain-box"><b>Explanation:</b> <span id="explain-text"></span></div>
+      <div class="q-footer"><button class="btn" id="quiz-next" disabled>Next &rarr;</button></div>
+    </div>
+  `;
+  const wrap = document.getElementById('opts-wrap');
+  const letters=['A','B','C','D'];
+  q.opts.forEach((opt,i)=>{
+    const b = document.createElement('button');
+    b.className='opt';
+    b.innerHTML = `<span class="lab">${letters[i]}</span>${opt}`;
+    b.addEventListener('click', ()=>{
+      if(quizAnswered) return;
+      quizAnswered = true;
+      const allOpts = wrap.querySelectorAll('.opt');
+      allOpts.forEach((o,j)=>{
+        o.disabled=true;
+        if(j===q.ans) o.classList.add('correct');
+        else if(j===i) o.classList.add('incorrect');
+      });
+      if(i===q.ans) quizScore++;
+      document.getElementById('explain-text').textContent = q.exp;
+      document.getElementById('explain-box').classList.add('show');
+      document.getElementById('quiz-next').disabled=false;
+    });
+    wrap.appendChild(b);
+  });
+  document.getElementById('quiz-next').addEventListener('click', ()=>{
+    quizIdx++; renderQuiz();
+  });
+}
+renderQuiz();
+</script>
+</body>
+</html>
