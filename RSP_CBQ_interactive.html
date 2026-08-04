@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Respiratory System — Case-Based Questions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16324F;
+    --ink-soft:#3C5670;
+    --paper:#EEF2F1;
+    --card:#FFFFFF;
+    --line:#D7DEDC;
+    --coral:#B23A48;
+    --coral-bg:#FBEDEE;
+    --sage:#2F6F4E;
+    --sage-bg:#EAF3EC;
+    --amber:#C4801A;
+    --amber-bg:#FBF1DF;
+    --radius:10px;
+    font-size:16px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 100% 0%, rgba(196,128,26,0.06), transparent 40%),
+      var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Serif', Georgia, serif;
+    font-size:16px;
+    line-height:1.55;
+    min-height:100vh;
+  }
+  .display{font-family:'Space Grotesk', sans-serif;}
+  .mono{font-family:'IBM Plex Mono', monospace; letter-spacing:.03em;}
+
+  /* ===== Layout shell ===== */
+  .shell{
+    display:grid;
+    grid-template-columns:250px 1fr;
+    max-width:1180px;
+    margin:0 auto;
+    min-height:100vh;
+  }
+  @media (max-width:860px){
+    .shell{grid-template-columns:1fr;}
+    .rail{position:static; order:2;}
+  }
+
+  /* ===== Left rail ===== */
+  .rail{
+    position:sticky; top:0; align-self:start;
+    height:100vh; overflow-y:auto;
+    padding:28px 18px 28px 24px;
+    border-right:1px solid var(--line);
+  }
+  @media (max-width:860px){ .rail{height:auto; border-right:none; border-bottom:1px solid var(--line);} }
+
+  .rail-title{
+    font-size:.72rem; text-transform:uppercase; letter-spacing:.14em;
+    color:var(--ink-soft); margin:0 0 4px 0;
+  }
+  .rail-sub{
+    font-size:1.05rem; font-weight:700; margin:0 0 20px 0; color:var(--ink);
+  }
+
+  .progress-ring-wrap{
+    display:flex; align-items:center; gap:12px;
+    padding:14px; margin-bottom:22px;
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+  }
+  .progress-ring-wrap svg{flex:none;}
+  .progress-num{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.3rem; color:var(--ink);}
+  .progress-label{font-size:.72rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.08em;}
+
+  .nav-case{
+    display:block; width:100%; text-align:left; cursor:pointer;
+    background:none; border:none; border-left:3px solid transparent;
+    padding:10px 10px 10px 12px; margin-bottom:6px; border-radius:0 8px 8px 0;
+    font-family:'IBM Plex Serif',serif; color:var(--ink-soft);
+    transition:background .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .nav-case:hover{background:var(--card);}
+  .nav-case.active{border-left-color:var(--coral); background:var(--card); color:var(--ink);}
+  .nav-case .tag{display:block; font-family:'IBM Plex Mono',monospace; font-size:.68rem; letter-spacing:.1em; color:var(--coral); margin-bottom:2px;}
+  .nav-case .name{display:block; font-weight:600; font-size:.92rem;}
+  .nav-case .mini-progress{
+    height:3px; background:var(--line); border-radius:2px; margin-top:6px; overflow:hidden;
+  }
+  .nav-case .mini-progress > span{display:block; height:100%; background:var(--sage); width:0%; transition:width .2s ease;}
+
+  .rail-actions{margin-top:24px; display:flex; flex-direction:column; gap:8px;}
+  .rail-actions button{
+    font-family:'IBM Plex Mono',monospace; font-size:.72rem; letter-spacing:.05em;
+    padding:9px 10px; border-radius:7px; border:1px solid var(--line);
+    background:var(--card); color:var(--ink-soft); cursor:pointer;
+    text-transform:uppercase;
+  }
+  .rail-actions button:hover{border-color:var(--ink-soft); color:var(--ink);}
+
+  /* ===== Main column ===== */
+  main{padding:36px 40px 80px;}
+  @media (max-width:860px){ main{padding:24px 18px 60px;} }
+
+  .masthead{margin-bottom:34px;}
+  .masthead .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:.75rem; letter-spacing:.16em;
+    color:var(--coral); text-transform:uppercase; margin-bottom:10px;
+  }
+  .masthead h1{
+    font-family:'Space Grotesk',sans-serif; font-weight:700;
+    font-size:clamp(1.7rem,3.4vw,2.5rem); margin:0 0 8px 0; color:var(--ink); line-height:1.15;
+  }
+  .masthead p{margin:0; color:var(--ink-soft); font-size:1.02rem; max-width:640px;}
+
+  .vitals-divider{width:100%; height:26px; margin:26px 0 8px; opacity:.55;}
+
+  /* ===== Case card ===== */
+  .case{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    margin-bottom:46px;
+    scroll-margin-top:20px;
+    overflow:hidden;
+  }
+  .case-head{
+    background:var(--ink);
+    color:#fff;
+    padding:18px 26px;
+    display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
+  }
+  .case-head .tab{
+    font-family:'IBM Plex Mono',monospace; font-size:.78rem; letter-spacing:.12em;
+    background:rgba(255,255,255,.14); padding:4px 10px; border-radius:5px;
+  }
+  .case-head h2{
+    font-family:'Space Grotesk',sans-serif; font-size:1.28rem; margin:0; font-weight:600;
+  }
+  .vignette{
+    padding:22px 26px 24px;
+    font-size:1.05rem;
+    color:var(--ink);
+    border-bottom:1px dashed var(--line);
+    background:
+      repeating-linear-gradient(180deg, transparent, transparent 34px, rgba(22,50,79,0.028) 35px);
+  }
+  .vignette::before{
+    content:"CASE VIGNETTE";
+    display:block; font-family:'IBM Plex Mono',monospace; font-size:.68rem;
+    letter-spacing:.14em; color:var(--ink-soft); margin-bottom:10px;
+  }
+
+  .qa-list{padding:6px 26px 22px;}
+  .qa{
+    border:1px solid var(--line);
+    border-radius:8px;
+    margin-top:16px;
+    overflow:hidden;
+  }
+  .q-row{
+    display:flex; align-items:flex-start; gap:12px;
+    width:100%; text-align:left; cursor:pointer;
+    background:var(--coral-bg); border:none; border-left:4px solid var(--coral);
+    padding:14px 16px; font-family:'IBM Plex Serif',serif; font-size:1.02rem; color:var(--ink);
+  }
+  .q-row .qlabel{
+    font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:.85rem;
+    color:var(--coral); flex:none; padding-top:1px; min-width:52px;
+  }
+  .q-row .qtext{flex:1; font-weight:600;}
+  .q-row .chev{
+    flex:none; width:22px; height:22px; margin-top:1px;
+    transition:transform .2s ease; color:var(--coral);
+  }
+  .qa.open .chev{transform:rotate(180deg);}
+
+  .a-wrap{
+    max-height:0; overflow:hidden;
+    transition:max-height .28s ease;
+    background:var(--sage-bg);
+    border-left:4px solid var(--sage);
+  }
+  .qa.open .a-wrap{ max-height:1400px; }
+  .a-inner{
+    padding:16px 16px 18px 16px;
+    position:relative;
+  }
+  .stamp{
+    display:inline-block;
+    font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:.7rem;
+    letter-spacing:.12em; text-transform:uppercase;
+    color:var(--sage); border:1.5px solid var(--sage); border-radius:5px;
+    padding:3px 8px; transform:rotate(-2deg);
+    margin-bottom:10px;
+  }
+  .a-inner p{margin:0 0 10px 0; font-size:1rem; color:var(--ink);}
+  .a-inner p:last-child{margin-bottom:0;}
+
+  .reveal-hint{
+    flex:none; align-self:center;
+    font-family:'IBM Plex Mono',monospace; font-size:.68rem; letter-spacing:.06em;
+    color:var(--coral); text-transform:uppercase; padding-top:2px;
+    white-space:nowrap;
+  }
+
+  footer{
+    text-align:center; padding:30px 20px 50px; color:var(--ink-soft);
+    font-family:'IBM Plex Mono',monospace; font-size:.72rem; letter-spacing:.06em;
+  }
+
+  ::selection{background:var(--amber-bg); color:var(--ink);}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <nav class="rail">
+    <p class="rail-title">MBBS Year 1 &middot; Practice Set</p>
+    <p class="rail-sub">Respiratory System CBQs</p>
+
+    <div class="progress-ring-wrap">
+      <svg width="46" height="46" viewBox="0 0 46 46">
+        <circle cx="23" cy="23" r="19" fill="none" stroke="#D7DEDC" stroke-width="5"/>
+        <circle id="ringProgress" cx="23" cy="23" r="19" fill="none" stroke="#2F6F4E" stroke-width="5"
+          stroke-linecap="round" stroke-dasharray="119.4" stroke-dashoffset="119.4"
+          transform="rotate(-90 23 23)"/>
+      </svg>
+      <div>
+        <div class="progress-num"><span id="revealedCount">0</span>/<span id="totalCount">0</span></div>
+        <div class="progress-label">Answers viewed</div>
+      </div>
+    </div>
+
+    <div id="caseNav"></div>
+
+    <div class="rail-actions">
+      <button id="revealAllBtn" type="button">Reveal all answers</button>
+      <button id="hideAllBtn" type="button">Hide all answers</button>
+    </div>
+  </nav>
+
+  <main>
+    <div class="masthead">
+      <p class="eyebrow">Self-Test &middot; Cover, Attempt, Reveal</p>
+      <h1>Case-Based Questions — Respiratory System</h1>
+      <p>Work through each clinical vignette and attempt every sub-question before tapping it open. Each question reveals its own model answer beneath it — try to answer out loud or on paper first.</p>
+    </div>
+
+    <svg class="vitals-divider" viewBox="0 0 600 26" preserveAspectRatio="none">
+      <polyline points="0,13 140,13 158,3 172,23 188,13 600,13" fill="none" stroke="#16324F" stroke-width="2"/>
+    </svg>
+
+    <div id="cases"></div>
+  </main>
+</div>
+
+<footer>Respiratory System Module &middot; Pathology &amp; Forensic Medicine Department &middot; MAHSA University</footer>
+
+<script>
+const DATA = [
+  {
+    tag: "CASE 1",
+    title: "Bronchial Asthma",
+    vignette: "A 28-year-old man with a history of asthma since his childhood presents with frequent wheezing, night-time cough, and daily use of his salbutamol inhaler. He also reports frequent episodes of allergic rhinitis and eczema since childhood. He is diagnosed with moderate persistent asthma and started on a combination of inhaled budesonide and formoterol. He is educated on inhaler use, given an asthma action plan, and scheduled for follow-up in 4 weeks.",
+    questions: [
+      { label:"1a", q:"What is bronchial asthma, and how is it related to airway resistance?",
+        a:["Bronchial asthma is a chronic inflammatory disorder of the airways characterised by reversible airway obstruction, bronchial hyperresponsiveness, and airway inflammation, producing recurrent episodes of wheezing, breathlessness, chest tightness, and cough (often worse at night/early morning).",
+           "Relation to airway resistance: By Poiseuille's law, airway resistance (R) is inversely proportional to the 4th power of the airway radius (R \u221d 1/r\u2074). In asthma, bronchospasm (smooth muscle contraction), mucosal oedema, and mucus hypersecretion narrow the airway lumen, so even a small reduction in radius causes a very large rise in airway resistance — most marked during expiration — producing airflow limitation and wheeze."] },
+      { label:"1b(i)", q:"State the expected change: Peak Expiratory Flow Rate (PEFR)",
+        a:["Decreased — reflects narrowing of the large/medium airways and reduced expiratory flow."] },
+      { label:"1b(ii)", q:"State the expected change: Forced Expiratory Volume in 1st second (FEV\u2081)",
+        a:["Decreased — airway narrowing limits the volume that can be forcibly exhaled in the first second."] },
+      { label:"1b(iii)", q:"State the expected change: FEV\u2081/FVC ratio",
+        a:["Decreased (typically < 70–75% of predicted) — the hallmark of an obstructive ventilatory defect, as FEV\u2081 falls proportionally more than FVC."] },
+      { label:"1c", q:"What are the roles of parasympathetic and sympathetic systems in airway tone regulation in asthma?",
+        a:["Parasympathetic (vagal) system: the dominant neural control of resting bronchomotor tone. Acetylcholine acts on M3 muscarinic receptors on bronchial smooth muscle → bronchoconstriction, and on submucosal glands → increased mucus secretion. In asthma there is increased vagal tone/airway hyperresponsiveness, contributing to bronchoconstriction.",
+           "Sympathetic system: there is little direct sympathetic innervation of bronchial smooth muscle; bronchodilation is mediated mainly by circulating adrenaline acting on \u03b22-adrenergic receptors → \u2191cAMP → smooth muscle relaxation, decreased mucus secretion, and improved mucociliary clearance. In asthma, relative \u03b22-receptor hyporesponsiveness/down-regulation can further tip the balance towards bronchoconstriction."] },
+      { label:"1d", q:"List the types of asthma. State the type of asthma that this patient is most likely to have.",
+        a:["Types: (1) Extrinsic/atopic (allergic) asthma — IgE-mediated, associated with atopy (allergic rhinitis, eczema, family history); (2) Intrinsic (non-allergic) asthma — triggered by infection, exercise, cold air, or stress, not IgE-mediated; (3) Mixed asthma — features of both.",
+           "This patient (childhood onset with allergic rhinitis and eczema — the 'atopic triad') most likely has extrinsic (atopic/allergic) asthma."] },
+      { label:"1e", q:"Describe the pathogenesis of bronchial asthma in this patient.",
+        a:["Sensitisation: allergen exposure → antigen presentation to naive T cells → differentiation into Th2 cells → release of IL-4, IL-5, IL-13 → B-cell class switching to IgE → IgE binds to high-affinity FcERI receptors on mast cells/basophils.",
+           "Early (immediate) phase, within minutes of re-exposure: allergen cross-links mast cell-bound IgE → mast cell degranulation → release of histamine, leukotrienes (LTC4/D4/E4), and prostaglandin D2 → bronchial smooth muscle contraction, mucus hypersecretion, and increased vascular permeability → acute bronchospasm.",
+           "Late phase, 4–8 hours later: recruitment of eosinophils, neutrophils and Th2 cells sustains inflammation, causing epithelial damage and heightened airway hyperresponsiveness.",
+           "Chronic/repeated inflammation leads to airway remodelling — subepithelial fibrosis, smooth muscle hypertrophy, goblet cell hyperplasia and angiogenesis — contributing to a progressive, less reversible component of obstruction."] },
+      { label:"1f", q:"Describe the mechanisms of action of formoterol in this condition.",
+        a:["Formoterol is a long-acting \u03b22-agonist (LABA) with a rapid onset and long duration of action (~12 hours). It binds \u03b22-adrenergic receptors on bronchial smooth muscle → activates adenylate cyclase → \u2191intracellular cAMP → activates protein kinase A → lowers intracellular calcium and relaxes smooth muscle → bronchodilation. It also stabilises mast cells, reducing mediator release, and enhances mucociliary clearance."] },
+      { label:"1g", q:"Describe the mechanisms of action of budesonide in this condition.",
+        a:["Budesonide is an inhaled corticosteroid (ICS). It diffuses into the cell and binds the cytoplasmic glucocorticoid receptor; the complex translocates to the nucleus, where it suppresses transcription of pro-inflammatory genes (e.g. via inhibition of NF-\u03baB and AP-1) and induces anti-inflammatory proteins such as annexin-1 (lipocortin), which inhibits phospholipase A2 and thereby reduces eicosanoid (prostaglandin/leukotriene) synthesis.",
+           "Net effect: reduced airway inflammation, mucosal oedema, mucus secretion and bronchial hyperresponsiveness, and up-regulation/restoration of \u03b22-receptor responsiveness (synergy with formoterol)."] },
+      { label:"1h", q:"List TWO advantages of inhalational route of administration.",
+        a:["1. Drug is delivered directly to the target organ (the lungs), giving a rapid onset of action at the site of disease.",
+           "2. Much lower doses are required than for the systemic (oral/parenteral) route, which minimises systemic side effects (e.g. reduced risk of systemic steroid effects with inhaled budesonide)."] }
+    ]
+  },
+  {
+    tag: "CASE 2",
+    title: "COPD — Emphysema",
+    vignette: "A 65-year-old male, chronic smoker (40 pack-years), presents with increasing shortness of breath, fatigue, and drowsiness. On examination, he is tachypneic with pursed-lip breathing and barrel-shaped chest. His oxygen saturation is 86% on room air. Arterial blood gas (ABG) analysis shows: pH 7.0 (low), PaCO\u2082 58 mmHg, HCO\u2083\u207b 28 mEq/L, PaO\u2082 60 mmHg. He is diagnosed with emphysema.",
+    questions: [
+      { label:"2a", q:"Describe the parts of the respiratory tree starting from the trachea. List the parts that are affected in this patient. (3+3 marks)",
+        a:["Respiratory tree from the trachea: Trachea → primary (main) bronchi (right and left) → secondary (lobar) bronchi (3 on the right, 2 on the left) → tertiary (segmental) bronchi → bronchioles → terminal bronchioles → respiratory bronchioles → alveolar ducts → alveolar sacs → alveoli.",
+           "Parts affected in emphysema: the respiratory bronchioles, alveolar ducts, alveolar sacs and alveoli — i.e. the acinus distal to the terminal bronchiole — where alveolar wall destruction occurs."] },
+      { label:"2b", q:"During his stay at the hospital, the patient developed spontaneous pneumothorax due to rupture of a bullae. State the anatomical space that is affected in pneumothorax.",
+        a:["The pleural cavity — the potential space between the visceral and parietal layers of pleura. Air enters and accumulates here, converting it into a real space and causing partial or complete collapse of the lung."] },
+      { label:"2c", q:"Describe the pathogenesis of emphysema in this patient.",
+        a:["Chronic exposure to cigarette smoke recruits neutrophils and macrophages into the lung, which release proteolytic enzymes (neutrophil elastase, matrix metalloproteinases).",
+           "Smoking also generates oxidants that inactivate \u03b11-antitrypsin (the main antiprotease), creating a protease–antiprotease imbalance.",
+           "Unopposed elastase activity progressively destroys elastin in the alveolar walls → breakdown of alveolar septa → permanent, abnormal enlargement of the airspaces distal to the terminal bronchiole.",
+           "This causes loss of elastic recoil, reduced alveolar surface area for gas exchange, and air trapping/hyperinflation."] },
+      { label:"2d", q:"Spirometry was done to evaluate the pulmonary function in this patient. What will be the likely result of the patient's spirometry?",
+        a:["An obstructive pattern: reduced FEV\u2081 with a relatively preserved/mildly reduced FVC, giving a reduced FEV\u2081/FVC ratio; increased total lung capacity (TLC) and residual volume (RV) due to air trapping and hyperinflation; and reduced diffusing capacity (DLCO) due to loss of alveolar-capillary surface area."] },
+      { label:"2e", q:"Based on the ABG analysis, identify the buffer system that plays a major compensatory role in this patient's condition.",
+        a:["The bicarbonate buffer system (HCO\u2083\u207b/H\u2082CO\u2083), with renal metabolic compensation for chronic respiratory acidosis."] },
+      { label:"2f", q:"Describe the biochemical mechanism by which this buffer system influences the patient's blood pH level.",
+        a:["In chronic CO\u2082 retention (respiratory acidosis), the kidneys compensate by increasing reabsorption of filtered HCO\u2083\u207b and generating new HCO\u2083\u207b through increased renal H\u207a secretion and NH\u2084\u207a excretion, raising plasma HCO\u2083\u207b (28 mEq/L here).",
+           "By the Henderson–Hasselbalch relationship (CO\u2082 + H\u2082O ↔ H\u2082CO\u2083 ↔ H\u207a + HCO\u2083\u207b), the elevated HCO\u2083\u207b buffers the excess H\u207a produced by the raised PaCO\u2082, keeping the HCO\u2083\u207b/PaCO\u2082 ratio closer to normal and limiting the fall in blood pH, even though PaCO\u2082 remains high."] },
+      { label:"2g", q:"Describe a biochemical adaptation within red blood cells that enhances oxygen delivery to tissues during chronic hypoxia in this patient.",
+        a:["Chronic hypoxia increases red cell production of 2,3-bisphosphoglycerate (2,3-BPG). 2,3-BPG binds preferentially to deoxyhaemoglobin (the \u03b2-chains), stabilising the low-affinity T (tense) conformation of haemoglobin.",
+           "This shifts the oxygen–haemoglobin dissociation curve to the right, decreasing haemoglobin's affinity for oxygen and facilitating greater unloading/delivery of oxygen to the tissues at a given PO\u2082."] }
+    ]
+  },
+  {
+    tag: "CASE 3",
+    title: "Community-Acquired Pneumonia",
+    vignette: "A 60-year-old male patient presents with a 5-day history of fever with chills, productive cough, and shortness of breath. On examination, his temperature is 38.1\u00b0C (100.5\u00b0F); his respiratory rate is 24 breaths per minute, and auscultation of his lungs reveals coarse crepitations in the right lower lobe of the lung field with bronchial breath sound. Chest X-ray showed consolidation in the right lower lobe. Microbiological analysis of the sputum specimen reveals the presence of Haemophilus influenzae. The initial provisional diagnosis is community-acquired pneumonia (CAP). The patient is prescribed amoxicillin.",
+    questions: [
+      { label:"3a", q:"Describe the features of the medial surface of the right lung and name FOUR structures related to it.",
+        a:["The medial surface has a vertebral part (posteriorly, related to the vertebral column) and a larger mediastinal part, which is concave and moulded by the heart and great vessels; it bears the hilum (with the pulmonary ligament below it) where the root structures enter/leave the lung.",
+           "Four related structures: (1) Right atrium of the heart (cardiac impression), (2) Superior vena cava (groove, above the hilum), (3) Azygos vein (arches over the hilum from behind), (4) Oesophagus (groove on the posterior part of the mediastinal surface). The inferior vena cava may also groove the lower part."] },
+      { label:"3b", q:"Define hilum and root of the lung. State the level of the root with reference to the vertebrae.",
+        a:["Hilum: a roughly triangular depression on the mediastinal surface of each lung through which the bronchus, pulmonary artery, pulmonary veins, bronchial vessels, lymphatics and nerves enter or leave the lung.",
+           "Root of the lung: the collection of these structures connecting the lung to the mediastinum at the hilum, invested in a tubular sheath of mediastinal (pleural) pleura that becomes continuous with the visceral pleura.",
+           "Level: opposite the bodies of the 5th to 7th thoracic vertebrae (T5–T7)."] },
+      { label:"3c", q:"A few days later patient presented with pleural effusion and a pleural fluid aspiration was done. Describe the surface marking of the parietal pleura along with its reflections.",
+        a:["Cervical pleura: extends about 2.5 cm above the medial third of the clavicle.",
+           "Anterior border: both sides meet in the midline near the sternal angle; the right pleura continues down to the level of the 6th costal cartilage. The left pleura deviates laterally at the level of the 4th costal cartilage (cardiac notch) before turning down to reach the 6th costal cartilage.",
+           "Lower (costal) border: crosses the 8th rib in the midclavicular line, the 10th rib in the midaxillary line, and reaches the 12th rib near the paravertebral line posteriorly.",
+           "Reflections: the costal pleura reflects onto the diaphragmatic pleura along this lower border (costodiaphragmatic recess); the mediastinal pleura reflects into the costal pleura anteriorly and posteriorly; at the hilum, the pleura reflects around the root of the lung and continues down as the pulmonary ligament."] },
+      { label:"3d", q:"Describe the bronchopulmonary segments of the right lung.",
+        a:["The right lung has 10 bronchopulmonary segments, each a functionally independent unit aerated by its own segmental (tertiary) bronchus:",
+           "Upper lobe (3): apical, posterior, anterior.",
+           "Middle lobe (2): lateral, medial.",
+           "Lower lobe (5): superior (apical) basal, medial basal, anterior basal, lateral basal, posterior basal."] },
+      { label:"3e", q:"State the possible mode of transmission in pneumonia.",
+        a:["Mainly via inhalation of infectious respiratory droplets released during coughing/sneezing/talking by an infected person (droplet/airborne spread); also via aspiration of colonising oropharyngeal organisms into the lower respiratory tract, and less commonly via contact with contaminated fomites/secretions or haematogenous spread from another focus."] },
+      { label:"3f", q:"List the predisposing factors for pneumonia in this patient.",
+        a:["Advanced age; smoking; chronic lung disease (e.g. COPD); alcohol excess; malnutrition; diabetes mellitus or other causes of immunosuppression; a recent viral upper respiratory tract infection; impaired mucociliary clearance/aspiration risk; and crowded living conditions or recent hospitalisation."] },
+      { label:"3g", q:"Discuss the laboratory diagnostic tests utilized for detection of Haemophilus influenzae.",
+        a:["Gram stain of sputum: small, pleomorphic Gram-negative coccobacilli.",
+           "Culture: grows on chocolate agar (which supplies both X factor/haemin and V factor/NAD required for growth); on blood agar it shows 'satellite phenomenon' — enhanced growth around colonies of Staphylococcus aureus, which release V factor.",
+           "Biochemical/confirmatory tests and capsular (serotype b) antigen detection (e.g. latex agglutination).",
+           "Molecular methods (PCR) for rapid and definitive identification, particularly in culture-negative cases."] },
+      { label:"3h", q:"Describe the mechanism of action and rationale of using amoxicillin in treating this patient.",
+        a:["Mechanism: amoxicillin is a \u03b2-lactam (aminopenicillin) antibiotic. It binds to penicillin-binding proteins (transpeptidases) on the bacterial cell wall, inhibiting the cross-linking of peptidoglycan strands during cell wall synthesis. This weakens the wall, causing osmotic lysis and death of actively dividing bacteria (bactericidal).",
+           "Rationale: amoxicillin has good activity against typical community-acquired pneumonia pathogens including Haemophilus influenzae and Streptococcus pneumoniae, achieves good lung tissue penetration, has high oral bioavailability, and is generally well tolerated — making it a standard first-line oral agent for non-severe CAP (a \u03b2-lactamase inhibitor combination such as co-amoxiclav is used if a \u03b2-lactamase-producing strain is suspected)."] },
+      { label:"3i", q:"Give TWO alternative antibiotics if the patient is allergic to penicillin.",
+        a:["1. A macrolide, e.g. azithromycin or clarithromycin.", "2. A respiratory fluoroquinolone, e.g. levofloxacin or moxifloxacin (doxycycline is another acceptable alternative)."] }
+    ]
+  },
+  {
+    tag: "CASE 4",
+    title: "Pulmonary Tuberculosis",
+    vignette: "A 40-year-old male was admitted to a clinic, reporting weakness, cough with bloody sputum, and night sweats persisting for 8 days. Sputum samples collected over three consecutive days revealed the presence of acid-fast bacilli upon Ziehl-Neelsen staining, confirming a diagnosis of pulmonary tuberculosis. Chest X-ray of the patient revealed a cavitary lesion in the apex of the right lung. Treatment commenced with a two-month regimen of antitubercular drugs consisting of isoniazid, rifampicin, pyrazinamide, and ethambutol.",
+    questions: [
+      { label:"4a", q:"State the most likely causative organism for above diagnosis.",
+        a:["Mycobacterium tuberculosis."] },
+      { label:"4b", q:"Explain the staining characteristics of above-mentioned organism that result in its acid-fast property.",
+        a:["The mycobacterial cell wall is unusually thick and lipid-rich, containing long-chain mycolic acids linked to an arabinogalactan-peptidoglycan complex, making it highly hydrophobic and impermeable to ordinary stains.",
+           "In the Ziehl–Neelsen technique, carbol fuchsin is driven into the wall with heat (or a phenol carrier), and once taken up it binds strongly to the mycolic acids. This complex resists decolourisation by acid-alcohol — hence 'acid-fast' — so the bacilli retain the red/pink stain, while non-acid-fast organisms are decolourised and take up the methylene blue counterstain (appearing blue)."] },
+      { label:"4c", q:"State ONE other species besides the answer mentioned in (a), that can cause a similar pulmonary infection.",
+        a:["Mycobacterium bovis (Mycobacterium africanum or non-tuberculous mycobacteria such as the M. avium-intracellulare complex are also acceptable)."] },
+      { label:"4d", q:"Explain the mode of transmission of the above case and suggest TWO infection control strategies that can prevent its spread.",
+        a:["Mode of transmission: airborne spread via inhalation of droplet nuclei containing M. tuberculosis, aerosolised when an infected person with active pulmonary disease coughs, sneezes, or talks.",
+           "Infection control strategies: (1) Airborne/respiratory isolation of the infectious patient (negative-pressure room where available; use of N95 respirators by healthcare workers and a surgical mask on the patient); (2) Prompt diagnosis and initiation of effective anti-tubercular treatment together with contact tracing and screening of close contacts (with health education on cough etiquette/hygiene)."] },
+      { label:"4e", q:"What is the most likely type of tuberculosis in this patient?",
+        a:["Secondary (post-primary/reactivation) pulmonary tuberculosis — suggested by the apical cavitary lesion in an adult, the classic site and pattern of reactivation disease."] },
+      { label:"4f", q:"Outline THREE differences between primary and secondary tuberculosis.",
+        a:["1. Host immune status: primary TB occurs in a previously unexposed, non-immune (unsensitised) host; secondary TB occurs in a previously sensitised host, either through reactivation of a dormant focus or reinfection.",
+           "2. Site of lesion: primary TB typically affects the mid or lower lung zones with prominent hilar/mediastinal lymph node involvement (Ghon complex = Ghon focus + lymph node); secondary TB classically affects the apex of the upper lobe, with much less lymph node involvement.",
+           "3. Pathology/outcome: primary TB usually heals with fibrosis and calcification (Ranke complex); secondary TB tends to cause more extensive caseation, cavitation and tissue destruction, reflecting a strong hypersensitivity response."] },
+      { label:"4g", q:"On examination, the patient had bilateral matted cervical lymphadenopathy. Describe the histological findings that are most likely to be seen in this patient's lymph node biopsy.",
+        a:["Caseating granulomatous inflammation: well-formed granulomas with a central area of caseous (cheese-like, eosinophilic, amorphous) necrosis, surrounded by epithelioid histiocytes, Langhans-type multinucleated giant cells (peripheral horseshoe arrangement of nuclei), and an outer rim of lymphocytes and fibroblasts."] },
+      { label:"4h", q:"Describe briefly the mechanism of action of isoniazid in treating this condition.",
+        a:["Isoniazid is a prodrug activated by the mycobacterial catalase-peroxidase enzyme (KatG). The activated form inhibits InhA (enoyl-acyl carrier protein reductase), blocking synthesis of mycolic acids, which are essential components of the mycobacterial cell wall. This disrupts cell wall integrity and is bactericidal against actively dividing M. tuberculosis."] },
+      { label:"4i", q:"Describe briefly the mechanism of action of rifampicin in treating this condition.",
+        a:["Rifampicin binds the \u03b2-subunit of bacterial DNA-dependent RNA polymerase (encoded by rpoB), inhibiting the initiation of RNA transcription. This is bactericidal and is active against both rapidly dividing and semi-dormant/intracellular mycobacteria, making it valuable for sterilising persister organisms."] },
+      { label:"4j", q:"Mention the adverse effects of rifampicin.",
+        a:["Hepatotoxicity; orange-red discolouration of body secretions (urine, tears, sweat — patients should be counselled about this); flu-like syndrome; gastrointestinal upset (nausea, vomiting); induction of hepatic cytochrome P450 enzymes leading to important drug interactions (e.g. reduced efficacy of oral contraceptives, warfarin); thrombocytopenia; and hypersensitivity reactions/rash."] }
+    ]
+  }
+];
+
+const casesEl = document.getElementById('cases');
+const caseNavEl = document.getElementById('caseNav');
+let totalQuestions = 0;
+
+DATA.forEach((c, ci) => {
+  totalQuestions += c.questions.length;
+
+  // Case card
+  const caseDiv = document.createElement('section');
+  caseDiv.className = 'case';
+  caseDiv.id = 'case-' + ci;
+
+  const head = document.createElement('div');
+  head.className = 'case-head';
+  head.innerHTML = `<span class="tag mono">${c.tag}</span><h2>${c.title}</h2>`;
+  caseDiv.appendChild(head);
+
+  const vig = document.createElement('div');
+  vig.className = 'vignette';
+  vig.textContent = c.vignette;
+  caseDiv.appendChild(vig);
+
+  const list = document.createElement('div');
+  list.className = 'qa-list';
+
+  c.questions.forEach((item, qi) => {
+    const qa = document.createElement('div');
+    qa.className = 'qa';
+    qa.dataset.case = ci;
+
+    const row = document.createElement('button');
+    row.type = 'button';
+    row.className = 'q-row';
+    row.innerHTML = `
+      <span class="qlabel">${item.label}</span>
+      <span class="qtext">${item.q}</span>
+      <span class="reveal-hint">Tap to reveal</span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    `;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'a-wrap';
+    const inner = document.createElement('div');
+    inner.className = 'a-inner';
+    inner.innerHTML = `<span class="stamp">Model Answer</span>` +
+      item.a.map(p => `<p>${p}</p>`).join('');
+    wrap.appendChild(inner);
+
+    row.addEventListener('click', () => {
+      const wasOpen = qa.classList.contains('open');
+      qa.classList.toggle('open');
+      updateProgress();
+      if (!wasOpen) qa.classList.add('seen');
+    });
+
+    qa.appendChild(row);
+    qa.appendChild(wrap);
+    list.appendChild(qa);
+  });
+
+  caseDiv.appendChild(list);
+  casesEl.appendChild(caseDiv);
+
+  // Nav button
+  const navBtn = document.createElement('button');
+  navBtn.type = 'button';
+  navBtn.className = 'nav-case';
+  navBtn.dataset.case = ci;
+  navBtn.innerHTML = `
+    <span class="tag">${c.tag}</span>
+    <span class="name">${c.title}</span>
+    <span class="mini-progress"><span style="width:0%"></span></span>
+  `;
+  navBtn.addEventListener('click', () => {
+    document.getElementById('case-' + ci).scrollIntoView({ behavior:'smooth', block:'start' });
+  });
+  caseNavEl.appendChild(navBtn);
+});
+
+document.getElementById('totalCount').textContent = totalQuestions;
+
+function updateProgress(){
+  const allQa = document.querySelectorAll('.qa');
+  let seen = 0;
+  const perCase = {};
+  allQa.forEach(qa => {
+    const ci = qa.dataset.case;
+    perCase[ci] = perCase[ci] || {total:0, seen:0};
+    perCase[ci].total++;
+    if (qa.classList.contains('seen')) { seen++; perCase[ci].seen++; }
+  });
+  document.getElementById('revealedCount').textContent = seen;
+  const pct = totalQuestions ? seen/totalQuestions : 0;
+  const circumference = 119.4;
+  document.getElementById('ringProgress').style.strokeDashoffset = circumference * (1 - pct);
+
+  document.querySelectorAll('.nav-case').forEach(btn => {
+    const ci = btn.dataset.case;
+    const d = perCase[ci] || {total:0, seen:0};
+    const p = d.total ? (d.seen/d.total*100) : 0;
+    btn.querySelector('.mini-progress > span').style.width = p + '%';
+  });
+}
+
+document.getElementById('revealAllBtn').addEventListener('click', () => {
+  document.querySelectorAll('.qa').forEach(qa => { qa.classList.add('open','seen'); });
+  updateProgress();
+});
+document.getElementById('hideAllBtn').addEventListener('click', () => {
+  document.querySelectorAll('.qa').forEach(qa => qa.classList.remove('open'));
+});
+
+// Highlight active case in nav on scroll
+const caseSections = Array.from(document.querySelectorAll('.case'));
+const navButtons = Array.from(document.querySelectorAll('.nav-case'));
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const idx = caseSections.indexOf(entry.target);
+      navButtons.forEach(b => b.classList.remove('active'));
+      if (navButtons[idx]) navButtons[idx].classList.add('active');
+    }
+  });
+}, { rootMargin: '-10% 0px -70% 0px', threshold: 0 });
+caseSections.forEach(s => observer.observe(s));
+if (navButtons[0]) navButtons[0].classList.add('active');
+
+updateProgress();
+</script>
+</body>
+</html>
