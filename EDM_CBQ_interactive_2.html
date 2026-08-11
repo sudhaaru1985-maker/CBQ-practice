@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+<title>Endocrine Module — CBQ Practice</title>
+<style>
+:root{
+  --navy:#0b2942;
+  --navy2:#123a5c;
+  --bg:#f4f6f8;
+  --card:#ffffff;
+  --ink:#1c2b3a;
+  --ink-soft:#5b6b7a;
+  --border:#dfe6ec;
+  --radius:14px;
+  --shadow:0 2px 10px rgba(11,41,66,.08);
+
+  --path:#0f766e;    --path-bg:#e6f5f3;
+  --anat:#2563eb;    --anat-bg:#eaf1fd;
+  --physio:#7c3aed;  --physio-bg:#f2ecfd;
+  --pharm:#c2410c;   --pharm-bg:#fdece2;
+  --bioc:#be185d;    --bioc-bg:#fce8f1;
+  --micro:#b91c1c;   --micro-bg:#fbe9e9;
+  --added:#b8860b;   --added-bg:#fdf6e3;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;}
+body{padding-bottom:60px;}
+
+.header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;padding:22px 18px 18px;position:sticky;top:0;z-index:30;box-shadow:0 2px 12px rgba(0,0,0,.18);}
+.header h1{margin:0 0 4px;font-size:1.2rem;font-weight:700;letter-spacing:.2px;}
+.header p{margin:0;font-size:.85rem;opacity:.85;}
+.progress-wrap{margin-top:12px;background:rgba(255,255,255,.15);border-radius:20px;height:8px;overflow:hidden;}
+.progress-bar{height:100%;background:linear-gradient(90deg,#4fd1c5,#38b2ac);width:0%;transition:width .35s ease;}
+.progress-text{font-size:.78rem;margin-top:6px;opacity:.9;}
+
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:12px 14px;background:#fff;position:sticky;top:96px;z-index:29;border-bottom:1px solid var(--border);-webkit-overflow-scrolling:touch;}
+.tabs::-webkit-scrollbar{display:none;}
+.tabbtn{flex:0 0 auto;padding:10px 16px;border-radius:999px;border:1.5px solid var(--border);background:#fff;color:var(--ink-soft);font-size:.85rem;font-weight:600;cursor:pointer;white-space:nowrap;}
+.tabbtn.active{background:var(--navy);border-color:var(--navy);color:#fff;}
+.tabbtn .mini{display:block;font-size:.68rem;font-weight:400;opacity:.85;margin-top:2px;}
+
+main{max-width:760px;margin:0 auto;padding:16px 14px 40px;}
+.panel{display:none;}
+.panel.active{display:block;}
+
+.vignette{background:var(--card);border:1px solid var(--border);border-left:6px solid var(--navy);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;margin-bottom:18px;line-height:1.55;font-size:.95rem;}
+.vignette strong{color:var(--navy);}
+
+.case-progress{display:flex;align-items:center;gap:10px;margin-bottom:16px;font-size:.78rem;color:var(--ink-soft);}
+.case-progress .track{flex:1;height:6px;background:#e4e9ee;border-radius:6px;overflow:hidden;}
+.case-progress .fill{height:100%;background:var(--navy2);width:0%;transition:width .3s ease;}
+
+.qcard{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px 16px;margin-bottom:14px;border-left:6px solid var(--ink-soft);}
+.qcard .badgerow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px;}
+.badge{display:inline-block;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:3px 9px;border-radius:999px;}
+.marks{font-size:.72rem;color:var(--ink-soft);font-weight:600;}
+.qtext{font-size:.94rem;line-height:1.5;margin:0 0 10px;}
+textarea{width:100%;min-height:70px;border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-size:.9rem;font-family:inherit;resize:vertical;color:var(--ink);background:#fbfcfd;}
+textarea:focus{outline:none;border-color:var(--navy2);}
+.qcard-actions{display:flex;justify-content:flex-end;margin-top:8px;}
+.reveal-btn{border:1.5px solid var(--navy2);background:#fff;color:var(--navy2);font-size:.78rem;font-weight:700;padding:7px 14px;border-radius:999px;cursor:pointer;}
+.reveal-btn.open{background:var(--navy2);color:#fff;}
+.answer{display:none;margin-top:12px;padding:12px 14px;border-radius:10px;font-size:.88rem;line-height:1.55;}
+.answer.open{display:block;}
+.answer ul{margin:4px 0 0;padding-left:18px;}
+.answer li{margin-bottom:3px;}
+
+.pathology{border-left-color:var(--path);} .pathology .badge{background:var(--path-bg);color:var(--path);} .pathology .answer{background:var(--path-bg);color:#0a4a41;}
+.anatomy{border-left-color:var(--anat);} .anatomy .badge{background:var(--anat-bg);color:var(--anat);} .anatomy .answer{background:var(--anat-bg);color:#123a75;}
+.physiology{border-left-color:var(--physio);} .physiology .badge{background:var(--physio-bg);color:var(--physio);} .physiology .answer{background:var(--physio-bg);color:#4c1d95;}
+.pharmacology{border-left-color:var(--pharm);} .pharmacology .badge{background:var(--pharm-bg);color:var(--pharm);} .pharmacology .answer{background:var(--pharm-bg);color:#7c2d12;}
+.biochemistry{border-left-color:var(--bioc);} .biochemistry .badge{background:var(--bioc-bg);color:var(--bioc);} .biochemistry .answer{background:var(--bioc-bg);color:#831843;}
+.microbiology{border-left-color:var(--micro);} .microbiology .badge{background:var(--micro-bg);color:var(--micro);} .microbiology .answer{background:var(--micro-bg);color:#7f1d1d;}
+
+.controls{display:flex;gap:8px;margin-bottom:16px;}
+.ctrlbtn{flex:1;padding:9px;border-radius:10px;border:1.5px solid var(--border);background:#fff;font-size:.78rem;font-weight:600;color:var(--ink-soft);cursor:pointer;}
+
+@media (min-width:600px){ .header h1{font-size:1.4rem;} body{font-size:16px;} }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Endocrine Module — CBQ Practice</h1>
+  <p>MBBS Year 2 &middot; Case-Based Questions across Pathology, Anatomy, Physiology, Pharmacology, Biochemistry &amp; Microbiology</p>
+  <div class="progress-wrap"><div class="progress-bar" id="overallFill"></div></div>
+  <div class="progress-text"><span id="overallLabel">0 / 0 questions attempted</span></div>
+</div>
+
+<div class="tabs" id="tabs"></div>
+
+<main id="main"></main>
+
+<script>
+var CASES = [
+{
+  id:"c1", label:"Case 1", mini:"Hashimoto thyroiditis",
+  vignette:"A 35-year-old woman presents to the clinic with complaints of fatigue, weight gain, constipation, cold intolerance, and dry skin for the past 6 months. Physical examination reveals a slightly enlarged, firm, and non-tender thyroid gland. Laboratory investigations reveal elevated TSH, low free T4, and the presence of anti-thyroid peroxidase (TPO) antibodies. Based on Fine Needle Aspiration Cytology (FNAC) and thyroid function tests, she is diagnosed with Hashimoto thyroiditis. <br><br>A few years later, the patient developed lymphoma of the thyroid gland and thyroidectomy was done.",
+  questions:[
+    {cat:"pathology", q:"a) What is the feedback mechanism responsible for the elevated TSH level in this patient?",
+     a:"Hashimoto thyroiditis causes primary (thyroid-level) hypothyroidism, so circulating free T4/T3 falls. Thyroid hormone normally exerts negative feedback on the hypothalamus (TRH) and anterior pituitary (TSH). With low T4, this negative feedback is lost, so TRH and TSH secretion rise in an attempt to drive the failing gland to produce more hormone — hence a high TSH with a low free T4 (primary hypothyroidism pattern)."},
+    {cat:"pathology", q:"b) Why does a patient with Hashimoto's thyroiditis develop a goitre despite hypothyroidism?",
+     a:"The chronically elevated TSH acts as a growth/trophic stimulus on the remaining follicular cells, causing compensatory hypertrophy and hyperplasia. In addition, the gland is infiltrated and enlarged by a dense lymphoplasmacytic infiltrate with germinal centre formation, which itself adds bulk. The combination of TSH-driven hyperplasia plus lymphocytic infiltration produces a firm, often symmetrically enlarged goitre even though hormone output is falling."},
+    {cat:"pathology", q:"c) How does thyroid hormone deficiency affect cardiovascular physiology in this patient?",
+     a:"Reduced thyroid hormone lowers basal metabolic rate and beta-adrenergic receptor expression in the heart, leading to decreased heart rate, decreased myocardial contractility, and reduced cardiac output. Peripheral vascular resistance rises (cold intolerance, diastolic hypertension). There is also decreased cardiac chronotropy/inotropy, and interstitial accumulation of glycosaminoglycans can cause pericardial effusion (myxedema heart) with muffled heart sounds and, in severe cases, cardiomegaly on imaging."},
+    {cat:"pathology", q:"d) List pathological findings that are most likely to be seen on FNAC of this patient's thyroid gland.",
+     a:"<ul><li>Numerous lymphocytes, plasma cells, and occasional germinal centre fragments</li><li>Hurthle cell (oncocytic) change — follicular cells with abundant granular eosinophilic cytoplasm</li><li>Scattered follicular epithelial cell clusters showing mild nuclear atypia</li><li>Background colloid is scanty</li></ul>"},
+    {cat:"pathology", q:"e) State the results of the thyroid function test in this patient.",
+     a:"Elevated serum TSH, low free T4 (usually with normal or low free T3), and positive anti-thyroid peroxidase (anti-TPO) antibodies (anti-thyroglobulin antibodies may also be positive) — the classic biochemical picture of primary autoimmune hypothyroidism."},
+    {cat:"pathology", q:"f) List complications that this patient is most likely to develop.",
+     a:"<ul><li>Myxedema coma (severe, decompensated hypothyroidism)</li><li>Dyslipidaemia and accelerated atherosclerosis / ischaemic heart disease</li><li>Infertility and menstrual irregularities</li><li>Depression and cognitive slowing</li><li>Increased risk of other autoimmune diseases (e.g. type 1 diabetes, pernicious anaemia)</li><li>Increased risk of primary thyroid B-cell (non-Hodgkin) lymphoma, as illustrated later in this case</li></ul>"},
+    {cat:"anatomy", added:true, q:"E. Describe the microscopic structure of the thyroid gland.",
+     a:"The thyroid is organised into follicles — spherical structures lined by a single layer of cuboidal-to-columnar follicular epithelial cells surrounding a central lumen filled with eosinophilic colloid (thyroglobulin). Follicular cells synthesise, store, and release thyroid hormone. Scattered singly or in small clusters between follicles, usually not reaching the lumen, are parafollicular (C) cells, which are larger and paler and secrete calcitonin. A thin fibrovascular stroma with a rich capillary network surrounds each follicle."},
+    {cat:"anatomy", added:true, q:"F. Describe the arterial supply of the thyroid gland, stating the origins of the arteries.",
+     a:"<ul><li>Superior thyroid artery — the first branch of the external carotid artery; supplies the upper pole</li><li>Inferior thyroid artery — arises from the thyrocervical trunk, a branch of the first part of the subclavian artery; supplies the lower pole and posterior gland</li><li>Thyroid ima artery (present in a minority of individuals) — a variable vessel arising directly from the brachiocephalic trunk or the arch of the aorta, ascending to the isthmus</li></ul>"},
+    {cat:"anatomy", q:"G. Name the nerves related to the arteries that supply the gland.",
+     a:"The external laryngeal nerve runs close to the superior thyroid artery near the upper pole and supplies cricothyroid muscle — at risk during ligation of this vessel, causing loss of voice pitch. The recurrent laryngeal nerve runs close to the inferior thyroid artery, typically crossing near the ligament of Berry in the tracheo-oesophageal groove, and supplies all intrinsic laryngeal muscles except cricothyroid — injury during thyroidectomy causes hoarseness or, if bilateral, airway compromise. Both nerves must be carefully identified and preserved during thyroidectomy."},
+    {cat:"anatomy", q:"H. Describe the anatomical relationship between the inferior thyroid artery and the recurrent laryngeal nerve, and its surgical significance.",
+     a:"The recurrent laryngeal nerve ascends in or near the tracheo-oesophageal groove and crosses the inferior thyroid artery at a variable point — it may pass anterior to the artery, posterior to it, or, most commonly, between its terminal branches; this relationship also differs slightly between the two sides because the right recurrent laryngeal nerve loops around the subclavian artery and ascends more obliquely, while the left loops around the arch of the aorta and ascends more vertically in the groove. Close to the gland, near the ligament of Berry (the posterior suspensory ligament that tethers the thyroid capsule to the cricoid cartilage and upper tracheal rings), the nerve lies in intimate contact with the thyroid capsule and is at its highest risk of injury from traction, clamping, or diathermy. For this reason, during thyroidectomy the recurrent laryngeal nerve is formally identified and traced along its course before any vessel is ligated, and vessels are ligated close to the gland capsule (rather than at the main trunk of the inferior thyroid artery at a distance) to avoid nerve injury and to preserve the blood supply to the parathyroid glands."},
+    {cat:"anatomy", q:"I. Describe the relationship of the external laryngeal nerve to the superior thyroid artery, and how this differs from the recurrent laryngeal nerve's relationship to the inferior thyroid artery.",
+     a:"The external laryngeal nerve descends alongside the superior thyroid artery as it approaches the upper pole of the gland, running very close to (and sometimes crossing) the vessel before entering cricothyroid muscle; this makes it vulnerable when the superior pole vessels are clamped or ligated in bulk, particularly if ligation is performed away from the gland capsule. This differs from the recurrent laryngeal nerve, which is not simply parallel to the inferior thyroid artery but characteristically crosses its branches near the lower pole/ligament of Berry, making its course less predictable and its identification during surgery even more critical. Because of this, the accepted surgical principle is to ligate the superior pedicle close to the upper pole and the inferior thyroid artery branches close to the gland capsule, keeping dissection near the thyroid rather than at the main arterial trunks."}
+  ]
+},
+{
+  id:"c2", label:"Case 2", mini:"Graves' disease",
+  vignette:"A 45-year-old woman presents with poor concentration, irritability, fatigue, palpitations, heat intolerance, fine tremor, weight loss, and a midline neck swelling. Laboratory investigations confirm Graves' disease. She is prescribed methimazole and propranolol.",
+  questions:[
+    {cat:"pathology", marks:"3 Marks", q:"a. State THREE causes of hyperthyroidism other than Graves' disease.",
+     a:"<ul><li>Hyperfunctioning (\"toxic\") multinodular goitre</li><li>Hyperfunctioning (\"toxic\") adenoma</li><li>Thyroid-stimulating hormone-secreting pituitary adenoma</li><li>Subacute granulomatous (de Quervain) thyroiditis</li><li>Subacute lymphocytic (postpartum/silent) thyroiditis</li><li>Struma ovarii</li><li>Factitious thyrotoxicosis (exogenous thyroxine intake)</li></ul>Any THREE of the above are acceptable."},
+    {cat:"pathology", q:"b. State the expected results of the Radioactive Iodine Uptake (RAIU) test in Graves' disease.",
+     a:"Diffuse, homogeneous increased uptake throughout an enlarged gland — reflecting generalised follicular cell hyperfunction driven by TSH-receptor antibody stimulation, as opposed to the focal uptake seen in a toxic nodule or the low/suppressed uptake seen in thyroiditis."},
+    {cat:"pathology", q:"c. State THREE characteristic features uniquely associated with Graves' disease.",
+     a:"<ul><li>Diffuse hyperplasia of the thyroid gland</li><li>Infiltrative ophthalmopathy / exophthalmos / proptosis</li><li>Dermopathy / pretibial myxedema</li></ul>These extrathyroidal features distinguish Graves' disease from other causes of thyrotoxicosis."},
+    {cat:"biochemistry", added:true, q:"Describe the biosynthesis of thyroid hormone at the follicular cell, and explain which step is amplified in Graves' disease.",
+     a:"Iodide is actively trapped from blood into the follicular cell via the sodium-iodide symporter (NIS), then transported into the colloid. Thyroid peroxidase (TPO) oxidises iodide and iodinates tyrosine residues on thyroglobulin to form monoiodotyrosine (MIT) and diiodotyrosine (DIT); TPO then couples MIT+DIT or DIT+DIT to form T3 and T4, which remain stored on thyroglobulin until proteolysis releases them into the circulation. In Graves' disease, thyroid-stimulating immunoglobulins (TSIs) bind and activate the TSH receptor, driving every one of these steps (iodide trapping, organification, coupling, and release) well beyond normal physiological control, producing excess hormone output."},
+    {cat:"biochemistry", added:true, q:"Explain the biochemical basis of TSH-receptor stimulation by TSI in Graves' disease and why serum TSH is low despite an overactive gland.",
+     a:"TSIs are IgG autoantibodies directed against the extracellular domain of the TSH receptor (a G-protein-coupled receptor) on follicular cells. Binding mimics TSH, activating adenylate cyclase and raising intracellular cAMP, which drives hormone synthesis and follicular cell growth independent of pituitary control. Because free T3/T4 rise, normal negative feedback suppresses hypothalamic TRH and pituitary TSH secretion, so serum TSH is low (suppressed) even though the gland itself is being maximally stimulated by TSI rather than by TSH."},
+    {cat:"pharmacology", added:true, q:"Describe the mechanism of action of methimazole in this patient.",
+     a:"Methimazole is a thionamide antithyroid drug that is concentrated within the thyroid gland and inhibits thyroid peroxidase, blocking both the organification (iodination) of tyrosine residues on thyroglobulin and the coupling of MIT/DIT to form T3/T4. It does not block existing hormone release or iodide trapping, so clinical effect is delayed until stored hormone is depleted. Important adverse effects include agranulocytosis, hepatotoxicity, and a rash; it is teratogenic and generally avoided in the first trimester of pregnancy (propylthiouracil is preferred there)."},
+    {cat:"pharmacology", added:true, q:"Describe the mechanism of action of propranolol in this patient and why it is added to her regimen.",
+     a:"Propranolol is a non-selective beta-adrenergic antagonist. It rapidly controls the adrenergic-mediated symptoms of thyrotoxicosis — tachycardia, palpitations, tremor, anxiety, and heat intolerance — by blocking beta-1 receptors in the heart and beta-2 receptors peripherally. At higher doses it also inhibits peripheral conversion of T4 to the more active T3 by inhibiting type 1 deiodinase. It provides symptomatic relief while methimazole takes weeks to reduce hormone synthesis."},
+    {cat:"pharmacology", added:true, q:"What monitoring advice should be given to a patient starting methimazole, and why?",
+     a:"The patient should be counselled to seek urgent medical review and a full blood count if she develops fever, sore throat, or mouth ulcers, as these may herald agranulocytosis, a rare but serious idiosyncratic reaction. Liver function should also be monitored, as hepatotoxicity (including rare fulminant hepatic failure) has been reported. Thyroid function tests are repeated periodically to titrate the dose and avoid iatrogenic hypothyroidism."}
+  ]
+},
+{
+  id:"c3", label:"Case 3", mini:"Type 2 diabetes mellitus",
+  vignette:"A 55-year-old man with newly diagnosed type 2 diabetes presents with muscle weakness, elevated fasting glucose and HbA1c of 8.2%. He is started on metformin, and due to inadequate glycaemic control, glipizide, sitagliptin and exenatide are added to his regimen.",
+  questions:[
+    {cat:"physiology", added:true, q:"Describe the normal physiological trigger for insulin secretion from pancreatic beta cells in response to a rise in blood glucose.",
+     a:"Glucose enters the beta cell via the GLUT2 transporter and is phosphorylated by glucokinase, the rate-limiting glucose sensor. Glycolysis and oxidative metabolism raise the intracellular ATP:ADP ratio, which closes ATP-sensitive K+ (K-ATP) channels. Reduced K+ efflux depolarises the cell membrane, opening voltage-gated Ca2+ channels; the resulting Ca2+ influx triggers exocytosis of insulin-containing secretory granules — first a rapid first-phase release of pre-formed insulin, followed by a sustained second phase."},
+    {cat:"physiology", added:true, q:"Describe the physiological actions of insulin on carbohydrate, protein, and fat metabolism.",
+     a:"<ul><li>Carbohydrate: promotes GLUT4-mediated glucose uptake into skeletal muscle and adipose tissue, stimulates glycogen synthesis in liver and muscle, and inhibits hepatic gluconeogenesis and glycogenolysis</li><li>Protein: promotes amino acid uptake and protein synthesis in muscle, and inhibits proteolysis</li><li>Fat: promotes lipogenesis and triglyceride storage in adipocytes, activates lipoprotein lipase, and inhibits hormone-sensitive lipase, thereby suppressing lipolysis and ketogenesis</li></ul>Overall, insulin is the principal anabolic, fuel-storage hormone of the fed state."},
+    {cat:"physiology", added:true, q:"Explain how glucose homeostasis is normally maintained between meals and during fasting, and which hormones oppose insulin.",
+     a:"Blood glucose is kept within a narrow range by the balance between insulin (glucose-lowering) and the counter-regulatory hormones glucagon, adrenaline, cortisol, and growth hormone (glucose-raising). As glucose falls between meals, insulin secretion declines and glucagon rises, stimulating hepatic glycogenolysis and gluconeogenesis to maintain glucose supply to obligate glucose-using tissues (brain, RBCs). In prolonged fasting or stress, adrenaline, cortisol, and growth hormone reinforce this by promoting lipolysis, proteolysis, and further gluconeogenesis, and by reducing peripheral glucose uptake."},
+    {cat:"pharmacology", q:"a. Describe the mechanism of action of metformin in this case.",
+     a:"Metformin activates AMP-activated protein kinase (AMPK) in hepatocytes, which suppresses key gluconeogenic enzymes and reduces hepatic glucose output; it also modestly increases peripheral (muscle) insulin sensitivity and glucose uptake, and reduces intestinal glucose absorption. It does not stimulate insulin secretion, so it does not cause hypoglycaemia when used alone."},
+    {cat:"pharmacology", q:"b. Describe the mechanism of action of glipizide in this case.",
+     a:"Glipizide is a sulfonylurea that binds the SUR1 subunit of the K-ATP channel on pancreatic beta cells, closing the channel independent of the ambient glucose level. This causes membrane depolarisation, opens voltage-gated Ca2+ channels, and triggers insulin exocytosis — effectively bypassing the normal glucose-sensing step and providing a glucose-independent secretagogue effect (hence the risk of hypoglycaemia)."},
+    {cat:"pharmacology", q:"c. State a condition in which exenatide is contraindicated.",
+     a:"Exenatide (a GLP-1 receptor agonist) is contraindicated in severe renal impairment/end-stage renal disease, in patients with a personal or family history of medullary thyroid carcinoma or Multiple Endocrine Neoplasia type 2 (MEN2), and should be avoided in those with a history of pancreatitis."},
+    {cat:"pharmacology", q:"Describe the mechanism of action of sitagliptin in this patient, and how it complements the other agents in his regimen.",
+     a:"Sitagliptin is a dipeptidyl peptidase-4 (DPP-4) inhibitor. DPP-4 normally rapidly degrades the endogenous incretin hormones GLP-1 and GIP, which are released from the gut after meals. By inhibiting DPP-4, sitagliptin prolongs the activity of endogenous GLP-1 and GIP, which enhances glucose-dependent insulin secretion from pancreatic beta cells and suppresses glucagon secretion from alpha cells — both effects being glucose-dependent, so the drug carries a low intrinsic risk of hypoglycaemia. It complements metformin (which reduces hepatic glucose output) and glipizide (which stimulates insulin release independent of glucose) by targeting the incretin axis, and unlike exenatide it is given orally rather than by injection."},
+    {cat:"physiology", q:"d. Explain how insulin resistance in peripheral tissues leads to hyperglycaemia in this patient.",
+     a:"In insulin resistance, post-receptor signalling defects impair GLUT4 translocation to the cell membrane in skeletal muscle and adipose tissue, reducing glucose uptake into these tissues. In the liver, resistance to insulin's suppressive effect allows continued gluconeogenesis and glycogenolysis despite hyperinsulinaemia. The combined effect of reduced peripheral disposal and unrestrained hepatic output raises fasting and postprandial blood glucose."},
+    {cat:"biochemistry", q:"e. Describe how elevated glucagon levels increase blood glucose through the stimulation of gluconeogenesis, including the signalling pathway and key regulatory enzyme involved.",
+     a:"Glucagon binds its hepatocyte G-protein-coupled receptor, activating adenylate cyclase to raise cAMP, which activates protein kinase A (PKA). PKA phosphorylates and activates key gluconeogenic control points, notably reducing fructose-2,6-bisphosphate (via phosphorylation of the bifunctional PFK-2/FBPase-2 enzyme), which relieves inhibition of fructose-1,6-bisphosphatase and inhibits phosphofructokinase-1 — favouring gluconeogenesis over glycolysis. PKA also upregulates transcription of phosphoenolpyruvate carboxykinase (PEPCK), the rate-limiting gluconeogenic enzyme, increasing hepatic glucose output."},
+    {cat:"biochemistry", q:"f. Describe the biochemical basis of hyperlipidaemia associated with insulin resistance and hyperglycaemia.",
+     a:"Reduced insulin action fails to suppress hormone-sensitive lipase in adipocytes, increasing lipolysis and free fatty acid release into the circulation. The liver takes up these fatty acids and, together with reduced lipoprotein lipase activity (normally insulin-stimulated), increases hepatic triglyceride synthesis and VLDL secretion, producing hypertriglyceridaemia with characteristically low HDL and small dense LDL particles."},
+    {cat:"biochemistry", q:"g. Describe the biochemical basis of muscle weakness in this diabetic patient.",
+     a:"Reduced GLUT4-mediated glucose uptake into muscle limits intracellular ATP generation via glycolysis, causing an energy deficit. Insulin deficiency/resistance also favours net proteolysis over protein synthesis in skeletal muscle, contributing to muscle wasting. Additional contributing factors include electrolyte disturbance (e.g. hypokalaemia), microvascular disease, and diabetic peripheral neuropathy, all of which impair muscle function."}
+  ]
+},
+{
+  id:"c4", label:"Case 4", mini:"Addison's disease",
+  vignette:"A 40-year-old man presents to his physician with complaints of chronic fatigue, weight loss, and abdominal pain. He mentions feeling lightheaded and dizzy occasionally, especially when getting up from a seated position. Upon further inquiry, he also reveals that his facial skin and areas exposed to the sun has become darker over the past few months. His medical history is unremarkable, except for a recent bout of pneumonia. Physical examination reveals low blood pressure and hyperpigmentation in his oral mucosa. Blood tests confirm Addison's disease. <br><br>Biopsy of the adrenal gland revealed caseating granulomas, and the patient was investigated for tuberculosis.",
+  questions:[
+    {cat:"physiology", q:"1a. State ONE primary hormone besides cortisol that is involved in Addison's disease, and its cellular source of production.",
+     a:"Aldosterone, the principal mineralocorticoid, produced by the cells of the zona glomerulosa of the adrenal cortex (the outermost cortical layer)."},
+    {cat:"physiology", q:"1b. Explain the functions of the above-mentioned hormone and its implication for this patient's health.",
+     a:"Aldosterone acts on the principal cells of the distal convoluted tubule and collecting duct, promoting Na+ reabsorption (via ENaC channels) in exchange for K+ and H+ secretion, and consequently promoting water retention. In Addison's disease, aldosterone deficiency causes urinary Na+ and water loss with K+ and H+ retention, producing hyponatraemia, hyperkalaemia, mild metabolic acidosis, volume depletion, and postural hypotension — explaining this patient's dizziness on standing."},
+    {cat:"pathology", q:"1c. Explain the hyperpigmentation seen in this patient.",
+     a:"In primary adrenal insufficiency, low cortisol removes negative feedback on the hypothalamus and anterior pituitary, causing increased production of pro-opiomelanocortin (POMC). POMC is cleaved not only to ACTH but also to melanocyte-stimulating hormone (MSH); both ACTH and MSH can stimulate melanocortin-1 receptors on melanocytes, increasing melanin synthesis. This produces diffuse hyperpigmentation, most noticeable in sun-exposed areas, skin creases, and mucosal surfaces such as the oral mucosa."},
+    {cat:"pathology", q:"1d. List FOUR blood tests done for diagnosis of Addison's disease.",
+     a:"<ul><li>Serum cortisol (early morning)</li><li>Plasma ACTH level</li><li>Serum electrolytes (Na+, K+)</li><li>Plasma renin activity and serum aldosterone</li><li>Fasting blood glucose (may be low)</li></ul>Any FOUR of the above are acceptable."},
+    {cat:"pathology", q:"1e. State the CONFIRMATORY test for Addison's disease and explain the principle of the test.",
+     a:"The ACTH stimulation (Synacthen/cosyntropin) test is confirmatory. A baseline serum cortisol is measured, synthetic ACTH (cosyntropin) is administered, and cortisol is re-measured at 30–60 minutes. In a healthy adrenal gland, cortisol rises briskly; in primary adrenal insufficiency the diseased cortex cannot respond, so serum cortisol fails to rise appropriately, confirming the diagnosis."},
+    {cat:"microbiology", added:true, q:"Name the organism responsible for the granulomatous adrenalitis in this patient and describe its key staining characteristic.",
+     a:"Mycobacterium tuberculosis. It is an acid-fast bacillus — its mycolic acid-rich cell wall resists decolourisation by acid-alcohol after staining, demonstrated by the Ziehl-Neelsen (or auramine fluorescent) stain, appearing as slender red/pink bacilli against a blue background."},
+    {cat:"microbiology", added:true, q:"Describe the pathogenesis by which tuberculosis leads to adrenal destruction and Addison's disease.",
+     a:"Following primary pulmonary infection, M. tuberculosis can disseminate haematogenously to extrapulmonary sites, including the adrenal glands. Cell-mediated (Th1) immunity forms granulomas — aggregates of epithelioid macrophages, Langhans giant cells, and lymphocytes — with central caseous necrosis. Progressive, typically bilateral, caseating granulomatous destruction of the adrenal cortex (and eventually medulla) gradually reduces functional cortical tissue below the threshold needed to maintain cortisol and aldosterone output, precipitating chronic primary adrenal insufficiency."},
+    {cat:"microbiology", added:true, q:"List the investigations used to diagnose active tuberculosis in this patient.",
+     a:"<ul><li>Sputum smear microscopy for acid-fast bacilli (Ziehl-Neelsen stain)</li><li>Sputum/tissue culture on Lowenstein-Jensen medium (gold standard, slow)</li><li>Rapid nucleic acid amplification test (e.g. GeneXpert MTB/RIF)</li><li>Chest radiograph</li><li>Tuberculin skin test (Mantoux) or interferon-gamma release assay (IGRA)</li><li>Histopathology of the adrenal biopsy showing caseating granulomas with Langhans giant cells</li></ul>"},
+    {cat:"microbiology", added:true, q:"Outline the standard first-line anti-tuberculous treatment regimen.",
+     a:"An intensive phase of four drugs — Rifampicin, Isoniazid, Pyrazinamide, and Ethambutol (RIPE) — for 2 months, followed by a continuation phase of Rifampicin and Isoniazid for a further 4 months (total 6 months for standard, fully sensitive disease). Directly observed therapy and monitoring for hepatotoxicity and other drug-specific adverse effects are recommended throughout."}
+  ]
+}
+];
+
+var CAT_LABEL = {pathology:"Pathology", anatomy:"Anatomy", physiology:"Physiology", pharmacology:"Pharmacology", biochemistry:"Biochemistry", microbiology:"Microbiology"};
+var STORE_PREFIX = "edm_cbq_";
+
+function loadVal(key){ try{ return localStorage.getItem(STORE_PREFIX+key) || ""; }catch(e){ return ""; } }
+function saveVal(key,val){ try{ localStorage.setItem(STORE_PREFIX+key, val); }catch(e){} }
+
+function buildTabs(){
+  var tabsEl = document.getElementById("tabs");
+  CASES.forEach(function(c, idx){
+    var b = document.createElement("button");
+    b.className = "tabbtn" + (idx===0 ? " active" : "");
+    b.id = "tab-"+c.id;
+    b.innerHTML = c.label + "<span class='mini'>"+c.mini+"</span>";
+    b.onclick = function(){ switchCase(c.id); };
+    tabsEl.appendChild(b);
+  });
+}
+
+function switchCase(id){
+  CASES.forEach(function(c){
+    document.getElementById("panel-"+c.id).classList.toggle("active", c.id===id);
+    document.getElementById("tab-"+c.id).classList.toggle("active", c.id===id);
+  });
+}
+
+function buildPanels(){
+  var main = document.getElementById("main");
+  CASES.forEach(function(c, idx){
+    var panel = document.createElement("div");
+    panel.className = "panel" + (idx===0 ? " active" : "");
+    panel.id = "panel-"+c.id;
+
+    var vign = document.createElement("div");
+    vign.className = "vignette";
+    vign.innerHTML = "<strong>"+c.label+" — "+c.mini+"</strong><br><br>" + c.vignette;
+    panel.appendChild(vign);
+
+    var prog = document.createElement("div");
+    prog.className = "case-progress";
+    prog.innerHTML = "<span id='caselabel-"+c.id+"'>0 / "+c.questions.length+" attempted</span><div class='track'><div class='fill' id='casefill-"+c.id+"'></div></div>";
+    panel.appendChild(prog);
+
+    var ctrl = document.createElement("div");
+    ctrl.className = "controls";
+    ctrl.innerHTML = "<button class='ctrlbtn' onclick=\"revealAll('"+c.id+"',true)\">Reveal all answers</button><button class='ctrlbtn' onclick=\"revealAll('"+c.id+"',false)\">Hide all answers</button>";
+    panel.appendChild(ctrl);
+
+    c.questions.forEach(function(item, qi){
+      var qid = c.id + "_q" + qi;
+      var card = document.createElement("div");
+      card.className = "qcard " + item.cat;
+      card.id = "card-"+qid;
+
+      var badgeRow = "<div class='badgerow'><span class='badge'>"+CAT_LABEL[item.cat]+"</span>";
+      if(item.marks){ badgeRow += "<span class='marks'>"+item.marks+"</span>"; }
+      badgeRow += "</div>";
+
+      var html = badgeRow;
+      html += "<p class='qtext'>"+item.q+"</p>";
+      html += "<textarea id='ta-"+qid+"' placeholder='Type your answer here...' oninput='onType(\""+qid+"\",\""+c.id+"\")'></textarea>";
+      html += "<div class='qcard-actions'><button class='reveal-btn' id='btn-"+qid+"' onclick=\"toggleAnswer('"+qid+"')\">Reveal model answer</button></div>";
+      html += "<div class='answer' id='ans-"+qid+"'>"+item.a+"</div>";
+
+      card.innerHTML = html;
+      panel.appendChild(card);
+
+      var ta = card.querySelector("#ta-"+qid);
+      ta.value = loadVal(qid);
+    });
+
+    main.appendChild(panel);
+  });
+}
+
+function toggleAnswer(qid){
+  var ans = document.getElementById("ans-"+qid);
+  var btn = document.getElementById("btn-"+qid);
+  var open = ans.classList.toggle("open");
+  btn.classList.toggle("open", open);
+  btn.textContent = open ? "Hide model answer" : "Reveal model answer";
+}
+
+function revealAll(caseId, show){
+  var c = CASES.filter(function(x){return x.id===caseId;})[0];
+  c.questions.forEach(function(item, qi){
+    var qid = caseId+"_q"+qi;
+    var ans = document.getElementById("ans-"+qid);
+    var btn = document.getElementById("btn-"+qid);
+    ans.classList.toggle("open", show);
+    btn.classList.toggle("open", show);
+    btn.textContent = show ? "Hide model answer" : "Reveal model answer";
+  });
+}
+
+function onType(qid, caseId){
+  var ta = document.getElementById("ta-"+qid);
+  saveVal(qid, ta.value);
+  updateProgress();
+}
+
+function updateProgress(){
+  var totalQ = 0, totalDone = 0;
+  CASES.forEach(function(c){
+    var done = 0;
+    c.questions.forEach(function(item, qi){
+      var qid = c.id+"_q"+qi;
+      var val = loadVal(qid);
+      if(val && val.trim().length>0){ done++; }
+    });
+    totalQ += c.questions.length;
+    totalDone += done;
+    var pct = c.questions.length ? Math.round((done/c.questions.length)*100) : 0;
+    var fillEl = document.getElementById("casefill-"+c.id);
+    var labelEl = document.getElementById("caselabel-"+c.id);
+    if(fillEl){ fillEl.style.width = pct+"%"; }
+    if(labelEl){ labelEl.textContent = done+" / "+c.questions.length+" attempted"; }
+  });
+  var overallPct = totalQ ? Math.round((totalDone/totalQ)*100) : 0;
+  document.getElementById("overallFill").style.width = overallPct+"%";
+  document.getElementById("overallLabel").textContent = totalDone+" / "+totalQ+" questions attempted ("+overallPct+"%)";
+}
+
+buildTabs();
+buildPanels();
+updateProgress();
+</script>
+</body>
+</html>
